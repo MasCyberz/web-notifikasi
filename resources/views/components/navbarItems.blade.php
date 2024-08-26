@@ -1,0 +1,50 @@
+<li class="nav-item {{ Request::route()->named('dashboard') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('dashboard') }}">
+        <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="ti ti-home fs-2"></i>
+        </span>
+        <span class="nav-link-title fw-semibold">
+            Dashboard
+        </span>
+    </a>
+</li>
+<li class="nav-item {{ Request::route()->named('stnk-index', 'stnk-tambah') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('stnk-index') }}">
+        <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="ti ti-car fs-2"></i>
+        </span>
+        <span class="nav-link-title fw-semibold">
+            Data STNK
+        </span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">
+        <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="ti ti-truck fs-2"></i>
+        </span>
+        <span class="nav-link-title fw-semibold">
+            Data KIR
+        </span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">
+        <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="ti ti-car fs-2"></i>
+        </span>
+        <span class="nav-link-title fw-semibold">
+            Data Kendaraan
+        </span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="#">
+        <span class="nav-link-icon d-md-none d-lg-inline-block">
+            <i class="ti ti-users fs-2"></i>
+        </span>
+        <span class="nav-link-title fw-semibold">
+            Management User
+        </span>
+    </a>
+</li>
