@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-AppLayout>
     <x-PageHeader header="Data STNK" classcontainer=""/>
     <div class="page-body">
         <div class="container-xl">
@@ -6,7 +6,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i class="ti ti-plus fs-2"></i>Tambah Data
+                            <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
+                                    class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
@@ -45,7 +46,6 @@
                                         <th>Nama Kendaraan</th>
                                         <th>Tipe Kendaraan</th>
                                         <th>Plat Nomor</th>
-                                        <th>Tanggal Perpanjangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -61,9 +61,6 @@
                                         </td>
                                         <td>
                                             87956621
-                                        </td>
-                                        <td>
-                                            15 Dec 2017
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i
@@ -83,9 +80,6 @@
                                         </td>
                                         <td>
                                             87956421
-                                        </td>
-                                        <td>
-                                            12 Apr 2017
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i
@@ -139,4 +133,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-AppLayout>

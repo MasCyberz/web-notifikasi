@@ -13,18 +13,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Authentication
 Route::get('/', function () {
     return view('authentication.login');
 })->name('login');
 
-Route::get('/dashboard', function () {
-    return view('authentication.login');
-});
-
+// Home / Dashboard
 Route::get('/dashboard', function () {
     return view('home');
 })->name('dashboard');
 
+// Kendaraan
+Route::get('/data-kendaraan', function () {
+    return view('kendaraan.index');
+})->name('kendaraan-index');
+
+Route::get('/data-kendaraan/tambah', function () {
+    return view('kendaraan.add');
+})->name('kendaraan-tambah');
+
+// STNK
 Route::get('/data-stnk', function () {
     return view('stnk.index');
 })->name('stnk-index');
@@ -32,3 +40,12 @@ Route::get('/data-stnk', function () {
 Route::get('/data-stnk/tambah', function () {
     return view('stnk.add');
 })->name('stnk-tambah');
+
+// KIR
+Route::get('/data-kir', function () {
+    return view('kir.index');
+})->name('kir-index');
+
+Route::get('/data-kir/tambah', function () {
+    return view('kir.add');
+})->name('kir-tambah');

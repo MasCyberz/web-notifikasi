@@ -1,20 +1,32 @@
 <x-app-layout>
     <x-PageHeader header="Data STNK" classcontainer="col-lg-8"/>
     <div class="page-body">
-
-
         <div class="col-12 col-lg-8 container-xl">
             {{-- Form Create STNK --}}
             <form action="" class="card">
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!"/>
                 <div class="card-body">
-                    <x-Input label="Nomor STNK" name="nomor_stnk" type="text" placeholder="1234567890" class="" />
-                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" type="date" class="w-25"/>
+                    <x-Input label="Nama Kendaraan" name="nama_kendaraan" type="text" placeholder="Cortez" class="w-100 w-xl-50 " />
+                    <div class="mb-3">
+                        <label class="form-label">Merk Kendaraan</label>
+                        <div>
+                            <select class="form-select w-25">
+                                <option>Mitsubishi</option>
+                                <option>Hyundai</option>
+                                <option>Kia</option>
+                                <option>Honda</option>
+                                <option>Yamaha</option>
+                                <option>Yamaha</option>
+                            </select>
+                        </div>
+                    </div>
+                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" type="date" class="w-100 w-md-25"/>
                     <div class="mb-3">
                         <label class="form-label">Tipe Kendaraan</label>
                         <div>
                             <select class="form-select w-25">
                                 <option>Mobil</option>
+                                <option>Mini Bus</option>
                                 <option>Truck</option>
                                 <option>Motor</option>
                             </select>
