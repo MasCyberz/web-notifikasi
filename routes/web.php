@@ -49,3 +49,9 @@ Route::get('/data-kir', function () {
 Route::get('/data-kir/tambah', function () {
     return view('kir.add');
 })->name('kir-tambah');
+
+// ADMIN
+// Management User
+Route::get('/management-user', function () {
+    return view('admin.management-user.index');
+})->name('management-user-index');

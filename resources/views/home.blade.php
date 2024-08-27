@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-pageHeader header="Dashboard" />
+    <x-pageHeader header="Dashboard" classcontainer="" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-cards">

@@ -8,10 +8,8 @@
             <form action="" class="card">
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!"/>
                 <div class="card-body">
-                    <x-Input label="Nomor STNK" name="nomor_stnk" type="text" placeholder="1234567890" class="" />
-                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" type="date" class="w-25"/>
                     <div class="mb-3">
-                        <label class="form-label">Tipe Kendaraan</label>
+                        <label class="form-label">Kendaraan</label>
                         <div>
                             <select class="form-select w-25">
                                 <option>Mobil</option>
@@ -20,6 +18,7 @@
                             </select>
                         </div>
                     </div>
+                    <x-Input label="Tgl. Perpanjangan KIR" name="tanggal_perpanjangan" type="date" class="w-25"/>
                     <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
                         <input type="text" name="plat_nomor" class="form-control" data-mask="** 0000 ***"

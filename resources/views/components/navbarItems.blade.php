@@ -38,8 +38,8 @@
         </span>
     </a>
 </li>
-<li class="nav-item">
-    <a class="nav-link" href="#">
+<li class="nav-item {{ Request::route()->named('management-user-index', 'management-user-tambah') ? 'active' : '' }}">
+    <a class="nav-link" href="{{ route('management-user-index') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-users fs-2"></i>
         </span>

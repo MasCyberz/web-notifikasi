@@ -1,12 +1,12 @@
 <x-AppLayout>
-    <x-PageHeader header="Data Kendaraan" classcontainer=""/>
+    <x-PageHeader header="Management User" classcontainer="" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
+                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
                                     class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>
@@ -19,13 +19,6 @@
                                             size="3" aria-label="Invoices count" fdprocessedid="7ljtz">
                                     </div>
                                     entries
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="number" class="form-control form-control-sm"
-                                            value="{{ \Carbon\Carbon::now()->format('Y') }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3"
-                                            aria-label="Invoices count">
-                                    </div>
-                                    Year
                                 </div>
                                 <div class="ms-auto text-secondary">
                                     Search:
@@ -50,15 +43,9 @@
                                                 <path d="M6 15l6 -6l6 6"></path>
                                             </svg>
                                         </th>
-                                        <th>No. Polisi</th>
-                                        <th>Merk</th>
-                                        <th>Tipe Kendaraan</th>
-                                        <th>Jenis</th>
-                                        <th>Model</th>
-                                        <th>Tahun</th>
-                                        <th>Warna</th>
-                                        <th>No. Mesin</th>
-                                        <th>Bahan Bakar</th>
+                                        <th>Email</th>
+                                        <th>Username</th>
+                                        <th>Role</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -75,23 +62,24 @@
                                         <td>
                                             87956621
                                         </td>
-                                        <td>
-                                            87956621
+                                        <td class="text-end">
+                                            <a href="#" class="btn btn-primary btn-icon"><i
+                                                    class="ti ti-edit"></i></a>
+                                            <a href="#" class="btn btn-danger btn-icon"><i
+                                                    class="ti ti-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="text-secondary">2</span></td>
+                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">UX
+                                                Wireframes</a>
                                         </td>
                                         <td>
-                                            87956621
+                                            <span class="flag flag-xs flag-country-gb me-2"></span>
+                                            Adobe
                                         </td>
                                         <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            lorem100
-                                        </td>
-                                        <td>
-                                            87956621
+                                            87956421
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i

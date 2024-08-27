@@ -1,12 +1,13 @@
 <x-app-layout>
-    <x-PageHeader header="Data STNK" classcontainer=""/>
+    <x-PageHeader header="Data KIR" classcontainer="" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i class="ti ti-plus fs-2"></i>Tambah Data
+                            <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
+                                    class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
@@ -18,6 +19,13 @@
                                             size="3" aria-label="Invoices count" fdprocessedid="7ljtz">
                                     </div>
                                     entries
+                                    <div class="mx-2 d-inline-block">
+                                        <input type="number" class="form-control form-control-sm"
+                                            value="{{ \Carbon\Carbon::now()->format('Y') }}" min="1900"
+                                            max="{{ \Carbon\Carbon::now()->year }}" size="3"
+                                            aria-label="Invoices count">
+                                    </div>
+                                    Year
                                 </div>
                                 <div class="ms-auto text-secondary">
                                     Search:
