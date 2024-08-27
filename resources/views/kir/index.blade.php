@@ -1,12 +1,12 @@
 <x-app-layout>
-    <x-PageHeader header="Data STNK" classcontainer="" />
+    <x-PageHeader header="Data KIR" classcontainer="" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
+                            <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
                                     class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>

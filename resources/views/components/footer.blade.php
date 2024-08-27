@@ -4,7 +4,7 @@
             <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item fw-semibold">
-                        Copyright © 2024
+                        Copyright © {{ \Carbon\Carbon::now()->format('Y') }}
                         <a href="." class="link-secondary">SMKN 12 JAKARTA</a>.
                         All rights reserved.
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

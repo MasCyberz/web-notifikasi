@@ -1,5 +1,5 @@
-<x-app-layout>
-    <x-PageHeader header="Data STNK" classcontainer="" />
+<x-AppLayout>
+    <x-PageHeader header="Management User" classcontainer="" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
@@ -19,13 +19,6 @@
                                             size="3" aria-label="Invoices count" fdprocessedid="7ljtz">
                                     </div>
                                     entries
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="number" class="form-control form-control-sm"
-                                            value="{{ \Carbon\Carbon::now()->format('Y') }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3"
-                                            aria-label="Invoices count">
-                                    </div>
-                                    Year
                                 </div>
                                 <div class="ms-auto text-secondary">
                                     Search:
@@ -50,10 +43,9 @@
                                                 <path d="M6 15l6 -6l6 6"></path>
                                             </svg>
                                         </th>
-                                        <th>Nama Kendaraan</th>
-                                        <th>Tipe Kendaraan</th>
-                                        <th>Plat Nomor</th>
-                                        <th>Tanggal Perpanjangan</th>
+                                        <th>Email</th>
+                                        <th>Username</th>
+                                        <th>Role</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -69,9 +61,6 @@
                                         </td>
                                         <td>
                                             87956621
-                                        </td>
-                                        <td>
-                                            15 Dec 2017
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i
@@ -91,9 +80,6 @@
                                         </td>
                                         <td>
                                             87956421
-                                        </td>
-                                        <td>
-                                            12 Apr 2017
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i
@@ -147,4 +133,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-AppLayout>

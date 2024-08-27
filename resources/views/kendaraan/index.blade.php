@@ -1,12 +1,12 @@
-<x-app-layout>
-    <x-PageHeader header="Data STNK" classcontainer="" />
+<x-AppLayout>
+    <x-PageHeader header="Data Kendaraan" classcontainer=""/>
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
+                            <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
                                     class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>
@@ -50,10 +50,15 @@
                                                 <path d="M6 15l6 -6l6 6"></path>
                                             </svg>
                                         </th>
-                                        <th>Nama Kendaraan</th>
+                                        <th>No. Polisi</th>
+                                        <th>Merk</th>
                                         <th>Tipe Kendaraan</th>
-                                        <th>Plat Nomor</th>
-                                        <th>Tanggal Perpanjangan</th>
+                                        <th>Jenis</th>
+                                        <th>Model</th>
+                                        <th>Tahun</th>
+                                        <th>Warna</th>
+                                        <th>No. Mesin</th>
+                                        <th>Bahan Bakar</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -71,29 +76,22 @@
                                             87956621
                                         </td>
                                         <td>
-                                            15 Dec 2017
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-secondary">2</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">UX
-                                                Wireframes</a>
+                                            87956621
                                         </td>
                                         <td>
-                                            <span class="flag flag-xs flag-country-gb me-2"></span>
-                                            Adobe
+                                            87956621
                                         </td>
                                         <td>
-                                            87956421
+                                            87956621
                                         </td>
                                         <td>
-                                            12 Apr 2017
+                                            87956621
+                                        </td>
+                                        <td>
+                                            lorem100
+                                        </td>
+                                        <td>
+                                            87956621
                                         </td>
                                         <td class="text-end">
                                             <a href="#" class="btn btn-primary btn-icon"><i
@@ -147,4 +145,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-AppLayout>
