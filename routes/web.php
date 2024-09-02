@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KendaraanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,13 +25,9 @@ Route::get('/dashboard', function () {
 })->name('dashboard');
 
 // Kendaraan
-Route::get('/data-kendaraan', function () {
-    return view('kendaraan.index');
-})->name('kendaraan-index');
+Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
 
-Route::get('/data-kendaraan/tambah', function () {
-    return view('kendaraan.add');
-})->name('kendaraan-tambah');
+Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
 
 // STNK
 Route::get('/data-stnk', function () {
