@@ -13,6 +13,7 @@
 </head>
 
 <body>
+    @stack('styles')
     <div class="page">
         <x-sidebar />
         <x-navbar />

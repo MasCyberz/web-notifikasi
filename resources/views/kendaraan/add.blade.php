@@ -16,14 +16,18 @@
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
                                 <select class="form-select" name="merk_kendaraan">
-                                    <option value="toyota">Toyota</option>
-                                    <option value="wuling">Wuling</option>
-                                    <option value="mitsubishi">Mitsubishi</option>
-                                    <option value="hyundai">Hyundai</option>
-                                    <option value="kia">Kia</option>
-                                    <option value="honda">Honda</option>
-                                    <option value="yamaha">Yamaha</option>
-                                    <option value="byd">BYD</option>
+                                    <option value="" selected>Pilih Merk Kendaraan</option>
+                                    <option value="Toyota">Toyota</option>
+                                    <option value="Wuling">Wuling</option>
+                                    <option value="Mitsubishi">Mitsubishi</option>
+                                    <option value="DSFK">DSFK</option>
+                                    <option value="Hyundai">Hyundai</option>
+                                    <option value="Kia">Kia</option>
+                                    <option value="Suzuki">Suzuki</option>
+                                    <option value="BYD">BYD</option>
+                                    <option value="Honda">Honda</option>
+                                    <option value="Yamaha">Yamaha</option>
+                                    <option value="ISUZU">ISUZU</option>
                                 </select>
                             </div>
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"

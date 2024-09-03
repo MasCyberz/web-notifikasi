@@ -4,8 +4,9 @@
         <div class="container-xl">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <form action="{{ route('kendaraan-store-add') }}" method="POST" class="card">
+                    <form action="{{ route('kendaraan-store-edit', $kendaraan->id) }}" method="POST" class="card">
                         @csrf
+                        @method('PUT')
                         <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                         <div class="card-body">
                             <div class="mb-3">
@@ -16,14 +17,17 @@
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
                                 <select class="form-select" name="merk_kendaraan">
-                                    <option value="toyota">Toyota</option>
-                                    <option value="wuling">Wuling</option>
-                                    <option value="mitsubishi">Mitsubishi</option>
-                                    <option value="hyundai">Hyundai</option>
-                                    <option value="kia">Kia</option>
-                                    <option value="honda">Honda</option>
-                                    <option value="yamaha">Yamaha</option>
-                                    <option value="byd">BYD</option>
+                                    <option value="Toyota" {{$kendaraan->merk_kendaraan == 'Toyota' ? 'selected' : ''}}>Toyota</option>
+                                    <option value="Wuling" {{$kendaraan->merk_kendaraan == 'Wuling' ? 'selected' : ''}}>Wuling</option>
+                                    <option value="Mitsubishi" {{$kendaraan->merk_kendaraan == 'Mitsubishi' ? 'selected' : ''}}>Mitsubishi</option>
+                                    <option value="DSFK" {{$kendaraan->merk_kendaraan == 'DSFK' ? 'selected' : ''}}>DSFK</option>
+                                    <option value="Hyundai" {{$kendaraan->merk_kendaraan == 'Hyundai' ? 'selected' : ''}}>Hyundai</option>
+                                    <option value="Kia" {{$kendaraan->merk_kendaraan == 'Kia' ? 'selected' : ''}}>Kia</option>
+                                    <option value="Suzuki" {{$kendaraan->merk_kendaraan == 'Suzuki' ? 'selected' : ''}}>Suzuki</option>
+                                    <option value="BYD" {{$kendaraan->merk_kendaraan == 'BYD' ? 'selected' : ''}}>BYD</option>
+                                    <option value="Honda" {{$kendaraan->merk_kendaraan == 'Honda' ? 'selected' : ''}}>Honda</option>
+                                    <option value="Yamaha" {{$kendaraan->merk_kendaraan == 'Yamaha' ? 'selected' : ''}}>Yamaha</option>
+                                    <option value="ISUZU" {{$kendaraan->merk_kendaraan == 'ISUZU' ? 'selected' : ''}}>ISUZU</option>
                                 </select>
                             </div>
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"
@@ -31,35 +35,27 @@
                             <div class="mb-3 w-100 w-xl-50">
                                 <label class="form-label">Jenis Kendaraan</label>
                                 <select class="form-select" name="jenis_kendaraan">
-                                    <option value="mobilpenumpang">MOBIL PENUMPANG</option>
-                                    <option value="mobilbarang">MOBIL BARANG</option>
-                                    <option value="sepedamotor">SEPEDA MOTOR</option>
-                                    <option value="bus">BUS</option>
-                                    <option value="kendaraankhusus">KENDARAAN KHUSUS</option>
+                                    <option value="Mobil Penumpang" {{ $kendaraan->jenis_kendaraan == 'Mobil Penumpang' ? 'selected' : ''}}>MOBIL PENUMPANG</option>
+                                    <option value="MOBIL BARANG" {{ $kendaraan->jenis_kendaraan == 'MOBIL BARANG' ? 'selected' : ''}}>MOBIL BARANG</option>
+                                    <option value="SEPEDA MOTOR" {{ $kendaraan->jenis_kendaraan == 'SEPEDA MOTOR' ? 'selected' : ''}}>SEPEDA MOTOR</option>
+                                    <option value="BUS" {{ $kendaraan->jenis_kendaraan == 'BUS' ? 'selected' : ''}}>BUS</option>
+                                    <option value="KENDARAAN KHUSUS" {{ $kendaraan->jenis_kendaraan == 'KENDARAAN KHUSUS' ? 'selected' : ''}}>KENDARAAN KHUSUS</option>
                                 </select>
                             </div>
 
                             <!-- Dropdown with Search Feature using Alpine.js -->
-                            <div class="mb-3 w-100 w-lg-50" x-data="{ open: false, search: '', selected: {{ $kendaraan->model_kendaraan_id }} }">
+                            <div class="mb-3 w-100 w-lg-50" x-data="{ search: '' }">
                                 <label class="form-label">Model Kendaraan</label>
-                                <div class="relative">
-                                    <button type="button" @click="open = !open" class="form-select w-100">
-                                        <span x-text="selectedName"></span>
-                                    </button>
-                                    <div x-show="open" @click.outside="open = false"
-                                        class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
-                                        <input type="text" x-model="search"
-                                            class="w-full px-3 py-2 border-b border-gray-300 rounded-t-lg focus:outline-none"
-                                            placeholder="Cari model...">
-                                        <ul class="max-h-60 overflow-y-auto">
-                                            <template x-for="model in filteredModels" :key="model.id">
-                                                <li @click="selectModel(model)"
-                                                    class="px-3 py-2 cursor-pointer hover:bg-gray-100"
-                                                    x-text="model.name"></li>
-                                            </template>
-                                        </ul>
-                                    </div>
-                                </div>
+                                <input type="text" x-model="search" class="form-control mb-2"
+                                    placeholder="Cari model...">
+                                <select class="form-select" name="model_kendaraan_id">
+                                    <template
+                                        x-for="model in {{ $models }}.filter(model => model.name.toLowerCase().includes(search.toLowerCase()))"
+                                        :key="model.id">
+                                        <option :value="model.id" x-text="model.name"
+                                            :selected="model.id == {{ $kendaraan->model_kendaraan_id }}"></option>
+                                    </template>
+                                </select>
                             </div>
 
 

@@ -30,6 +30,6 @@ class Kendaraan extends Model
 
     public function modelKendaraan()
     {
-        return $this->belongsTo(ModelKendaraan::class,  'id');
+        return $this->belongsTo(ModelKendaraan::class, 'model_kendaraan_id');
     }
 }
