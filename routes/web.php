@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider and all of them will
 | be assigned to the "web" middleware group. Make something great!
 |
-*/
+ */
 
 // Authentication
 Route::get('/', function () {
@@ -26,8 +26,11 @@ Route::get('/dashboard', function () {
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
-
 Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
+Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
+// Tambah Models Baru
+Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'storeNewModels'])->name('models-kendaraan-store-add');
+Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
 
 // STNK
 Route::get('/data-stnk', function () {

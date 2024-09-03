@@ -9,6 +9,8 @@ class Kendaraan extends Model
 {
     use HasFactory;
 
+    protected $table = 'kendaraans';
+
     protected $guarded = [
         'id',
     ];
@@ -25,4 +27,9 @@ class Kendaraan extends Model
         'nomor_mesin',
         'bahan_bakar',
     ];
+
+    public function modelKendaraan()
+    {
+        return $this->belongsTo(ModelKendaraan::class, 'model_kendaraans', 'id');
+    }
 }

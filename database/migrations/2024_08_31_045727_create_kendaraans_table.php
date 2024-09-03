@@ -16,10 +16,9 @@ return new class extends Migration
             $table->string('nomor_polisi')->unique();
             $table->string('merk_kendaraan');
             $table->string('tipe');
-            $table->unsignedBigInteger('jenis_kendaraan_id');
-            $table->unsignedBigInteger('model_id');
-            $table->foreign('jenis_kendaraan_id')->references('id')->on('jenis_kendaraans')->onDelete('cascade');
-            $table->foreign('model_id')->references('id')->on('models')->onDelete('cascade');
+            $table->string('jenis_kendaraan');
+            $table->unsignedBigInteger('model_kendaraan_id');
+            $table->foreign('model_kendaraan_id')->references('id')->on('model_kendaraans')->onDelete('cascade');
             $table->year('tahun');
             $table->string('warna');
             $table->string('nomor_rangka');
