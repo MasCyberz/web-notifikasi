@@ -26,11 +26,15 @@ Route::get('/dashboard', function () {
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
+    // Tambah Kendaraan
 Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
 Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
+    // Edit Kendaraan
+Route::get('/data-kendaraan/edit/{id}', [KendaraanController::class, 'edit'])->name('kendaraan-edit');
 // Tambah Models Baru
 Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'storeNewModels'])->name('models-kendaraan-store-add');
 Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
+
 
 // STNK
 Route::get('/data-stnk', function () {

@@ -11,7 +11,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Plat Nomor</label>
                                 <input type="text" name="nomor_polisi" class="form-control" placeholder="B 1234 XYZ"
-                                    value="{{ old('nomor_polisi') }}">
+                                    value="{{ old('nomor_polisi', $kendaraan->nomor_polisi) }}">
                             </div>
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
@@ -27,7 +27,7 @@
                                 </select>
                             </div>
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"
-                                class="" value="{{ old('tipe') }}" />
+                                class="" value="{{ old('tipe', $kendaraan->tipe) }}" />
                             <div class="mb-3 w-100 w-xl-50">
                                 <label class="form-label">Jenis Kendaraan</label>
                                 <select class="form-select" name="jenis_kendaraan">
@@ -40,17 +40,26 @@
                             </div>
 
                             <!-- Dropdown with Search Feature using Alpine.js -->
-                            <div class="mb-3 w-100 w-lg-50" x-data="{ search: '' }">
+                            <div class="mb-3 w-100 w-lg-50" x-data="{ open: false, search: '', selected: {{ $kendaraan->model_kendaraan_id }} }">
                                 <label class="form-label">Model Kendaraan</label>
-                                <input type="text" x-model="search" class="form-control mb-2"
-                                    placeholder="Cari model...">
-                                <select class="form-select" name="model_kendaraan_id">
-                                    <template
-                                        x-for="model in {{ $models }}.filter(model => model.name.toLowerCase().includes(search.toLowerCase()))"
-                                        :key="model.id">
-                                        <option :value="model.id" x-text="model.name"></option>
-                                    </template>
-                                </select>
+                                <div class="relative">
+                                    <button type="button" @click="open = !open" class="form-select w-100">
+                                        <span x-text="selectedName"></span>
+                                    </button>
+                                    <div x-show="open" @click.outside="open = false"
+                                        class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+                                        <input type="text" x-model="search"
+                                            class="w-full px-3 py-2 border-b border-gray-300 rounded-t-lg focus:outline-none"
+                                            placeholder="Cari model...">
+                                        <ul class="max-h-60 overflow-y-auto">
+                                            <template x-for="model in filteredModels" :key="model.id">
+                                                <li @click="selectModel(model)"
+                                                    class="px-3 py-2 cursor-pointer hover:bg-gray-100"
+                                                    x-text="model.name"></li>
+                                            </template>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -58,16 +67,16 @@
                             <div class="mb-3">
                                 <label for="tahun" class="form-label">Tahun</label>
                                 <input type="number" name="tahun" id="tahun" class="form-control" min="1901"
-                                    max="3000" placeholder="2024" value="{{ old('tahun') }}">
+                                    max="3000" placeholder="2024" value="{{ old('tahun', $kendaraan->tahun) }}">
                             </div>
                             <x-Input label="Warna" name="warna" type="text" class=""
-                                value="{{ old('warna') }}" />
+                                value="{{ old('warna', $kendaraan->warna) }}" />
                             <x-Input label="Nomor Rangka" name="nomor_rangka" type="text" class=""
-                                value="{{ old('nomor_rangka') }}" />
+                                value="{{ old('nomor_rangka', $kendaraan->nomor_rangka) }}" />
                             <x-Input label="Nomor Mesin" name="nomor_mesin" type="text" class=""
-                                value="{{ old('nomor_mesin') }}" />
+                                value="{{ old('nomor_mesin', $kendaraan->nomor_mesin) }}" />
                             <x-Input label="Bahan Bakar" name="bahan_bakar" type="text" class=""
-                                value="{{ old('bahan_bakar') }}" />
+                                value="{{ old('bahan_bakar', $kendaraan->bahan_bakar) }}" />
                         </div>
                         <x-cardFooter route="{{ route('kendaraan-index') }}" />
                     </form>
@@ -76,6 +85,31 @@
         </div>
     </div>
     @push('scripts')
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('dropdownSearch', () => ({
+                    open: false,
+                    search: '',
+                    selected: @json($kendaraan->model_kendaraan_id),
+
+                    get filteredModels() {
+                        return @json($models).filter(model => model.name.toLowerCase()
+                            .includes(this.search.toLowerCase()));
+                    },
+
+                    get selectedName() {
+                        const model = @json($models).find(model => model.id === this
+                            .selected);
+                        return model ? model.name : 'Select Model';
+                    },
+
+                    selectModel(model) {
+                        this.selected = model.id;
+                        this.open = false;
+                    }
+                }));
+            });
+        </script>
     @endpush
 
 </x-app-layout>
