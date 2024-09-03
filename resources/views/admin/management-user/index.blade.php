@@ -6,7 +6,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
+                            <a href="{{ route('management-user-tambah') }}" class="btn btn-primary"> <i
                                     class="ti ti-plus fs-2"></i>Tambah Data
                             </a>
                         </div>
@@ -82,7 +82,7 @@
                                             87956421
                                         </td>
                                         <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
+                                            <a href="{{ route('management-user-edit') }}" class="btn btn-primary btn-icon"><i
                                                     class="ti ti-edit"></i></a>
                                             <a href="#" class="btn btn-danger btn-icon"><i
                                                     class="ti ti-trash"></i></a>

@@ -55,3 +55,11 @@ Route::get('/data-kir/tambah', function () {
 Route::get('/management-user', function () {
     return view('admin.management-user.index');
 })->name('management-user-index');
+
+Route::get('/management-user/tambah', function () {
+    return view('admin.management-user.add');
+})->name('management-user-tambah');
+
+Route::get('/management-user/edit', function (){
+    return view('admin.management-user.edit');
+})->name('management-user-edit');
