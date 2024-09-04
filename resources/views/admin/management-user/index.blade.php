@@ -1,5 +1,34 @@
 <x-AppLayout>
+
+    
+    @push('styles')
+        <style>
+            /* Custom styles for full-width alert on mobile */
+            @media (max-width: 768px) {
+                .alert {
+                    width: 100%;
+                    right: 0;
+                    margin: 50px 0;
+                    position: absolute;
+                    top: 0;
+                }
+            }
+        </style>
+    @endpush
+
+
     <x-PageHeader header="Management User" classcontainer="" />
+
+    {{-- Alert Success --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Selamat!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    
+    
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">

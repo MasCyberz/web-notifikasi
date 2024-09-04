@@ -58,50 +58,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><span class="text-secondary">1</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">Design
-                                                Works</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-us me-2"></span>
-                                            Carlson Limited
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            15 Dec 2017
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-secondary">2</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">UX
-                                                Wireframes</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-gb me-2"></span>
-                                            Adobe
-                                        </td>
-                                        <td>
-                                            87956421
-                                        </td>
-                                        <td>
-                                            12 Apr 2017
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
+                                    @foreach ($stnks as $stnk)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}</td>
+                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
+                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</td>
+                                            <td>{{ $stnk->tanggal_perpanjangan }}</td>
+                                            <td class="text-end">
+                                                <a href="#" class="btn btn-primary btn-icon"><i
+                                                        class="ti ti-edit"></i></a>
+                                                <a href="#" class="btn btn-danger btn-icon"><i
+                                                        class="ti ti-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,14 +41,8 @@ Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'store
 Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
 
 // STNK
-Route::get('/data-stnk', function () {
-    return view('stnk.index');
-})->name('stnk-index');
-
-Route::get('/data-stnk/tambah', function () {
-    return view('stnk.add');
-})->name('stnk-tambah');
-
+Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
+Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
 // KIR
 Route::get('/data-kir', function () {
     return view('kir.index');
