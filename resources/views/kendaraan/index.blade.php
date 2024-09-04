@@ -1,10 +1,42 @@
 <x-AppLayout>
-    <x-PageHeader header="Data Kendaraan" classcontainer=""/>
+    @push('styles')
+        <style>
+            /* Custom styles for full-width alert on mobile */
+            @media (max-width: 768px) {
+                .alert {
+                    width: 100%;
+                    right: 0;
+                    margin: 50px 0;
+                    position: absolute;
+                    top: 0;
+                }
+            }
+        </style>
+    @endpush
+    <x-PageHeader header="Data Kendaraan" classcontainer="" />
+    <!-- Alert Success -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Selamat!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+
     <div class="page-body">
         <div class="container-xl">
+            {{-- @if (session('success'))
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <h4 class="alert-title fs-2">Congrats, </h4>
+                    <div class="text-secondary">{{ session('success') }}</div>
+                    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+                </div>
+            @endif --}}
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
+                        {{-- {{$kendaraans->model_kendaraan_id}} --}}
                         <div class="card-header d-flex flex-row-reverse">
                             <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
                                     class="ti ti-plus fs-2"></i>Tambah Data
@@ -63,43 +95,46 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><span class="text-secondary">1</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">Design
-                                                Works</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-us me-2"></span>
-                                            Carlson Limited
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            lorem100
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
+                                    @foreach ($kendaraans as $kendaraan)
+                                        <tr>
+                                            <td><span class="text-secondary">{{ $loop->iteration }}</span></td>
+                                            <td>
+                                                <span class="flag flag-xs flag-country-us me-2"></span>
+                                                {{ $kendaraan->nomor_polisi }}
+                                            </td>
+                                            <td>
+                                                <span class="flag flag-xs flag-country-us me-2"></span>
+                                                {{ $kendaraan->merk_kendaraan }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->tipe }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->jenis_kendaraan }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->modelKendaraan->name }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->tahun }}
+                                            </td>
+                                            <td class="text-capitalize">
+                                                {{ $kendaraan->warna }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->nomor_mesin }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->bahan_bakar }}
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{{ route('kendaraan-edit', $kendaraan->id) }}"
+                                                    class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
+                                                <a href="{{ route('kendaraan-store-delete', $kendaraan->id) }}"
+                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -145,4 +180,16 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            setTimeout(function() {
+                let alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('hide');
+                }
+            }, 5000); // Menghilang setelah 5 detik
+        </script>
+    @endpush
 </x-AppLayout>

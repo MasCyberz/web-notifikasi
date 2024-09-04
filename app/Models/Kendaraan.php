@@ -20,7 +20,7 @@ class Kendaraan extends Model
         'merk_kendaraan',
         'tipe',
         'jenis_kendaraan',
-        'model',
+        'model_kendaraan_id',
         'tahun',
         'warna',
         'nomor_rangka',
@@ -30,6 +30,6 @@ class Kendaraan extends Model
 
     public function modelKendaraan()
     {
-        return $this->belongsTo(ModelKendaraan::class, 'model_kendaraans', 'id');
+        return $this->belongsTo(ModelKendaraan::class, 'model_kendaraan_id');
     }
 }

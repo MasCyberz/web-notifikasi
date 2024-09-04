@@ -10,7 +10,8 @@ class KendaraanController extends Controller
 {
     public function index()
     {
-        return view('kendaraan.index');
+        $kendaraans = Kendaraan::with('modelKendaraan')->get();
+        return view('kendaraan.index', compact('kendaraans'));
     }
 
     public function create()
@@ -41,7 +42,6 @@ class KendaraanController extends Controller
             'bahan_bakar' => $request->bahan_bakar,
         ]);
 
-
         return redirect()->route('kendaraan-index')->with('success', 'Kendaraan berhasil ditambahkan.');
     }
 
@@ -70,5 +70,29 @@ class KendaraanController extends Controller
         }
 
         return response()->json(['success' => false], 404);
+    }
+
+    public function edit($id)
+    {
+        $kendaraan = Kendaraan::findOrFail($id);
+        $models = ModelKendaraan::all(); // Mengambil semua model kendaraan dari database
+
+        return view('kendaraan.edit', compact('kendaraan', 'models'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $kendaraan = Kendaraan::findOrFail($id);
+        $kendaraan->update($request->all());
+
+        return redirect()->route('kendaraan-index')->with('success', 'Kendaraan berhasil diperbarui.');
+    }
+
+    public function delete($id)
+    {
+        $kendaraan = Kendaraan::findOrFail($id);
+        $kendaraan->delete();
+
+        return redirect()->route('pelatihan')->with('success', 'Kendaraan berhasil dihapus');
     }
 }
