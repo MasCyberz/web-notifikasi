@@ -3,11 +3,13 @@
     <div class="page-body">
         <div class="col-12 col-lg-8 container-xl">
             {{-- Form Create STNK --}}
-            <form action="" class="card">
+            <form action="{{ route('management-user-update', $user->id) }}" method="POST" class="card">
+                @csrf
+                @method('PUT')
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
-                    <x-Input label="Name" name="name" type="text" placeholder="Isi Nama Anda Disini" class="" />
-                    <x-Input label="Email" name="email" type="email" placeholder="Isi Email Anda Disini" class="" />
+                    <x-Input label="Name" name="name" type="text" value="{{ $user->name }}" class="" />
+                    <x-Input label="Email" name="email" type="email" value="{{ $user->email }}" class="" />
         
                     <x-Input label="Password" name="password" type="password" placeholder="Isi Password Anda Disini" class="" />
                 </div>

@@ -11,23 +11,24 @@
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <div class="d-flex">
-                                <div class="text-secondary">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8"
-                                            size="3" aria-label="Invoices count" fdprocessedid="7ljtz">
+                            <form action="{{ route('management-user-index') }}" method="GET"> <!-- Tambahkan action dan method -->
+                                <div class="d-flex">
+                                    <div class="text-secondary">
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <input type="text" name="entries" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                        </div>
+                                        entries
                                     </div>
-                                    entries
-                                </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm"
-                                            aria-label="Search invoice" fdprocessedid="f6xn2k">
+                                    <div class="ms-auto text-secondary">
+                                        Search:
+                                        <div class="ms-2 d-inline-block">
+                                            <!-- Tambahkan name="search" untuk mengirimkan query pencarian -->
+                                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ request('search') }}" aria-label="Search invoice">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
@@ -43,51 +44,26 @@
                                                 <path d="M6 15l6 -6l6 6"></path>
                                             </svg>
                                         </th>
+                                        <th>Name</th>
                                         <th>Email</th>
-                                        <th>Username</th>
-                                        <th>Role</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><span class="text-secondary">1</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">Design
-                                                Works</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-us me-2"></span>
-                                            Carlson Limited
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-secondary">2</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">UX
-                                                Wireframes</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-gb me-2"></span>
-                                            Adobe
-                                        </td>
-                                        <td>
-                                            87956421
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="{{ route('management-user-edit') }}" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
+                                    @php $no = 1; @endphp
+                                    @foreach ($users as $user)
+                                        <tr>
+                                            <td>{{ $no++ }}</td>
+                                            <td>{{ $user->name }}</td>
+                                            <td>{{ $user->email }}</td>
+                                            <td class="text-end">
+                                                <a href="{{ route('management-user-edit', ['id' => $user->id]) }}"
+                                                    class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
+                                                <a href="{{ route('management-user-delete', ['id' => $user->id]) }}"
+                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -118,9 +94,8 @@
                                     <a class="page-link" href="#">
                                         next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" class="icon">
                                             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                             <path d="M9 6l6 6l-6 6"></path>
                                         </svg>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,14 +53,9 @@ Route::get('/data-kir/tambah', function () {
 
 // ADMIN
 // Management User
-Route::get('/management-user', function () {
-    return view('admin.management-user.index');
-})->name('management-user-index');
-
-Route::get('/management-user/tambah', function () {
-    return view('admin.management-user.add');
-})->name('management-user-tambah');
-
-Route::get('/management-user/edit', function (){
-    return view('admin.management-user.edit');
-})->name('management-user-edit');
+Route::get('/management-user', [UserController::class, 'index'])->name('management-user-index');
+Route::get('management-user/tambah', [UserController::class, 'createUser'])->name('management-user-tambah');
+Route::post('management-user/store', [UserController::class, 'storeUser'])->name('management-user-store');
+Route::get('management-user/edit/{id}', [UserController::class, 'editUser'])->name('management-user-edit');
+Route::get('management-user/delete/{id}', [UserController::class, 'deleteUser'])->name('management-user-delete');
+Route::put('management-user/update/{id}', [UserController::class, 'updateUser'])->name('management-user-update');

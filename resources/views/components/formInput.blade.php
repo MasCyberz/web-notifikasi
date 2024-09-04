@@ -1,9 +1,11 @@
 <div class="mb-3">
-    <label class="form-label {{ $required ? 'required' : '' }}">{{$label}}</label>
+    <label class="form-label {{ $required ? 'required' : '' }}">{{ $label }}</label>
     <div>
-        <input type="{{$type}}" name="{{$name}}" class="form-control {{ $class ?? '' }}" aria-describedby="emailHelp" placeholder="{{$placeholder}}" value="{{$value}}">
+        <input type="{{ $type }}" name="{{ $name }}" class="form-control {{ $class ?? '' }}"
+            aria-describedby="emailHelp" placeholder="{{ $placeholder }}" value="{{ $value }}"
+            {{ $required ? 'required' : '' }}>
         @if ($hint)
-        <small class="form-hint">{{$hint}}</small>
+            <small class="form-hint">{{ $hint }}</small>
         @endif
     </div>
 </div>
