@@ -43,6 +43,10 @@ Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'delete
 // STNK
 Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
 Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
+Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-store');
+Route::get('stnk/edit/{id}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
+Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
+Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
 // KIR
 Route::get('/data-kir', function () {
     return view('kir.index');
