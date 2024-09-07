@@ -48,12 +48,19 @@ Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-sto
 Route::get('stnk/edit/{id}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
 Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
 Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
+
+
 // KIR
 Route::get('/data-kir', [KIRController::class, 'index'])->name('kir-index');
+// Create-KIR
+Route::get('/data-kir/tambah', [KIRController::class, 'create'])->name('kir-tambah');
+Route::post('/data-kir/store', [KIRController::class, 'store'])->name('kir-tambah-store');
+// Edit KIR
+Route::get('/data-kir/edit/{id}', [KIRController::class, 'edit'])->name('kir-edit');
+Route::put('/data-kir/edit-store/{id}', [KIRController::class, 'update'])->name('kir-edit-store');
+// Delete KIR
+Route::get('/data-kir/delete/{id}', [KIRController::class, 'delete'])->name('kir-delete-store');
 
-Route::get('/data-kir/tambah', function () {
-    return view('kir.add');
-})->name('kir-tambah');
 
 // ADMIN
 // Management User

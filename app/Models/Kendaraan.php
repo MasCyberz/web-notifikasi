@@ -32,4 +32,9 @@ class Kendaraan extends Model
     {
         return $this->belongsTo(ModelKendaraan::class, 'model_kendaraan_id');
     }
+
+    public function kir()
+    {
+        return $this->hasOne(KIR::class,);
+    }
 }

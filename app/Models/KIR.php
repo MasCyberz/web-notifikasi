@@ -17,5 +17,10 @@ class KIR extends Model
         'tanggal_expired_kir'
     ];
 
+    public function kendaraan()
+    {
+        return $this->belongsTo(Kendaraan::class, 'kendaraan_id', 'id');
+    }
+
     use HasFactory;
 }

@@ -15,7 +15,7 @@
                             </div> --}}
                             <div class="mb-3">
                                 <label class="form-label">Plat Nomor</label>
-                                <input type="text" name="nomor_polisi" class="form-control" data-mask="** 0000 ***"
+                                <input type="text" name="nomor_polisi" class="form-control" data-mask="B 0000 ***"
                                     data-mask-visible="true" placeholder="B 1234 XYZ" autocomplete="off">
                             </div>
                             <div class="mb-3 w-100 w-lg-50 ">
