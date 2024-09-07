@@ -18,7 +18,8 @@
                             </select>
                         </div>
                     </div>
-                    <x-Input label="Tgl. Perpanjangan KIR" name="tanggal_perpanjangan" type="date" class="w-25"/>
+                    <x-Input label="Nomor Uji Kendaraan" name="nomor_uji_kendaraan" type="text" class="w-100 w-xl-50"/>
+                    <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date" class="w-25"/>
                 </div>
                 <x-cardFooter route="{{ route('stnk-index') }}"/>
             </form>

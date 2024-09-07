@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,9 +45,7 @@ Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'delete
 Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
 Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
 // KIR
-Route::get('/data-kir', function () {
-    return view('kir.index');
-})->name('kir-index');
+Route::get('/data-kir', [KIRController::class, 'index'])->name('kir-index');
 
 Route::get('/data-kir/tambah', function () {
     return view('kir.add');
