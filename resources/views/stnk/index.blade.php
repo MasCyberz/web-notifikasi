@@ -64,11 +64,12 @@
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}</td>
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</td>
-                                            <td>{{ $stnk->tanggal_perpanjangan }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->translatedFormat('d F Y') }}</td>
+
                                             <td class="text-end">
-                                                <a href="#" class="btn btn-primary btn-icon"><i
+                                                <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}" class="btn btn-primary btn-icon"><i
                                                         class="ti ti-edit"></i></a>
-                                                <a href="#" class="btn btn-danger btn-icon"><i
+                                                <a href="{{ route('stnk-delete', ['id' => $stnk->id]) }}" class="btn btn-danger btn-icon"><i
                                                         class="ti ti-trash"></i></a>
                                             </td>
                                         </tr>

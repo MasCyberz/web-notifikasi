@@ -12,10 +12,10 @@
                     <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
                         <div>
-                            <select class="form-select w-25" name="nomor_polisi">
-                                @foreach ($kendaraanTanpaSTNK as $item)
-                                    <option value="{{ $item->id }}">{{ $item->nomor_polisi }}</option>
-                                @endforeach
+                            <select class="form-select w-25" disabled name="nomor_polisi">
+                                {{-- @foreach ($kendaraanTanpaSTNK as $item) --}}
+                                    <option value="{{ $kendaraanTerkait->id }}">{{ $kendaraanTerkait->nomor_polisi }}</option>
+                                {{-- @endforeach --}}
                             </select>
                         </div>
                     </div>

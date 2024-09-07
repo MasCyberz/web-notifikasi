@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('id_kendaraan')->constrained('kendaraans')->onDelete('cascade');
             $table->string('biaya');
             $table->date('tanggal_perpanjangan');
-            $table->date('updated_at');
             $table->string('alasan')->nullable();
+            $table->timestamps();
         });
     }
 
