@@ -50,58 +50,38 @@
                                                 <path d="M6 15l6 -6l6 6"></path>
                                             </svg>
                                         </th>
-                                        <th>Nama Kendaraan</th>
-                                        <th>Tipe Kendaraan</th>
                                         <th>Plat Nomor</th>
+                                        <th>Tipe Kendaraan</th>
+                                        <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td><span class="text-secondary">1</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">Design
-                                                Works</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-us me-2"></span>
-                                            Carlson Limited
-                                        </td>
-                                        <td>
-                                            87956621
-                                        </td>
-                                        <td>
-                                            15 Dec 2017
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><span class="text-secondary">2</span></td>
-                                        <td><a href="invoice.html" class="text-reset" tabindex="-1">UX
-                                                Wireframes</a>
-                                        </td>
-                                        <td>
-                                            <span class="flag flag-xs flag-country-gb me-2"></span>
-                                            Adobe
-                                        </td>
-                                        <td>
-                                            87956421
-                                        </td>
-                                        <td>
-                                            12 Apr 2017
-                                        </td>
-                                        <td class="text-end">
-                                            <a href="#" class="btn btn-primary btn-icon"><i
-                                                    class="ti ti-edit"></i></a>
-                                            <a href="#" class="btn btn-danger btn-icon"><i
-                                                    class="ti ti-trash"></i></a>
-                                        </td>
-                                    </tr>
+                                    @foreach ($kir as $item)
+                                        <tr>
+                                            <td><span class="text-secondary">{{ $loop->iteration }}</span></td>
+                                            <td>
+                                                <span class="flag flag-xs flag-country-us me-2"></span>
+                                                {{ $item->kendaraan->nomor_polisi }}
+                                            </td>
+                                            <td>
+                                                {{ $item->kendaraan->tipe }}
+                                            </td>
+                                            <td>
+                                                {{ $item->nomor_uji_kendaraan }}
+                                            </td>
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{{ route('kir-edit', $item->id) }}" class="btn btn-primary btn-icon"><i
+                                                        class="ti ti-edit"></i></a>
+                                                <a href="{{ route('kir-delete-store', $item->id) }}" class="btn btn-danger btn-icon"><i
+                                                        class="ti ti-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
