@@ -54,6 +54,7 @@
                                         <th>Tipe Kendaraan</th>
                                         <th>Plat Nomor</th>
                                         <th>Tanggal Perpanjangan</th>
+                                        <th>Biaya Perpanjangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -65,7 +66,7 @@
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</td>
                                             <td>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->translatedFormat('d F Y') }}</td>
-
+                                            <td>Rp.{{ $stnk->biaya }}</td>
                                             <td class="text-end">
                                                 <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}" class="btn btn-primary btn-icon"><i
                                                         class="ti ti-edit"></i></a>

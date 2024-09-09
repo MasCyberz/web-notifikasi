@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\KendaraanController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KendaraanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,7 @@ Route::get('/', function () {
 })->name('login');
 
 // Home / Dashboard
-Route::get('/dashboard', function () {
-    return view('home');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
