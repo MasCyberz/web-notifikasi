@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KendaraanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +26,12 @@ Route::get('/', function () {
 })->name('login');
 
 // Home / Dashboard
-Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya'])->name('pemberitahuan-lainnya');
+
+
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
