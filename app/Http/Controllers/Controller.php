@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\KIR;
 use App\Models\STNK;
-use Carbon\Carbon;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Models\User;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function dashboard()
+    public function index()
     {
-        return view('home');
+        $dataUser = User::count();
+        return view('home', ['dataUser' => $dataUser]);
     }
 
     public function pemberitahuanlainnya()

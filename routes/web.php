@@ -28,7 +28,7 @@ Route::get('/', function () {
 // Home / Dashboard
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [Controller::class, 'index'])->name('dashboard');
 Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya'])->name('pemberitahuan-lainnya');
 
 
