@@ -7,7 +7,6 @@ use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KendaraanController;
 
 /*
 |--------------------------------------------------------------------------
