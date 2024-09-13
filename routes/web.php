@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KendaraanController;
+use App\Http\Controllers\NotifikasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +26,13 @@ Route::get('/', function () {
 
 // Home / Dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+// Notifikasi
+Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+Route::put('/notifikasi/update/{id}', [NotifikasiController::class, 'updateStatus'])->name('notifikasi.updateStatus');
+Route::get('/generate-notifications', [NotifikasiController::class, 'generateNotifications'])->name('notifikasi.generate');
+
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
