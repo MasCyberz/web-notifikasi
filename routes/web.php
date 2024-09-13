@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
@@ -23,9 +24,8 @@ Route::get('/', function () {
 })->name('login');
 
 // Home / Dashboard
-Route::get('/dashboard', function () {
-    return view('home');
-})->name('dashboard');
+Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard');
+Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya'])->name('pemberitahuan-lainnya');
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
