@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kendaraan;
 use App\Models\KIR;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class KIRController extends Controller
 {
@@ -25,8 +26,14 @@ class KIRController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'kendaraan_id' => 'required',
-            'nomor_uji_kendaraan' => 'required',
+            'kendaraan_id' => 'required | exists:kendaraans,id',
+            'nomor_uji_kendaraan' => [
+                'required',
+                Rule::unique('kirs')->where(function ($query) use ($request) {
+                    return $query->where('bulan_uji', date('m', strtotime($request->tanggal_expired_kir)))
+                    ->where('tahun_uji', date('Y', strtotime($request->tanggal_expired_kir)));
+                })
+            ],
             'tanggal_expired_kir' => 'required',
         ]);
 

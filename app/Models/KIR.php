@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class KIR extends Model
 {
+    use HasFactory;
+    
     protected $table = 'kirs';
 
     protected $guarded = ['id'];
@@ -22,5 +24,4 @@ class KIR extends Model
         return $this->belongsTo(Kendaraan::class, 'kendaraan_id', 'id');
     }
 
-    use HasFactory;
 }

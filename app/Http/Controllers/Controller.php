@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\KIR;
 use App\Models\STNK;
 use App\Models\User;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
@@ -17,7 +17,54 @@ class Controller extends BaseController
     public function index()
     {
         $dataUser = User::count();
-        return view('home', ['dataUser' => $dataUser]);
+
+        $today = Carbon::today();
+        $oneAndHalfMonth = $today->copy()->addMonths(1)->addDays(15);
+        $tenDays = $today->copy()->addDays(10);
+
+        // Query
+
+        $stnkPR = STNK::whereBetween('tanggal_perpanjangan', [$today->copy()->addDays(11), $oneAndHalfMonth])
+            ->whereDate('tanggal_perpanjangan', '!=', $today)
+            ->with('relasiSTNKtoKendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+        $kirPR = KIR::whereBetween('tanggal_expired_kir', [$today->copy()->addDays(11), $oneAndHalfMonth])
+            ->whereDate('tanggal_expired_kir', '!=', $today)
+            ->with('kendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+        // Query untuk mendapatkan data PR STNK dalam 10 hari, kecuali hari ini
+        $stnkPRTenDays = STNK::whereBetween('tanggal_perpanjangan', [$today, $tenDays])
+            ->whereDate('tanggal_perpanjangan', '!=', $today)
+            ->with('RelasiSTNKtoKendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+// Query untuk mendapatkan data PR KIR dalam 10 hari, kecuali hari ini
+        $kirPRTenDays = KIR::whereBetween('tanggal_expired_kir', [$today, $tenDays])
+            ->whereDate('tanggal_expired_kir', '!=', $today)
+            ->with('kendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+        // Query untuk mendapatkan data PR STNK yang jatuh tempo hari ini
+        $stnkPRToday = STNK::whereDate('tanggal_perpanjangan', $today)
+            ->with('relasiSTNKtoKendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+// Query untuk mendapatkan data PR KIR yang jatuh tempo hari ini
+        $kirPRToday = KIR::whereDate('tanggal_expired_kir', $today)
+            ->with('kendaraan') // Mengambil relasi kendaraan
+            ->get();
+
+        return view('home', [
+            'dataUser' => $dataUser,
+            'stnkPR' => $stnkPR,
+            'kirPR' => $kirPR,
+            'stnkPRTenDays' => $stnkPRTenDays,
+            'kirPRTenDays' => $kirPRTenDays,
+            'stnkPRToday' => $stnkPRToday,
+            'kirPRToday' => $kirPRToday
+        ]);
     }
 
     public function pemberitahuanlainnya()
