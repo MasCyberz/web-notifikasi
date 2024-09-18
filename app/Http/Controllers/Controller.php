@@ -18,6 +18,22 @@ class Controller extends BaseController
     {
         $dataUser = User::count();
 
+        // Total STNK
+        $totalStnk = STNK::whereYear('tanggal_perpanjangan', Carbon::now()->year)->count();
+
+        $bulanIni = Carbon::now()->format('m');
+        $totalStnkBulanIni = Stnk::whereYear('tanggal_perpanjangan', Carbon::now()->year)
+            ->whereMonth('tanggal_perpanjangan', $bulanIni)
+            ->count();
+
+        // Total KIR
+        $totalKIR = KIR::whereYear('tanggal_expired_kir', Carbon::now()->year)->count();
+
+        $totalKIRBulanIni = KIR::whereYear('tanggal_expired_kir', Carbon::now()->year)
+            ->whereMonth('tanggal_expired_kir', $bulanIni)
+            ->count();
+
+        // Untuk Menghitung H-45, H-10, Hari H
         $today = Carbon::today();
         $oneAndHalfMonth = $today->copy()->addMonths(1)->addDays(15);
         $tenDays = $today->copy()->addDays(10);
@@ -35,35 +51,39 @@ class Controller extends BaseController
             ->get();
 
         // Query untuk mendapatkan data PR STNK dalam 10 hari, kecuali hari ini
-        $stnkPRTenDays = STNK::whereBetween('tanggal_perpanjangan', [$today, $tenDays])
+        $stnkTenDays = STNK::whereBetween('tanggal_perpanjangan', [$today, $tenDays])
             ->whereDate('tanggal_perpanjangan', '!=', $today)
             ->with('RelasiSTNKtoKendaraan') // Mengambil relasi kendaraan
             ->get();
 
 // Query untuk mendapatkan data PR KIR dalam 10 hari, kecuali hari ini
-        $kirPRTenDays = KIR::whereBetween('tanggal_expired_kir', [$today, $tenDays])
+        $kirTenDays = KIR::whereBetween('tanggal_expired_kir', [$today, $tenDays])
             ->whereDate('tanggal_expired_kir', '!=', $today)
             ->with('kendaraan') // Mengambil relasi kendaraan
             ->get();
 
         // Query untuk mendapatkan data PR STNK yang jatuh tempo hari ini
-        $stnkPRToday = STNK::whereDate('tanggal_perpanjangan', $today)
+        $stnkToday = STNK::whereDate('tanggal_perpanjangan', $today)
             ->with('relasiSTNKtoKendaraan') // Mengambil relasi kendaraan
             ->get();
 
 // Query untuk mendapatkan data PR KIR yang jatuh tempo hari ini
-        $kirPRToday = KIR::whereDate('tanggal_expired_kir', $today)
+        $kirToday = KIR::whereDate('tanggal_expired_kir', $today)
             ->with('kendaraan') // Mengambil relasi kendaraan
             ->get();
 
         return view('home', [
             'dataUser' => $dataUser,
+            'totalStnk' => $totalStnk,
+            'totalStnkBulanIni' => $totalStnkBulanIni,
+            'totalKIR' => $totalKIR,
+            'totalKIRBulanIni' => $totalKIRBulanIni,
             'stnkPR' => $stnkPR,
             'kirPR' => $kirPR,
-            'stnkPRTenDays' => $stnkPRTenDays,
-            'kirPRTenDays' => $kirPRTenDays,
-            'stnkPRToday' => $stnkPRToday,
-            'kirPRToday' => $kirPRToday
+            'stnkTenDays' => $stnkTenDays,
+            'kirTenDays' => $kirTenDays,
+            'stnkToday' => $stnkToday,
+            'kirToday' => $kirToday,
         ]);
     }
 
@@ -101,7 +121,7 @@ class Controller extends BaseController
         // Filter data KIR untuk H-10, 45 hari, dan Hari H
         $hMinus10STNK = $stnkData->filter(function ($stnk) use ($today) {
             $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
-            return $daysToExpire >= 0 && $daysToExpire <= 10; // Menampilkan dari H-10 hingga hari H
+            return $daysToExpire > 0 && $daysToExpire <= 10; // Menampilkan dari H-10 hingga hari H
         });
 
         $prDateSTNK = $stnkData->filter(function ($stnk) use ($today) {

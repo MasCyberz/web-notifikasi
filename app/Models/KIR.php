@@ -8,15 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class KIR extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'kirs';
+
+    protected $dates = ['tanggal_expired_kir'];
 
     protected $guarded = ['id'];
 
     protected $fillable = [
         'kendaraan_id',
         'nomor_uji_kendaraan',
-        'tanggal_expired_kir'
+        'tanggal_expired_kir',
     ];
 
     public function kendaraan()

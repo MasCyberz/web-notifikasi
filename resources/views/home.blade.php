@@ -15,10 +15,10 @@
                                 </div>
                                 <div class="col">
                                     <div class="font-weight-medium">
-                                        132 Total STNK {{ \Carbon\Carbon::now()->format('Y') }}
+                                        {{ $totalStnk }} Total STNK {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        12 pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalStnkBulanIni }} pada bulan {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>
@@ -37,10 +37,10 @@
                                 </div>
                                 <div class="col">
                                     <div class="font-weight-medium">
-                                        132 Total KIR {{ \Carbon\Carbon::now()->format('Y') }}
+                                        {{ $totalKIR }} Total KIR {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        32 pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalKIRBulanIni }} pada bulan {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>
@@ -76,8 +76,310 @@
                     </a>
                 </div>
 
+                {{-- Notifikasi Hari H --}}
+
+                @foreach ($stnkToday as $stnk)
+                    @php
+                        $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
+                        $message =
+                            'STNK untuk kendaraan ' .
+                            $stnk->RelasiSTNKtoKendaraan->nomor_polisi .
+                            ' segera diperpanjang hari ini.';
+                    @endphp
+                    <div class="col-xl-3">
+                        <div class="card text-bg-danger mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Waktunya Perpanjangan STNK!</h5>
+                                <p class="card-text">Perpanjangan STNK untuk kendaraan
+                                    <span class="fw-bold">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span> hari
+                                    ini. Segera
+                                    lakukan
+                                    perpanjangan.
+                                </p>
+                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function setCookie(name, value, days) {
+                            var expires = "";
+                            if (days) {
+                                var date = new Date();
+                                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                                expires = "; expires=" + date.toUTCString();
+                            }
+                            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                        }
+
+                        function getCookie(name) {
+                            var nameEQ = name + "=";
+                            var ca = document.cookie.split(';');
+                            for (var i = 0; i < ca.length; i++) {
+                                var c = ca[i];
+                                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                            }
+                            return null;
+                        }
+
+                        function showNotificationSTNK() {
+                            if (Notification.permission === "granted") {
+                                var options = {
+                                    body: "{{ $message }}",
+                                    requireInteraction: true,
+                                };
+                                new Notification("Pengingat STNK", options);
+                                setCookie("notification-stnk-hari-ini-{{ $stnk->id }}", "shown", 1);
+                            }
+                        }
+
+                        if (!getCookie("notification-stnk-hari-ini-{{ $stnk->id }}")) {
+                            if (Notification.permission === "default") {
+                                Notification.requestPermission().then(permission => {
+                                    if (permission === "granted") {
+                                        showNotificationSTNK();
+                                    }
+                                });
+                            } else if (Notification.permission === "granted") {
+                                showNotificationSTNK();
+                            }
+                        }
+                    </script>
+                @endforeach
+                @foreach ($kirToday as $kir)
+                    @php
+                        $deadline = \Carbon\Carbon::parse($kir->tanggal_perpanjangan);
+                        $message =
+                            'STNK untuk kendaraan ' . $kir->kendaraan->nomor_polisi . ' segera diperpanjang hari ini.';
+                    @endphp
+                    <div class="col-xl-3">
+                        <div class="card text-bg-danger mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Waktunya Perpanjangan STNK!</h5>
+                                <p class="card-text">Perpanjangan STNK untuk kendaraan
+                                    <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span> hari ini. Segera
+                                    lakukan
+                                    perpanjangan.
+                                </p>
+                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        function setCookie(name, value, days) {
+                            var expires = "";
+                            if (days) {
+                                var date = new Date();
+                                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                                expires = "; expires=" + date.toUTCString();
+                            }
+                            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                        }
+
+                        function getCookie(name) {
+                            var nameEQ = name + "=";
+                            var ca = document.cookie.split(';');
+                            for (var i = 0; i < ca.length; i++) {
+                                var c = ca[i];
+                                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                            }
+                            return null;
+                        }
+
+                        function showNotificationSTNK() {
+                            if (Notification.permission === "granted") {
+                                var options = {
+                                    body: "{{ $message }}",
+                                    requireInteraction: true,
+                                };
+                                new Notification("Pengingat STNK", options);
+                                setCookie("notification-kir-hari-ini-{{ $kir->id }}", "shown", 1);
+                            }
+                        }
+
+                        if (!getCookie("notification-kir-hari-ini-{{ $kir->id }}")) {
+                            if (Notification.permission === "default") {
+                                Notification.requestPermission().then(permission => {
+                                    if (permission === "granted") {
+                                        showNotificationSTNK();
+                                    }
+                                });
+                            } else if (Notification.permission === "granted") {
+                                showNotificationSTNK();
+                            }
+                        }
+                    </script>
+                @endforeach
+
+                {{-- Notifikasi 10 Hari --}}
+
+                @foreach ($stnkTenDays as $stnk)
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
+                        $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
+                        $diffInHours = $now->diffInHours($deadline, false); // Menghitung sisa jam
+                        $diffInMinutes = $now->diffInMinutes($deadline, false); // Menghitung sisa menit
+                        $message = '';
+                        $showNotificationSTNKHminus10 = $diffInDays <= 10;
+
+                        if ($diffInDays > 0) {
+                            $message = "akan jatuh tempo dalam $diffInDays hari.";
+                        } elseif ($diffInDays === 0 && $diffInHours > 0) {
+                            $message = "akan jatuh tempo dalam $diffInHours jam.";
+                        } elseif ($diffInHours === 0 && $diffInMinutes > 0) {
+                            $message = "akan jatuh tempo dalam $diffInMinutes menit.";
+                        }
+                    @endphp
+                    <div class="col-xl-3">
+                        <div class="card text-bg-warning mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Perpanjangan STNK</h5>
+                                <p class="card-text">Perpanjangan STNK untuk kendaraan
+                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} {{ $message }} Segera
+                                    dipersiapkan.</p>
+                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($showNotificationSTNKHminus10)
+                        <script>
+                            function setCookie(name, value, days) {
+                                var expires = "";
+                                if (days) {
+                                    var date = new Date();
+                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                    expires = "; expires=" + date.toUTCString();
+                                }
+                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                            }
+
+                            function getCookie(name) {
+                                var nameEQ = name + "=";
+                                var ca = document.cookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                }
+                                return null;
+                            }
+
+                            function showNotificationSTNK() {
+                                if (Notification.permission === "granted") {
+                                    var options = {
+                                        body: "STNK untuk kendaraan {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} {{ $message }}.",
+                                        requireInteraction: true,
+                                    };
+                                    new Notification("Pengingat STNK", options);
+                                    setCookie("notification-stnk-h10-{{ $stnk->id }}", "shown",
+                                        1); // Set cookie for 1 day
+                                }
+                            }
+
+                            if (!getCookie("notification-stnk-h10-{{ $stnk->id }}")) {
+                                if (Notification.permission === "default") {
+                                    Notification.requestPermission().then(permission => {
+                                        if (permission === "granted") {
+                                            showNotificationSTNK();
+                                        }
+                                    });
+                                } else if (Notification.permission === "granted") {
+                                    showNotificationSTNK();
+                                }
+                            }
+                        </script>
+                    @endif
+                @endforeach
+                @foreach ($kirTenDays as $kir)
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $deadline = \Carbon\Carbon::parse($kir->tanggal_expired_kir);
+                        $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
+                        $diffInHours = $now->diffInHours($deadline, false); // Menghitung sisa jam
+                        $diffInMinutes = $now->diffInMinutes($deadline, false); // Menghitung sisa menit
+                        $message = '';
+                        $showNotificationKIRhMinus10 = $diffInDays <= 10;
+
+                        if ($diffInDays > 0) {
+                            $message = "akan jatuh tempo dalam $diffInDays hari.";
+                        } elseif ($diffInDays === 0 && $diffInHours > 0) {
+                            $message = "akan jatuh tempo dalam $diffInHours jam.";
+                        } elseif ($diffInHours === 0 && $diffInMinutes > 0) {
+                            $message = "akan jatuh tempo dalam $diffInMinutes menit.";
+                        }
+                    @endphp
+                    <div class="col-xl-3">
+                        <div class="card text-bg-warning mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Perpanjangan KIR</h5>
+                                <p class="card-text">Perpanjangan KIR untuk kendaraan <br>
+                                    <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span>
+                                    {{ $message }} Segera dipersiapkan.
+                                </p>
+                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+                    @if ($showNotificationKIRhMinus10)
+                        <script>
+                            function setCookie(name, value, days) {
+                                var expires = "";
+                                if (days) {
+                                    var date = new Date();
+                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                    expires = "; expires=" + date.toUTCString();
+                                }
+                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                            }
+
+                            function getCookie(name) {
+                                var nameEQ = name + "=";
+                                var ca = document.cookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                }
+                                return null;
+                            }
+
+                            function showNotificationKIR() {
+                                if (Notification.permission === "granted") {
+                                    var options = {
+                                        body: "KIR untuk kendaraan {{ $kir->kendaraan->nomor_polisi }} {{ $message }}.",
+                                        requireInteraction: true,
+                                    };
+                                    new Notification("Pengingat KIR", options);
+                                    setCookie("notification-kir-h10-{{ $kir->id }}", "shown",
+                                        1); // Set cookie for 1 day
+                                }
+                            }
+
+                            if (!getCookie("notification-kir-h10-{{ $kir->id }}")) {
+                                if (Notification.permission === "default") {
+                                    Notification.requestPermission().then(permission => {
+                                        if (permission === "granted") {
+                                            showNotificationKIR();
+                                        }
+                                    });
+                                } else if (Notification.permission === "granted") {
+                                    showNotificationKIR();
+                                }
+                            }
+                        </script>
+                    @endif
+                @endforeach
+
                 {{-- Notifikasi PR (1,5 Bulan) --}}
                 @foreach ($kirPR->slice(0, 4) as $kir)
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $deadline = \Carbon\Carbon::parse($kir->tanggal_expired_kir);
+                        $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
+                        $showNotification = $diffInDays <= 45;
+                    @endphp
                     <div class="col-xl-3">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
@@ -90,50 +392,125 @@
                             </div>
                         </div>
                     </div>
+                    @if ($showNotification)
+                        <script>
+                            function setCookie(name, value, days) {
+                                var expires = "";
+                                if (days) {
+                                    var date = new Date();
+                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                    expires = "; expires=" + date.toUTCString();
+                                }
+                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                            }
+
+                            function getCookie(name) {
+                                var nameEQ = name + "=";
+                                var ca = document.cookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                }
+                                return null;
+                            }
+
+                            function showNotification() {
+                                if (Notification.permission === "granted") {
+                                    var options = {
+                                        body: "KIR untuk kendaraan {{ $kir->kendaraan->nomor_polisi }} akan jatuh tempo pada {{ $kir->tanggal_expired_kir->format('d-m-Y') }}",
+                                        requireInteraction: true,
+                                    }
+
+                                    var notification = new Notification("Persiapan PR KIR {{ $kir->kendaraan->nomor_polisi }}", options);
+                                    setCookie("notification-kir-{{ $kir->id }}", "shown",
+                                        1); // Notifikasi akan di-set ulang setiap hari
+                                }
+                            }
+
+                            if (!getCookie("notification-kir-{{ $kir->id }}")) {
+                                if (Notification.permission === "default") {
+                                    Notification.requestPermission().then(permission => {
+                                        if (permission === "granted") {
+                                            showNotification();
+                                        }
+                                    });
+                                } else if (Notification.permission === "granted") {
+                                    showNotification();
+                                }
+                            }
+                        </script>
+                    @endif
                 @endforeach
-                @foreach ($stnkPR as $stnk)
+                @foreach ($stnkPR->slice(0, 4) as $stnk)
+                    @php
+                        $now = \Carbon\Carbon::now();
+                        $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
+                        $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
+                        $showNotification = $diffInDays <= 45;
+                    @endphp
                     <div class="col-xl-3">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Pembuatan PR Untuk STNK</h5>
                                 <p class="card-text">Segera buat PR untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} untuk perpanjangan STNK pada <br>
+                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} untuk perpanjangan STNK pada
+                                    <br>
                                     <span>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->format('d-M-Y') }}</span>.
                                 </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
                     </div>
-                @endforeach
+                    @if ($showNotification)
+                        <script>
+                            function setCookie(name, value, days) {
+                                var expires = "";
+                                if (days) {
+                                    var date = new Date();
+                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                    expires = "; expires=" + date.toUTCString();
+                                }
+                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                            }
 
-                {{-- Notifikasi 10 Hari --}}
+                            function getCookie(name) {
+                                var nameEQ = name + "=";
+                                var ca = document.cookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                }
+                                return null;
+                            }
 
-                @foreach ($stnkPRTenDays as $stnk)
-                    <div class="col-xl-3">
-                        <div class="card text-bg-warning mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Perpanjangan STNK H-10</h5>
-                                <p class="card-text">Batas waktu perpanjangan STNK untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} tinggal 10 hari lagi. Segera
-                                    lakukan tindakan yang diperlukan.</p>
-                                <a href="#" class="btn btn-primary">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
+                            function showNotification() {
+                                if (Notification.permission === "granted") {
+                                    var options = {
+                                        body: "STNK untuk kendaraan {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} akan jatuh tempo pada {{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->format('d-M-Y') }}",
+                                        requireInteraction: true,
+                                    }
 
-                @foreach ($kirPRTenDays as $kir)
-                    <div class="col-xl-3">
-                        <div class="card text-bg-warning mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Perpanjangan KIR H-10</h5>
-                                <p class="card-text">Batas waktu perpanjangan KIR untuk kendaraan
-                                    {{ $kir->kendaraan->nomor_polisi }} tinggal 10 hari lagi. Segera
-                                    lakukan tindakan yang diperlukan.</p>
-                                <a href="#" class="btn btn-primary">Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
+                                    var notification = new Notification("Persiapan PR STNK {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}",
+                                        options);
+                                    setCookie("notification-stnk-{{ $stnk->id }}", "shown", 1);;
+                                }
+                            }
+
+                            if (!getCookie("notification-stnk-{{ $stnk->id }}")) {
+                                if (Notification.permission === "default") {
+                                    Notification.requestPermission().then(permission => {
+                                        if (permission === "granted") {
+                                            showNotification();
+                                        }
+                                    });
+                                } else if (Notification.permission === "granted") {
+                                    showNotification();
+                                }
+                            }
+                        </script>
+                    @endif
                 @endforeach
 
                 {{-- <div class="col-xl-3">
