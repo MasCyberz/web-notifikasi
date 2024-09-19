@@ -32,7 +32,7 @@
                             </div>
                         </div>
                     </div>
-                    <script>
+                    {{-- <script>
                         function setCookie(name, value, days) {
                             var expires = "";
                             if (days) {
@@ -76,7 +76,7 @@
                                 showNotificationSTNK();
                             }
                         }
-                    </script>
+                    </script> --}}
                 @endforeach
                 @foreach ($hariIniKIR as $kir)
                     @php
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                     </div>
-                    <script>
+                    {{-- <script>
                         function showNotificationKIR() {
                             if (Notification.permission === "granted") {
                                 var options = {
@@ -116,7 +116,7 @@
                                 showNotificationKIR();
                             }
                         }
-                    </script>
+                    </script> --}}
                 @endforeach
 
 
@@ -155,7 +155,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($showNotificationSTNKHminus10)
+                    {{-- @if ($showNotificationSTNKHminus10)
                         <script>
                             function setCookie(name, value, days) {
                                 var expires = "";
@@ -202,7 +202,7 @@
                                 }
                             }
                         </script>
-                    @endif
+                    @endif --}}
                 @endforeach
                 @foreach ($hMinus10KIR as $kir)
                     @php
@@ -236,7 +236,7 @@
                             </div>
                         </div>
                     @endif
-                    @if ($showNotificationKIRhMinus10)
+                    {{-- @if ($showNotificationKIRhMinus10)
                         <script>
                             function setCookie(name, value, days) {
                                 var expires = "";
@@ -283,7 +283,7 @@
                                 }
                             }
                         </script>
-                    @endif
+                    @endif --}}
                 @endforeach
 
 
@@ -292,12 +292,12 @@
                     <h3 class="page-title"><span>1,5 bulan</span></h3>
                 </div>
                 @foreach ($prDateSTNK as $stnk)
-                    @php
+                    {{-- @php
                         $now = \Carbon\Carbon::now();
                         $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
                         $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
                         $showNotification = $diffInDays <= 45;
-                    @endphp
+                    @endphp --}}
                     <div class="col-xl-3 col-sm-6">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
@@ -309,7 +309,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($showNotification)
+                    {{-- @if ($showNotification)
                         <script>
                             function setCookie(name, value, days) {
                                 var expires = "";
@@ -357,15 +357,15 @@
                                 }
                             }
                         </script>
-                    @endif
+                    @endif --}}
                 @endforeach
                 @foreach ($prDateKIR as $kir)
-                    @php
+                    {{-- @php
                         $now = \Carbon\Carbon::now();
                         $deadline = \Carbon\Carbon::parse($kir->tanggal_expired_kir);
                         $diffInDays = $now->diffInDays($deadline, false); // Menghitung sisa hari
                         $showNotification = $diffInDays <= 45;
-                    @endphp
+                    @endphp --}}
                     <div class="col-xl-3 col-sm-6">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
@@ -376,7 +376,7 @@
                             </div>
                         </div>
                     </div>
-                    @if ($showNotification)
+                    {{-- @if ($showNotification)
                         <script>
                             function setCookie(name, value, days) {
                                 var expires = "";
@@ -424,7 +424,7 @@
                                 }
                             }
                         </script>
-                    @endif
+                    @endif --}}
                 @endforeach
 
 

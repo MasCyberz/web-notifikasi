@@ -10,6 +10,9 @@ class STNK extends Model
     use HasFactory;
 
     protected $table = 'stnks';
+
+    protected $dates = ['tanggal_perpanjangan'];
+
     protected $fillable = [
         'id_kendaraan',
         'biaya',
