@@ -11,13 +11,14 @@
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <form action="{{ route('kendaraan-index') }}" method="GET">
+                            <form action="{{ route('stnk-index') }}" method="GET">
                                 <div class="d-flex">
                                     <!-- Entries Dropdown -->
                                     <div class="text-secondary">
                                         Show
                                         <div class="mx-2 d-inline-block">
-                                            <select name="entries" class="form-control form-control-sm" onchange="this.form.submit()">
+                                            <select name="entries" class="form-control form-control-sm">
+                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
                                                 <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
                                                 <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
                                                 <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
@@ -31,10 +32,11 @@
                                     <!-- Year Input -->
                                     <div class="mx-2 d-inline-block">
                                         <input type="number" name="year" class="form-control form-control-sm"
-                                            value="{{ request('year', \Carbon\Carbon::now()->year) }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3" aria-label="Year">
+                                            value="{{ request('year') }}" min="1900"
+                                            max="{{ \Carbon\Carbon::now()->year }}" size="3" aria-label="Year" placeholder="{{ \Carbon\Carbon::now()->year }}">
                                     </div>
                                     Year
+                                    
                         
                                     <!-- Search Input -->
                                     <div class="ms-auto text-secondary">

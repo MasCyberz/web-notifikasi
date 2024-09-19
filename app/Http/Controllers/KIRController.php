@@ -14,7 +14,7 @@ class KIRController extends Controller
     // Get search, entries, and year from request
     $search = $request->input('search');
     $entries = $request->input('entries', 10); // Default 8 entries per page
-    $year = $request->input('year', \Carbon\Carbon::now()->year); // Default to current year
+    $year = $request->input('year'); // Default to current year
 
     // Query the KIR data
     $kir = KIR::with('kendaraan')

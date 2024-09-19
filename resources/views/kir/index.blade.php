@@ -18,6 +18,7 @@
                                         Show
                                         <div class="mx-2 d-inline-block">
                                             <select name="entries" class="form-control form-control-sm">
+                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
                                                 <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
                                                 <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
                                                 <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
@@ -27,15 +28,16 @@
                                         </div>
                                         entries
                                     </div>
-
+                        
                                     <!-- Year Input -->
                                     <div class="mx-2 d-inline-block">
                                         <input type="number" name="year" class="form-control form-control-sm"
-                                            value="{{ request('year', \Carbon\Carbon::now()->year) }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3" aria-label="Year">
+                                            value="{{ request('year') }}" min="1900"
+                                            max="{{ \Carbon\Carbon::now()->year }}" size="3" aria-label="Year" placeholder="{{ \Carbon\Carbon::now()->year }}">
                                     </div>
                                     Year
-
+                                    
+                        
                                     <!-- Search Input -->
                                     <div class="ms-auto text-secondary">
                                         Search:
@@ -44,7 +46,7 @@
                                                 value="{{ request('search') }}" aria-label="Search">
                                         </div>
                                     </div>
-
+                        
                                     <!-- Submit Button -->
                                     <div class="ms-2">
                                         <button type="submit" class="btn btn-sm btn-primary">Apply</button>

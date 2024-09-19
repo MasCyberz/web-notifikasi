@@ -46,7 +46,8 @@
                                     <div class="text-secondary">
                                         Show
                                         <div class="mx-2 d-inline-block">
-                                            <select name="entries" class="form-control form-control-sm" onchange="this.form.submit()">
+                                            <select name="entries" class="form-control form-control-sm">
+                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
                                                 <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
                                                 <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
                                                 <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
