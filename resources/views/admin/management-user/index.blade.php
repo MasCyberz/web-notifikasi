@@ -40,24 +40,39 @@
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <form action="{{ route('management-user-index') }}" method="GET"> <!-- Tambahkan action dan method -->
+                            <form action="{{ route('management-user-index') }}" method="GET">
                                 <div class="d-flex">
+                                    <!-- Entries Dropdown -->
                                     <div class="text-secondary">
                                         Show
                                         <div class="mx-2 d-inline-block">
-                                            <input type="text" name="entries" class="form-control form-control-sm" value="8" size="3" aria-label="Invoices count">
+                                            <select name="entries" class="form-control form-control-sm">
+                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
+                                                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                            </select>
                                         </div>
                                         entries
                                     </div>
+                        
+                                    <!-- Search Input -->
                                     <div class="ms-auto text-secondary">
                                         Search:
                                         <div class="ms-2 d-inline-block">
-                                            <!-- Tambahkan name="search" untuk mengirimkan query pencarian -->
-                                            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search..." value="{{ request('search') }}" aria-label="Search invoice">
+                                            <input type="text" name="search" class="form-control form-control-sm"
+                                                value="{{ request('search') }}" aria-label="Search">
                                         </div>
                                     </div>
+                        
+                                    <!-- Submit Button -->
+                                    <div class="ms-2">
+                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+                                    </div>
                                 </div>
-                            </form>
+                            </form>                            
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
@@ -97,41 +112,81 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            <p class="m-0 text-secondary">Showing <span>1</span> to <span>8</span> of
-                                <span>16</span>
-                                entries
+                            <p class="m-0 text-secondary">
+                                Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} entries
                             </p>
-                            <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>
-                                        prev
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
+                            @if ($users->hasPages())
+                                <ul class="pagination m-0 ms-auto">
+                                    {{-- Previous Page Link --}}
+                                    @if ($users->onFirstPage())
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M15 6l-6 6l6 6"></path>
+                                                </svg>
+                                                prev
+                                            </a>
+                                        </li>
+                                    @else
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M15 6l-6 6l6 6"></path>
+                                                </svg>
+                                                prev
+                                            </a>
+                                        </li>
+                                    @endif
+                        
+                                    {{-- Pagination Elements --}}
+                                    @foreach ($users->links()->elements as $element)
+                                        {{-- "Three Dots" Separator --}}
+                                        @if (is_string($element))
+                                            <li class="page-item disabled">
+                                                <span class="page-link">{{ $element }}</span>
+                                            </li>
+                                        @endif
+                        
+                                        {{-- Array Of Links --}}
+                                        @if (is_array($element))
+                                            @foreach ($element as $page => $url)
+                                                @if ($page == $users->currentPage())
+                                                    <li class="page-item active"><a class="page-link">{{ $page }}</a></li>
+                                                @else
+                                                    <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                        
+                                    {{-- Next Page Link --}}
+                                    @if ($users->hasMorePages())
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">
+                                                next
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M9 6l6 6l-6 6"></path>
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    @else
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#">
+                                                next
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path d="M9 6l6 6l-6 6"></path>
+                                                </svg>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            @endif
                         </div>
+                        
                     </div>
                 </div>
             </div>

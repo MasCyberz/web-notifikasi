@@ -7,6 +7,7 @@
             {{-- Form Create STNK --}}
             <form action="{{ route('stnk-store') }}" method="POST" class="card">
                 @csrf
+                @method('PUT')
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
                     <div class="mb-3">
@@ -20,10 +21,10 @@
                         </div>
                     </div>
                     {{-- Nomor STNK --}}
-                    <x-Input label="Biaya Perpanjangan Terakhir" name="biaya" type="text" placeholder="3.000.000"
+                    <x-Input label="Biaya Perpanjangan Terakhir" name="biaya" type="text" value="{{ $stnk->biaya }}"
                     class="" />
                     {{-- Tanggal Perpanjangan --}}
-                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" type="date" class="w-25" />
+                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" value="{{ $stnk->tanggal_perpanjangan }}" type="date" class="w-25" />
                     {{-- <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
                         <input type="text" name="plat_nomor" class="form-control" data-mask="** 0000 ***"
