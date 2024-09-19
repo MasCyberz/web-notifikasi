@@ -34,6 +34,8 @@ Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya']
 
 // Kendaraan
 Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
+// Detail Kendaraan
+Route::get('/data-kendaraan/detail/{id}', [KendaraanController::class, 'detail'])->name('kendaraan-detail');
 // Tambah Kendaraan
 Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
 Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
