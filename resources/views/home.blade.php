@@ -92,9 +92,7 @@
                                 <h5 class="card-title">Waktunya Perpanjangan STNK!</h5>
                                 <p class="card-text">Perpanjangan STNK untuk kendaraan
                                     <span class="fw-bold">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span> hari
-                                    ini. Segera
-                                    lakukan
-                                    perpanjangan.
+                                    ini.
                                 </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
@@ -157,9 +155,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Waktunya Perpanjangan STNK!</h5>
                                 <p class="card-text">Perpanjangan STNK untuk kendaraan
-                                    <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span> hari ini. Segera
-                                    lakukan
-                                    perpanjangan.
+                                    <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span> hari ini.
                                 </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
@@ -236,9 +232,8 @@
                         <div class="card text-bg-warning mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Perpanjangan STNK</h5>
-                                <p class="card-text">Perpanjangan STNK untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} {{ $message }} Segera
-                                    dipersiapkan.</p>
+                                <p class="card-text">STNK : <span class="fw-bold">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span> {{ $message }}</p>
+                                <p class="card-text">Tanggal : {{ $stnk->tanggal_perpanjangan }} </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -314,10 +309,10 @@
                         <div class="card text-bg-warning mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Perpanjangan KIR</h5>
-                                <p class="card-text">Perpanjangan KIR untuk kendaraan <br>
-                                    <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span>
-                                    {{ $message }} Segera dipersiapkan.
+                                <p class="card-text">KIR : <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span>
+                                    {{ $message }}
                                 </p>
+                                <p>Tanggal : {{ $kir->tanggal_expired_kir }}</p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -384,10 +379,10 @@
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Pembuatan PR Untuk KIR</h5>
-                                <p class="card-text">Segera buat PR untuk kendaraan {{ $kir->kendaraan->nomor_polisi }}
-                                    untuk perpanjangan KIR pada <br>
-                                    <span>{{ \Carbon\Carbon::parse($kir->tanggal_expired_kir)->format('d-M-Y') }}</span>.
-                                </p>
+                                <p class="card-text">Buat PR untuk kendaraan <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span>
+                                    untuk perpanjangan KIR pada </p>
+                                    <p>Jatuh Tempo : {{ \Carbon\Carbon::parse($kir->tanggal_expired_kir)->format('d-M-Y') }}</p>
+                                
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -452,12 +447,9 @@
                     <div class="col-xl-3">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Pembuatan PR Untuk STNK</h5>
-                                <p class="card-text">Segera buat PR untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} untuk perpanjangan STNK pada
-                                    <br>
-                                    <span>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->format('d-M-Y') }}</span>.
-                                </p>
+                                <h5 class="card-title">PR Perpanjangan STNK</h5>
+                                <p class="card-text">Buat PR untuk kendaraan : <span class="fw-bold">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span></p>
+                                <p>Jatuh Tempo : {{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->format('d-M-Y') }}</p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>

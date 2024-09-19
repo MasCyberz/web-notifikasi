@@ -152,12 +152,9 @@
                     <div class="col-xl-3">
                         <div class="card text-bg-warning mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Persiapan STNK {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}
-                                </h5>
-                                <p class="card-text">STNK untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} akan jatuh
-                                    tempo dalam {{ $message }} Pada tanggal
-                                    {{ $stnk->tanggal_perpanjangan->format('d-m-Y') }}</p>
+                                <h5 class="card-title">Persiapan STNK {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</h5>
+                                <p class="card-text">STNK : {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} {{ $message }} </p>
+                                <p class="card-text">Tanggal : {{ $stnk->tanggal_perpanjangan->format('d-m-Y') }}</p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -234,10 +231,8 @@
                             <div class="card text-bg-warning mb-3">
                                 <div class="card-body">
                                     <h5 class="card-title">Persiapan KIR {{ $kir->kendaraan->nomor_polisi }}</h5>
-                                    <p class="card-text">KIR untuk kendaraan {{ $kir->kendaraan->nomor_polisi }} akan
-                                        jatuh
-                                        tempo dalam {{ $message }} Pada tanggal
-                                        {{ $kir->tanggal_expired_kir->format('d-m-Y') }}</p>
+                                    <p class="card-text">KIR : {{ $kir->kendaraan->nomor_polisi }} {{ $message }}</p>
+                                    <p class="card-text">Tanggal : {{ $kir->tanggal_expired_kir->format('d-m-Y') }}</p>
                                     <a href="#" class="btn btn-light">Selengkapnya</a>
                                 </div>
                             </div>
@@ -308,10 +303,10 @@
                     <div class="col-xl-3 col-sm-6">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Persiapan PR untuk STNK</h5>
-                                <p class="card-text">STNK untuk kendaraan
-                                    {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} akan jatuh
-                                    tempo pada {{ $stnk->tanggal_perpanjangan->format('d-M-Y') }}</p>
+                                <h5 class="card-title">Persiapan PR Perpanjangan STNK</h5>
+                                <p class="card-text">STNK : {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }} </p>
+                                <p class="card-text">Jatuh Tempo : {{ $stnk->tanggal_perpanjangan->format('d-M-Y') }}
+                                </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -376,9 +371,9 @@
                     <div class="col-xl-3 col-sm-6">
                         <div class="card text-bg-primary mb-3">
                             <div class="card-body">
-                                <h5 class="card-title">Persiapan PR untuk KIR</h5>
-                                <p class="card-text">KIR untuk kendaraan {{ $kir->kendaraan->nomor_polisi }} akan jatuh
-                                    tempo pada {{ $kir->tanggal_expired_kir->format('d-m-Y') }}</p>
+                                <h5 class="card-title">Persiapan PR Perpanjangan KIR</h5>
+                                <p class="card-text">KIR : {{ $kir->kendaraan->nomor_polisi }} </p>
+                                <p class="card-text">Jatuh Tempo : {{ $kir->tanggal_expired_kir->format('d-m-Y') }} </p>
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
