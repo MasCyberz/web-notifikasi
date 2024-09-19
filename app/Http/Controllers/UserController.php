@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -21,23 +22,28 @@ class UserController extends Controller
                 ->orWhere('email', 'like', '%' . $search . '%');
         }
 
+        $users->orderBy('created_at', 'desc');
+
+
         // Ambil data dengan pagination sesuai jumlah entries
-        $users = $users->paginate($entries)->appends($request->query());
+        $users = $users->paginate($entries)->appends($request->all());
 
         return view('admin.management-user.index', compact('users'));
-       
+
         // $users = User::all();
         // return view('admin.management-user.index', ['users' => $users]);
     }
 
     public function createUser(){
-        return view('admin.management-user.add');
+        $roles = Role::all();
+        return view('admin.management-user.add', compact('roles'));
     }
 
     Public function storeUser(request $request){
         $request->validate([
             'name' => 'required',
             'email' => 'required',
+            'role' => 'required',
             'password' => 'required',
         ]);
 

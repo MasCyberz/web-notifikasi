@@ -27,8 +27,11 @@ class KendaraanController extends Controller
             ;
         }
 
+        $query->orderBy('created_at', 'desc');
+
         // Mengambil data kendaraan dengan pagination berdasarkan input entries
-        $kendaraans = $query->paginate($entries);
+        $kendaraans = $query->paginate($entries)
+            ->appends($request->all());
 
         // Melempar data ke view
         return view('kendaraan.index', compact('kendaraans'));
@@ -59,7 +62,7 @@ class KendaraanController extends Controller
             'nomor_rangka' => 'required|string|max:255',
             'nomor_mesin' => 'required|string|max:255',
             'bahan_bakar' => 'required|string|max:255',
-            'nomor_bpkb' => 'required|numeric|max:255',
+            'nomor_bpkb' => 'required|numeric',
             'tahun_registrasi' => 'required|string|max:255',
             'ident' => 'required|string|max:255',
         ]);
@@ -80,7 +83,6 @@ class KendaraanController extends Controller
             'nomor_bpkb' => $request->nomor_bpkb,
             'tahun_registrasi' => $request->tahun_registrasi,
             'ident' => $request->ident,
-
         ]);
 
         return redirect()->route('kendaraan-index')->with('success', 'Kendaraan berhasil ditambahkan.');

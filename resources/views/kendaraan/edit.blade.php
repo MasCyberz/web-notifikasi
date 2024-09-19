@@ -17,17 +17,29 @@
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
                                 <select class="form-select" name="merk_kendaraan">
-                                    <option value="Toyota" {{$kendaraan->merk_kendaraan == 'Toyota' ? 'selected' : ''}}>Toyota</option>
-                                    <option value="Wuling" {{$kendaraan->merk_kendaraan == 'Wuling' ? 'selected' : ''}}>Wuling</option>
-                                    <option value="Mitsubishi" {{$kendaraan->merk_kendaraan == 'Mitsubishi' ? 'selected' : ''}}>Mitsubishi</option>
-                                    <option value="DSFK" {{$kendaraan->merk_kendaraan == 'DSFK' ? 'selected' : ''}}>DSFK</option>
-                                    <option value="Hyundai" {{$kendaraan->merk_kendaraan == 'Hyundai' ? 'selected' : ''}}>Hyundai</option>
-                                    <option value="Kia" {{$kendaraan->merk_kendaraan == 'Kia' ? 'selected' : ''}}>Kia</option>
-                                    <option value="Suzuki" {{$kendaraan->merk_kendaraan == 'Suzuki' ? 'selected' : ''}}>Suzuki</option>
-                                    <option value="BYD" {{$kendaraan->merk_kendaraan == 'BYD' ? 'selected' : ''}}>BYD</option>
-                                    <option value="Honda" {{$kendaraan->merk_kendaraan == 'Honda' ? 'selected' : ''}}>Honda</option>
-                                    <option value="Yamaha" {{$kendaraan->merk_kendaraan == 'Yamaha' ? 'selected' : ''}}>Yamaha</option>
-                                    <option value="ISUZU" {{$kendaraan->merk_kendaraan == 'ISUZU' ? 'selected' : ''}}>ISUZU</option>
+                                    <option value="Toyota"
+                                        {{ $kendaraan->merk_kendaraan == 'Toyota' ? 'selected' : '' }}>Toyota</option>
+                                    <option value="Wuling"
+                                        {{ $kendaraan->merk_kendaraan == 'Wuling' ? 'selected' : '' }}>Wuling</option>
+                                    <option value="Mitsubishi"
+                                        {{ $kendaraan->merk_kendaraan == 'Mitsubishi' ? 'selected' : '' }}>Mitsubishi
+                                    </option>
+                                    <option value="DSFK" {{ $kendaraan->merk_kendaraan == 'DSFK' ? 'selected' : '' }}>
+                                        DSFK</option>
+                                    <option value="Hyundai"
+                                        {{ $kendaraan->merk_kendaraan == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
+                                    <option value="Kia" {{ $kendaraan->merk_kendaraan == 'Kia' ? 'selected' : '' }}>
+                                        Kia</option>
+                                    <option value="Suzuki"
+                                        {{ $kendaraan->merk_kendaraan == 'Suzuki' ? 'selected' : '' }}>Suzuki</option>
+                                    <option value="BYD" {{ $kendaraan->merk_kendaraan == 'BYD' ? 'selected' : '' }}>
+                                        BYD</option>
+                                    <option value="Honda"
+                                        {{ $kendaraan->merk_kendaraan == 'Honda' ? 'selected' : '' }}>Honda</option>
+                                    <option value="Yamaha"
+                                        {{ $kendaraan->merk_kendaraan == 'Yamaha' ? 'selected' : '' }}>Yamaha</option>
+                                    <option value="ISUZU"
+                                        {{ $kendaraan->merk_kendaraan == 'ISUZU' ? 'selected' : '' }}>ISUZU</option>
                                 </select>
                             </div>
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"
@@ -35,11 +47,20 @@
                             <div class="mb-3 w-100 w-xl-50">
                                 <label class="form-label">Jenis Kendaraan</label>
                                 <select class="form-select" name="jenis_kendaraan">
-                                    <option value="Mobil Penumpang" {{ $kendaraan->jenis_kendaraan == 'Mobil Penumpang' ? 'selected' : ''}}>MOBIL PENUMPANG</option>
-                                    <option value="MOBIL BARANG" {{ $kendaraan->jenis_kendaraan == 'MOBIL BARANG' ? 'selected' : ''}}>MOBIL BARANG</option>
-                                    <option value="SEPEDA MOTOR" {{ $kendaraan->jenis_kendaraan == 'SEPEDA MOTOR' ? 'selected' : ''}}>SEPEDA MOTOR</option>
-                                    <option value="BUS" {{ $kendaraan->jenis_kendaraan == 'BUS' ? 'selected' : ''}}>BUS</option>
-                                    <option value="KENDARAAN KHUSUS" {{ $kendaraan->jenis_kendaraan == 'KENDARAAN KHUSUS' ? 'selected' : ''}}>KENDARAAN KHUSUS</option>
+                                    <option value="Mobil Penumpang"
+                                        {{ $kendaraan->jenis_kendaraan == 'Mobil Penumpang' ? 'selected' : '' }}>MOBIL
+                                        PENUMPANG</option>
+                                    <option value="MOBIL BARANG"
+                                        {{ $kendaraan->jenis_kendaraan == 'MOBIL BARANG' ? 'selected' : '' }}>MOBIL
+                                        BARANG</option>
+                                    <option value="SEPEDA MOTOR"
+                                        {{ $kendaraan->jenis_kendaraan == 'SEPEDA MOTOR' ? 'selected' : '' }}>SEPEDA
+                                        MOTOR</option>
+                                    <option value="BUS"
+                                        {{ $kendaraan->jenis_kendaraan == 'BUS' ? 'selected' : '' }}>BUS</option>
+                                    <option value="KENDARAAN KHUSUS"
+                                        {{ $kendaraan->jenis_kendaraan == 'KENDARAAN KHUSUS' ? 'selected' : '' }}>
+                                        KENDARAAN KHUSUS</option>
                                 </select>
                             </div>
 
@@ -73,6 +94,12 @@
                                 value="{{ old('nomor_mesin', $kendaraan->nomor_mesin) }}" />
                             <x-Input label="Bahan Bakar" name="bahan_bakar" type="text" class=""
                                 value="{{ old('bahan_bakar', $kendaraan->bahan_bakar) }}" />
+                            <x-Input label="Nomor BPKB" name="nomor_bpkb" type="text" class=""
+                                value="{{ old('nomor_bpkb', $kendaraan->nomor_bpkb) }}" />
+                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" type="text" class=""
+                                value="{{ old('tahun_registrasi', $kendaraan->tahun_registrasi) }}" />
+                            <x-Input label="Ident" name="ident" type="text" class=""
+                                value="{{ old('ident', $kendaraan->ident) }}" />
                         </div>
                         <x-cardFooter route="{{ route('kendaraan-index') }}" />
                     </form>

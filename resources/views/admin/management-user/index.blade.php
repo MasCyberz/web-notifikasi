@@ -1,6 +1,6 @@
 <x-AppLayout>
 
-    
+
     @push('styles')
         <style>
             /* Custom styles for full-width alert on mobile */
@@ -27,8 +27,8 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    
-    
+
+
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
@@ -41,38 +41,51 @@
                         </div>
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('management-user-index') }}" method="GET">
-                                <div class="d-flex">
-                                    <!-- Entries Dropdown -->
-                                    <div class="text-secondary">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                            <select name="entries" class="form-control form-control-sm">
-                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
-                                                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
-                                                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
-                                                <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
-                                                <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
-                                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
-                                            </select>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-6 d-flex flex-wrap">
+                                        <!-- Entries Dropdown -->
+                                        <div class="me-3 text-secondary">
+                                            Show
+                                            <div class="d-inline-block">
+                                                <select name="entries" class="form-control form-control-sm">
+                                                    <option value=""
+                                                        {{ is_null(request('entries')) ? 'selected' : '' }}>Select
+                                                        entries</option>
+                                                    <option value="5"
+                                                        {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                    <option value="10"
+                                                        {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="15"
+                                                        {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                    <option value="20"
+                                                        {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                    <option value="25"
+                                                        {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                                </select>
+                                            </div>
+                                            entries
                                         </div>
-                                        entries
                                     </div>
-                        
-                                    <!-- Search Input -->
-                                    <div class="ms-auto text-secondary">
-                                        Search:
-                                        <div class="ms-2 d-inline-block">
-                                            <input type="text" name="search" class="form-control form-control-sm"
-                                                value="{{ request('search') }}" aria-label="Search">
+
+                                    <!-- Search and Apply (Right Side) -->
+                                    <div class="col-12 col-md-6 d-flex justify-content-md-end flex-wrap">
+                                        <!-- Search Input -->
+                                        <div class="me-3 text-secondary">
+                                            Search:
+                                            <div class="d-inline-block">
+                                                <input type="text" name="search"
+                                                    class="form-control form-control-sm" value="{{ request('search') }}"
+                                                    aria-label="Search">
+                                            </div>
                                         </div>
-                                    </div>
-                        
-                                    <!-- Submit Button -->
-                                    <div class="ms-2">
-                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+
+                                        <!-- Submit Button -->
+                                        <div>
+                                            <button type="submit" class="btn btn-sm btn-primary w-100">Apply</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>                            
+                            </form>
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
@@ -113,7 +126,8 @@
                         </div>
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
-                                Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of {{ $users->total() }} entries
+                                Showing {{ $users->firstItem() }} to {{ $users->lastItem() }} of
+                                {{ $users->total() }} entries
                             </p>
                             @if ($users->hasPages())
                                 <ul class="pagination m-0 ms-auto">
@@ -121,7 +135,10 @@
                                     @if ($users->onFirstPage())
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="icon">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M15 6l-6 6l6 6"></path>
                                                 </svg>
@@ -131,7 +148,10 @@
                                     @else
                                         <li class="page-item">
                                             <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="icon">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M15 6l-6 6l6 6"></path>
                                                 </svg>
@@ -139,7 +159,7 @@
                                             </a>
                                         </li>
                                     @endif
-                        
+
                                     {{-- Pagination Elements --}}
                                     @foreach ($users->links()->elements as $element)
                                         {{-- "Three Dots" Separator --}}
@@ -148,25 +168,30 @@
                                                 <span class="page-link">{{ $element }}</span>
                                             </li>
                                         @endif
-                        
+
                                         {{-- Array Of Links --}}
                                         @if (is_array($element))
                                             @foreach ($element as $page => $url)
                                                 @if ($page == $users->currentPage())
-                                                    <li class="page-item active"><a class="page-link">{{ $page }}</a></li>
+                                                    <li class="page-item active"><a
+                                                            class="page-link">{{ $page }}</a></li>
                                                 @else
-                                                    <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                                                    <li class="page-item"><a class="page-link"
+                                                            href="{{ $url }}">{{ $page }}</a></li>
                                                 @endif
                                             @endforeach
                                         @endif
                                     @endforeach
-                        
+
                                     {{-- Next Page Link --}}
                                     @if ($users->hasMorePages())
                                         <li class="page-item">
                                             <a class="page-link" href="{{ $users->nextPageUrl() }}" rel="next">
                                                 next
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="icon">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M9 6l6 6l-6 6"></path>
                                                 </svg>
@@ -176,7 +201,10 @@
                                         <li class="page-item disabled">
                                             <a class="page-link" href="#">
                                                 next
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="icon">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                     <path d="M9 6l6 6l-6 6"></path>
                                                 </svg>
@@ -186,10 +214,23 @@
                                 </ul>
                             @endif
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            setTimeout(function() {
+                let alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('hide');
+                }
+            }, 3000); // Menghilang setelah 5 detik
+        </script>
+    @endpush
+
 </x-AppLayout>

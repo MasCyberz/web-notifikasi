@@ -10,34 +10,46 @@ use Illuminate\Validation\Rule;
 class KIRController extends Controller
 {
     public function index(Request $request)
-{
-    // Get search, entries, and year from request
-    $search = $request->input('search');
-    $entries = $request->input('entries', 10); // Default 8 entries per page
-    $year = $request->input('year'); // Default to current year
+    {
+        // Retrieve the filter parameters
+        $entries = $request->input('entries', 10); // Default to 10 entries per page
+        $year = $request->input('year');
+        $search = $request->input('search');
 
-    // Query the KIR data
-    $kir = KIR::with('kendaraan')
-        ->whereHas('kendaraan', function($query) use ($search) {
-            // Filter by search if available
-            if ($search) {
-                $query->where('nomor_polisi', 'like', '%' . $search . '%')
-                      ->orWhere('tipe', 'like', '%' . $search . '%');
-            }
-        })
-        // Filter by year
-        ->whereYear('tanggal_expired_kir', $year)
-        // Paginate based on entries per page
-        ->paginate($entries)->appends($request->query());
+        // Build the query with filters
+        $query = KIR::query();
 
-    return view('kir.index', compact('kir'));
-}
+        if ($year) {
+            $query->whereYear('tanggal_expired_kir', $year);
+        }
 
+        if ($search) {
+            $query->whereHas('kendaraan', function ($q) use ($search) {
+                $q->where('nomor_polisi', 'like', "%$search%")
+                    ->orWhere('tipe', 'like', "%$search%");
+            });
+        }
+
+        $query->orderBy('created_at', 'desc');
+
+        // Paginate the results
+        $kir = $query->with('kendaraan')
+            ->paginate($entries)
+            ->appends($request->all());
+        return view('kir.index', compact('kir'));
+    }
+
+    public function detail($id)
+    {
+        $kir = KIR::with('kendaraan')->find($id);
+        return view('kir.detail', compact('kir'));
+    }
 
     public function create()
     {
         $kendaraans = Kendaraan::where('nomor_polisi', 'LIKE', '% 7%')
             ->orWhere('nomor_polisi', 'LIKE', '% 9%')
+            ->orWhere('nomor_polisi', 'LIKE', '% 8%')
             ->get();
         return view('kir.add', compact('kendaraans'));
     }
@@ -45,13 +57,13 @@ class KIRController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'kendaraan_id' => 'required | exists:kendaraans,id',
+            'kendaraan_id' => 'required|exists:kendaraans,id',
             'nomor_uji_kendaraan' => [
                 'required',
                 Rule::unique('kirs')->where(function ($query) use ($request) {
-                    return $query->where('bulan_uji', date('m', strtotime($request->tanggal_expired_kir)))
-                    ->where('tahun_uji', date('Y', strtotime($request->tanggal_expired_kir)));
-                })
+                    return $query->whereMonth('tanggal_expired_kir', date('m', strtotime($request->tanggal_expired_kir)))
+                        ->whereYear('tanggal_expired_kir', date('Y', strtotime($request->tanggal_expired_kir)));
+                }),
             ],
             'tanggal_expired_kir' => 'required',
         ]);

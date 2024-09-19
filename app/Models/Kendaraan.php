@@ -26,6 +26,9 @@ class Kendaraan extends Model
         'nomor_rangka',
         'nomor_mesin',
         'bahan_bakar',
+        'nomor_bpkb',
+        'tahun_registrasi',
+        'ident',
     ];
 
     public function modelKendaraan()

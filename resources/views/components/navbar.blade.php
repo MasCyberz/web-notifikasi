@@ -151,12 +151,15 @@
                     <span class="avatar avatar-sm"
                         style="background-image: url({{ asset('./img/default-profile.png') }})"></span>
                     <div class="d-none d-xl-block ps-2">
-                        <div>Dimas</div>
+                        <div>{{ Auth::user()->name }}</div>
                         {{-- <div class="mt-1 small text-secondary">UI Designer</div> --}}
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="{{ route('login') }}" class="dropdown-item">Logout</a>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="dropdown-item">Logout</button>
+                    </form>
                 </div>
             </div>
         </div>

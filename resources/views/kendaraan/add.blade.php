@@ -67,19 +67,19 @@
                                 <label class="form-label">Jenis Kendaraan</label>
                                 <select class="form-select @error('jenis_kendaraan') is-invalid @enderror"
                                     name="jenis_kendaraan">
-                                    <option value="mobilpenumpang"
-                                        {{ old('jenis_kendaraan') == 'mobilpenumpang' ? 'selected' : '' }}>MOBIL
+                                    <option value="Mobil Penumpang"
+                                        {{ old('jenis_kendaraan') == 'Mobbil Penumpang' ? 'selected' : '' }}>MOBIL
                                         PENUMPANG</option>
-                                    <option value="mobilbarang"
-                                        {{ old('jenis_kendaraan') == 'mobilbarang' ? 'selected' : '' }}>MOBIL BARANG
+                                    <option value="Mobil Barang"
+                                        {{ old('jenis_kendaraan') == 'Mobil Barang' ? 'selected' : '' }}>MOBIL BARANG
                                     </option>
-                                    <option value="sepedamotor"
-                                        {{ old('jenis_kendaraan') == 'sepedamotor' ? 'selected' : '' }}>SEPEDA MOTOR
+                                    <option value="Sepeda Motor"
+                                        {{ old('jenis_kendaraan') == 'Sepeda Motor' ? 'selected' : '' }}>SEPEDA MOTOR
                                     </option>
-                                    <option value="bus" {{ old('jenis_kendaraan') == 'bus' ? 'selected' : '' }}>BUS
+                                    <option value="Bus" {{ old('jenis_kendaraan') == 'Bus' ? 'selected' : '' }}>BUS
                                     </option>
-                                    <option value="kendaraankhusus"
-                                        {{ old('jenis_kendaraan') == 'kendaraankhusus' ? 'selected' : '' }}>KENDARAAN
+                                    <option value="Kendaraan Khusus"
+                                        {{ old('jenis_kendaraan') == 'Kendaraan Khusus' ? 'selected' : '' }}>KENDARAAN
                                         KHUSUS</option>
                                 </select>
                                 @error('jenis_kendaraan')

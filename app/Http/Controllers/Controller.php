@@ -35,42 +35,6 @@ class Controller extends BaseController
 
         // Untuk Menghitung H-45, H-10, Hari H
         $today = Carbon::today();
-        // $oneAndHalfMonth = $today->copy()->addMonths(1)->addDays(15);
-        // $tenDays = $today->copy()->addDays(10);
-
-        // Query
-
-        // $stnkPR = STNK::whereBetween('tanggal_perpanjangan', [$today->copy()->addDays(11), $oneAndHalfMonth])
-        //     ->whereDate('tanggal_perpanjangan', '!=', $today)
-        //     ->with('relasiSTNKtoKendaraan') // Mengambil relasi kendaraan
-        //     ->get();
-
-        // $kirPR = KIR::whereBetween('tanggal_expired_kir', [$today->copy()->addDays(11), $oneAndHalfMonth])
-        //     ->whereDate('tanggal_expired_kir', '!=', $today)
-        //     ->with('kendaraan') // Mengambil relasi kendaraan
-        //     ->get();
-
-        // Query untuk mendapatkan data PR STNK dalam 10 hari, kecuali hari ini
-        // $stnkTenDays = STNK::whereBetween('tanggal_perpanjangan', [$today, $tenDays])
-        //     ->whereDate('tanggal_perpanjangan', '!=', $today)
-        //     ->with('RelasiSTNKtoKendaraan') // Mengambil relasi kendaraan
-        //     ->get();
-
-// Query untuk mendapatkan data PR KIR dalam 10 hari, kecuali hari ini
-        // $kirTenDays = KIR::whereBetween('tanggal_expired_kir', [$today, $tenDays])
-        //     ->whereDate('tanggal_expired_kir', '!=', $today)
-        //     ->with('kendaraan') // Mengambil relasi kendaraan
-        //     ->get();
-
-        // Query untuk mendapatkan data PR STNK yang jatuh tempo hari ini
-        // $stnkToday = STNK::whereDate('tanggal_perpanjangan', $today)
-        //     ->with('relasiSTNKtoKendaraan') // Mengambil relasi kendaraan
-        //     ->get();
-
-// Query untuk mendapatkan data PR KIR yang jatuh tempo hari ini
-        // $kirToday = KIR::whereDate('tanggal_expired_kir', $today)
-        //     ->with('kendaraan') // Mengambil relasi kendaraan
-        //     ->get();
 
         // STNK Notifications
         $stnkNotifications = STNK::all()->map(function ($stnk) use ($today) {
@@ -79,8 +43,7 @@ class Controller extends BaseController
             $diffInHours = $today->diffInHours($deadline, false);
             $diffInMinutes = $today->diffInMinutes($deadline, false);
 
-            // Jika sudah lewat H+3, kembalikan null agar tidak muncul
-            if ($diffInDays < -3) {
+            if ($diffInDays < 0) {
                 return null;
             }
 
@@ -139,8 +102,7 @@ class Controller extends BaseController
             $diffInHours = $today->diffInHours($deadline, false);
             $diffInMinutes = $today->diffInMinutes($deadline, false);
 
-            // Jika sudah lewat H+3, kembalikan null agar tidak muncul
-            if ($diffInDays < -3) {
+            if ($diffInDays < 0) {
                 return null;
             }
 
@@ -219,47 +181,135 @@ class Controller extends BaseController
         $today = Carbon::today();
 
         // Ambil data dari model dan parse tanggal
-        $kirData = KIR::all()->map(function ($kir) {
+        // $kirData = KIR::all()->map(function ($kir) {
+        //     $kir->tanggal_expired_kir = Carbon::parse($kir->tanggal_expired_kir);
+        //     return $kir;
+        // });
+
+        // Ambil data dan parse tanggal untuk STNK
+        // $stnkData = STNK::all()->map(function ($stnk) {
+        //     $stnk->tanggal_perpanjangan = Carbon::parse($stnk->tanggal_perpanjangan);
+        //     return $stnk;
+        // });
+
+        // // Filter data KIR untuk H-10, 45 hari, dan Hari H
+        // $hMinus10KIR = $kirData->filter(function ($kir) use ($today) {
+        //     $daysToExpire = $kir->tanggal_expired_kir->diffInDays($today);
+        //     return $daysToExpire > 0 && $daysToExpire <= 10;
+        // });
+
+        // $prDateKIR = $kirData->filter(function ($kir) use ($today) {
+        //     $daysToExpire = $kir->tanggal_expired_kir->diffInDays($today);
+        //     return $daysToExpire > 10 && $daysToExpire <= 45; // Menampilkan dari 45 hari hingga H-10
+        // });
+
+        // $hariIniKIR = $kirData->filter(function ($kir) use ($today) {
+        //     return $kir->tanggal_expired_kir->isSameDay($today);
+        // });
+
+        // Filter data KIR untuk H-10, 45 hari, dan Hari H
+        // $hMinus10STNK = $stnkData->filter(function ($stnk) use ($today) {
+        //     $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
+        //     return $daysToExpire > 0 && $daysToExpire <= 10; // Menampilkan dari H-10 hingga hari H
+        // });
+
+        // $prDateSTNK = $stnkData->filter(function ($stnk) use ($today) {
+        //     $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
+        //     return $daysToExpire >= 10 && $daysToExpire <= 45; // Menampilkan dari 45 hari hingga H-10
+        // });
+
+        // $hariIniSTNK = $stnkData->filter(function ($stnk) use ($today) {
+        //     return $stnk->tanggal_perpanjangan->isSameDay($today);
+        // });
+
+        // Ambil data dari model dan parse tanggal
+        $kirData = KIR::all()->map(function ($kir) use ($today) {
             $kir->tanggal_expired_kir = Carbon::parse($kir->tanggal_expired_kir);
             return $kir;
         });
 
-        // Ambil data dan parse tanggal untuk STNK
-        $stnkData = STNK::all()->map(function ($stnk) {
+        $stnkData = STNK::all()->map(function ($stnk) use ($today) {
             $stnk->tanggal_perpanjangan = Carbon::parse($stnk->tanggal_perpanjangan);
             return $stnk;
         });
 
-        // Filter data KIR untuk H-10, 45 hari, dan Hari H
-        $hMinus10KIR = $kirData->filter(function ($kir) use ($today) {
+        $notifikasi = collect();
+
+// Gabungkan data KIR
+        foreach ($kirData as $kir) {
             $daysToExpire = $kir->tanggal_expired_kir->diffInDays($today);
-            return $daysToExpire > 0 && $daysToExpire <= 10;
-        });
+            $notifikasi->push((object) [
+                'id' => $kir->id,
+                'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
+                'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 KIR' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan KIR' : 'KIR hari ini'),
+                'message' => $daysToExpire <= 0 ? 'Hari ini' : "akan jatuh tempo dalam $daysToExpire hari.",
+                'tanggal_perpanjangan' => $kir->tanggal_expired_kir,
+                'relasiSTNKtoKendaraan' => $kir->kendaraan,
+            ]);
+        }
 
-        $prDateKIR = $kirData->filter(function ($kir) use ($today) {
-            $daysToExpire = $kir->tanggal_expired_kir->diffInDays($today);
-            return $daysToExpire > 10 && $daysToExpire <= 45; // Menampilkan dari 45 hari hingga H-10
-        });
-
-        $hariIniKIR = $kirData->filter(function ($kir) use ($today) {
-            return $kir->tanggal_expired_kir->isSameDay($today);
-        });
-
-        // Filter data KIR untuk H-10, 45 hari, dan Hari H
-        $hMinus10STNK = $stnkData->filter(function ($stnk) use ($today) {
+// Gabungkan data STNK
+        foreach ($stnkData as $stnk) {
             $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
-            return $daysToExpire > 0 && $daysToExpire <= 10; // Menampilkan dari H-10 hingga hari H
+            $notifikasi->push((object) [
+                'id' => $stnk->id,
+                'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
+                'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 STNK' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan STNK' : 'STNK hari ini'),
+                'message' => $daysToExpire <= 0 ? 'Hari ini' : "akan jatuh tempo dalam $daysToExpire hari.",
+                'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
+                'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+            ]);
+        }
+
+// Urutkan berdasarkan tanggal perpanjangan
+        $notifikasi = $notifikasi->sortBy(function ($item) {
+            return $item->tanggal_perpanjangan;
         });
 
-        $prDateSTNK = $stnkData->filter(function ($stnk) use ($today) {
-            $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
-            return $daysToExpire >= 10 && $daysToExpire <= 45; // Menampilkan dari 45 hari hingga H-10
+// Hanya tampilkan notifikasi yang jatuh tempo dalam 45 hari ke depan dan yang jatuh tempo hari ini
+        $notifikasi = $notifikasi->filter(function ($item) use ($today) {
+            $daysToExpire = $item->tanggal_perpanjangan->diffInDays($today);
+            return $daysToExpire <= 45 && $item->tanggal_perpanjangan->isFuture() || $item->tanggal_perpanjangan->isToday();
         });
 
-        $hariIniSTNK = $stnkData->filter(function ($stnk) use ($today) {
-            return $stnk->tanggal_perpanjangan->isSameDay($today);
-        });
+        return view('pemberitahuan-lainnya', compact(
+            // 'hariIniKIR',
+            // 'hMinus10KIR',
+            // 'prDateKIR',
+            // 'hariIniSTNK',
+            // 'hMinus10STNK',
+            // 'prDateSTNK',
+            'today',
+            'notifikasi'
+        ));
+    }
 
-        return view('pemberitahuan-lainnya', compact('hariIniKIR', 'hMinus10KIR', 'prDateKIR', 'hariIniSTNK', 'hMinus10STNK', 'prDateSTNK', 'today'));
+    public function detailAlert($id)
+    {
+        // Cari STNK dengan ID
+        $stnk = STNK::where('id', $id)->first();
+
+        // Jika STNK ditemukan dan memiliki kolom biaya
+        if ($stnk && $stnk->biaya) {
+            return view('detail-alert', ['notifikasi' => $stnk, 'tipe' => 'STNK']);
+        }
+
+        // Cari KIR dengan ID
+        $kir = KIR::where('id', $id)->first();
+
+        // Jika KIR ditemukan dan memiliki kolom nomor_uji_kendaraan
+        if ($kir && $kir->nomor_uji_kendaraan) {
+            return view('detail-alert', ['notifikasi' => $kir, 'tipe' => 'KIR']);
+        }
+
+        // Jika tidak ditemukan di kedua tabel
+        abort(404);
+
+        // Tentukan tipe notifikasi
+        $tipe = $notifikasi instanceof STNK ? 'STNK' : 'KIR';
+
+        dd($notifikasi, $tipe);
+
+        return view('detail-alert', compact('notifikasi', 'tipe'));
     }
 }

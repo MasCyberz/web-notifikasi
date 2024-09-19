@@ -3,7 +3,7 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-cards">
-                <div class="col-sm-6 col-xl-4">
+                <div class="col-12 col-md-6 {{ Auth::user()->role_id == 1 ? 'col-xl-4' : '' }}">
                     <div class="card card-sm">
                         <div class="card-body">
                             <div class="row align-items-center">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-xl-4">
+                <div class="col-12 col-md-6 {{ Auth::user()->role_id == 1 ? 'col-xl-4' : '' }}">
                     <div class="card card-sm">
                         <div class="card-body">
                             <div class="row align-items-center">
@@ -47,25 +47,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-xl-4">
-                    <div class="card card-sm">
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <div class="col-auto">
-                                    <span
-                                        class="bg-gray text-dark avatar"><!-- Download SVG icon from http://tabler-icons.io/i/brand-x -->
-                                        <i class="ti ti-users fs-2"></i>
-                                    </span>
-                                </div>
-                                <div class="col">
-                                    <div class="font-weight-medium">
-                                        {{ $dataUser }} User
+                @if (Auth::user()->role_id == 1)
+                    <div class="col-12 col-xl-4">
+                        <div class="card card-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <span
+                                            class="bg-gray text-dark avatar"><!-- Download SVG icon from http://tabler-icons.io/i/brand-x -->
+                                            <i class="ti ti-users fs-2"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col">
+                                        <div class="font-weight-medium">
+                                            {{ $dataUser }} User
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
 
             <div class="row mt-3">
@@ -382,7 +384,7 @@
                                 <p class="card-text">Buat PR untuk kendaraan <span class="fw-bold">{{ $kir->kendaraan->nomor_polisi }}</span>
                                     untuk perpanjangan KIR pada </p>
                                     <p>Jatuh Tempo : {{ \Carbon\Carbon::parse($kir->tanggal_expired_kir)->format('d-M-Y') }}</p>
-                                
+
                                 <a href="#" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
@@ -548,7 +550,7 @@
                                     Tanggal Perpanjangan:
                                     {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan ?? $notifikasi->tanggal_expired_kir)->format('d-M-Y') }}
                                 </p>
-                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                                <a href="{{ route('detail-alert', $notifikasi->id) }}" class="btn btn-light">Selengkapnya</a>
                             </div>
                         </div>
                     </div>

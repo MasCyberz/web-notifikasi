@@ -1,5 +1,38 @@
 <x-app-layout>
+
+    @push('styles')
+        <style>
+            /* Custom styles for full-width alert on mobile */
+            @media (max-width: 768px) {
+                .alert {
+                    width: 100%;
+                    right: 0;
+                    margin: 50px 0;
+                    position: absolute;
+                    top: 0;
+                }
+            }
+        </style>
+    @endpush
+
     <x-PageHeader header="Data STNK" classcontainer="" />
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Selamat!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Gagal!</strong> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-deck row-cards">
@@ -12,66 +45,80 @@
                         </div>
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('stnk-index') }}" method="GET">
-                                <div class="d-flex">
-                                    <!-- Entries Dropdown -->
-                                    <div class="text-secondary">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                            <select name="entries" class="form-control form-control-sm">
-                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
-                                                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
-                                                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
-                                                <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
-                                                <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
-                                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
-                                            </select>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-6 d-flex flex-wrap">
+                                        <!-- Entries Dropdown -->
+                                        <div class="me-3 text-secondary">
+                                            Show
+                                            <div class="d-inline-block">
+                                                <select name="entries" class="form-control form-control-sm">
+                                                    <option value=""
+                                                        {{ is_null(request('entries')) ? 'selected' : '' }}>Select
+                                                        entries</option>
+                                                    <option value="5"
+                                                        {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                    <option value="10"
+                                                        {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="15"
+                                                        {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                    <option value="20"
+                                                        {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                    <option value="25"
+                                                        {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                                </select>
+                                            </div>
+                                            entries
                                         </div>
-                                        entries
-                                    </div>
-                        
-                                    <!-- Year Input -->
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="number" name="year" class="form-control form-control-sm"
-                                            value="{{ request('year') }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3" aria-label="Year" placeholder="{{ \Carbon\Carbon::now()->year }}">
-                                    </div>
-                                    Year
-                                    
-                        
-                                    <!-- Search Input -->
-                                    <div class="ms-auto text-secondary">
-                                        Search:
-                                        <div class="ms-2 d-inline-block">
-                                            <input type="text" name="search" class="form-control form-control-sm"
-                                                value="{{ request('search') }}" aria-label="Search">
+
+                                        <!-- Year Input -->
+                                        <div class="me-3">
+                                            Tahun
+                                            <div class="d-inline-block">
+                                                <input type="number" name="year"
+                                                    class="form-control form-control-sm" value="{{ request('year') }}"
+                                                    min="1900" aria-label="Year"
+                                                    placeholder="{{ \Carbon\Carbon::now()->year }}">
+                                            </div>
                                         </div>
                                     </div>
-                        
-                                    <!-- Submit Button -->
-                                    <div class="ms-2">
-                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+
+                                    <!-- Search and Apply (Right Side) -->
+                                    <div class="col-12 col-md-6 d-flex justify-content-md-end flex-wrap">
+                                        <!-- Search Input -->
+                                        <div class="me-3 text-secondary">
+                                            Search:
+                                            <div class="d-inline-block">
+                                                <input type="text" name="search"
+                                                    class="form-control form-control-sm"
+                                                    value="{{ request('search') }}" aria-label="Search">
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div>
+                                            <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        
+
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
                                         <th class="w-1">No.
                                             <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                 class="icon icon-sm icon-thick">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M6 15l6 -6l6 6"></path>
-                                            </svg>
+                                            </svg> --}}
                                         </th>
-                                        <th>Nama Kendaraan</th>
-                                        <th>Tipe Kendaraan</th>
                                         <th>Plat Nomor</th>
+                                        <th>Tipe Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
                                         <th>Biaya Perpanjangan</th>
                                         <th></th>
@@ -79,17 +126,22 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($stnks as $stnk)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}</td>
-                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
+                                        @php
+                                            $isExpired = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isPast();
+                                        @endphp
+                                        <tr class="{{ $isExpired ? 'bg-secondary-subtle' : '' }}">
+                                            <td>{{ $loop->iteration + $stnks->firstItem() - 1 }}</td>
                                             <td>{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</td>
+                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
                                             <td>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->translatedFormat('d F Y') }}
                                             </td>
                                             <td>Rp.{{ $stnk->biaya }}</td>
                                             <td class="text-end">
+                                                <a href="{{ route('stnk-detail', $stnk->id) }}"
+                                                    class="btn btn-primary btn-icon"><i
+                                                        class="ti ti-alert-circle"></i></a>
                                                 <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}"
-                                                    class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
+                                                    class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
                                                 <a href="{{ route('stnk-delete', ['id' => $stnk->id]) }}"
                                                     class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                             </td>
@@ -133,7 +185,7 @@
                                             </a>
                                         </li>
                                     @endif
-                        
+
                                     {{-- Pagination Elements --}}
                                     @foreach ($stnks->links()->elements as $element)
                                         {{-- "Three Dots" Separator --}}
@@ -142,7 +194,7 @@
                                                 <span class="page-link">{{ $element }}</span>
                                             </li>
                                         @endif
-                        
+
                                         {{-- Array Of Links --}}
                                         @if (is_array($element))
                                             @foreach ($element as $page => $url)
@@ -156,7 +208,7 @@
                                             @endforeach
                                         @endif
                                     @endforeach
-                        
+
                                     {{-- Next Page Link --}}
                                     @if ($stnks->hasMorePages())
                                         <li class="page-item">
@@ -188,11 +240,24 @@
                                 </ul>
                             @endif
                         </div>
-                        
+
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            setTimeout(function() {
+                let alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('hide');
+                }
+            }, 3000); // Menghilang setelah 5 detik
+        </script>
+    @endpush
+
 </x-app-layout>

@@ -44,97 +44,84 @@
                         </div>
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('kendaraan-index') }}" method="GET">
-                                <div class="d-flex">
-                                    <!-- Entries Dropdown -->
-                                    <div class="text-secondary">
-                                        Show
-                                        <div class="mx-2 d-inline-block">
-                                            <select name="entries" class="form-control form-control-sm">
-                                                <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
-                                                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
-                                                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
-                                                <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
-                                                <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
-                                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
-                                            </select>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-12 col-md-6 d-flex flex-wrap">
+                                        <!-- Entries Dropdown -->
+                                        <div class="me-3 text-secondary">
+                                            Show
+                                            <div class="d-inline-block">
+                                                <select name="entries" class="form-control form-control-sm">
+                                                    <option value=""
+                                                        {{ is_null(request('entries')) ? 'selected' : '' }}>Select
+                                                        entries</option>
+                                                    <option value="5"
+                                                        {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                    <option value="10"
+                                                        {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="15"
+                                                        {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                    <option value="20"
+                                                        {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                    <option value="25"
+                                                        {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                                </select>
+                                            </div>
+                                            entries
                                         </div>
-                                        entries
                                     </div>
-                        
-                                    <!-- Search Input -->
-                                    <div class="ms-auto text-secondary">
-                                        Search:
-                                        <div class="ms-2 d-inline-block">
-                                            <input type="text" name="search" class="form-control form-control-sm"
-                                                value="{{ request('search') }}" aria-label="Search">
+
+                                    <!-- Search and Apply (Right Side) -->
+                                    <div class="col-12 col-md-6 d-flex justify-content-md-end flex-wrap">
+                                        <!-- Search Input -->
+                                        <div class="me-3 text-secondary">
+                                            Search:
+                                            <div class="d-inline-block">
+                                                <input type="text" name="search"
+                                                    class="form-control form-control-sm"
+                                                    value="{{ request('search') }}" aria-label="Search">
+                                            </div>
                                         </div>
-                                    </div>
-                        
-                                    <!-- Submit Button -->
-                                    <div class="ms-2">
-                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+
+                                        <!-- Submit Button -->
+                                        <div>
+                                            <button type="submit" class="btn btn-sm btn-primary w-100">Apply</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>    
+                            </form>
                         </div>
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
+                            <table class="table card-table table-vcenter text-nowrap datatable ">
                                 <thead>
                                     <tr>
                                         <th class="w-1">No.
                                             <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                 class="icon icon-sm icon-thick">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M6 15l6 -6l6 6"></path>
-                                            </svg>
+                                            </svg> --}}
                                         </th>
                                         <th>No. Polisi</th>
                                         <th>Merk</th>
                                         <th>Tipe Kendaraan</th>
-                                        <th>Jenis</th>
-                                        <th>Model</th>
-                                        <th>Tahun</th>
-                                        <th>Warna</th>
-                                        <th>No. Mesin</th>
-                                        <th>Bahan Bakar</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($kendaraans as $kendaraan)
                                         <tr>
-                                            <td><span class="text-secondary">{{ $loop->iteration }}</span></td>
+                                            <td><span class="text-secondary">{{ $loop->iteration + $kendaraans->firstItem() - 1 }}</span></td>
                                             <td>
-                                                <span class="flag flag-xs flag-country-us me-2"></span>
                                                 {{ $kendaraan->nomor_polisi }}
                                             </td>
                                             <td>
-                                                <span class="flag flag-xs flag-country-us me-2"></span>
                                                 {{ $kendaraan->merk_kendaraan }}
                                             </td>
                                             <td>
                                                 {{ $kendaraan->tipe }}
-                                            </td>
-                                            <td>
-                                                {{ $kendaraan->jenis_kendaraan }}
-                                            </td>
-                                            <td>
-                                                {{ $kendaraan->modelKendaraan->name }}
-                                            </td>
-                                            <td>
-                                                {{ $kendaraan->tahun }}
-                                            </td>
-                                            <td class="text-capitalize">
-                                                {{ $kendaraan->warna }}
-                                            </td>
-                                            <td>
-                                                {{ $kendaraan->nomor_mesin }}
-                                            </td>
-                                            <td>
-                                                {{ $kendaraan->bahan_bakar }}
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kendaraan-detail', $kendaraan->id) }}" class="btn btn-primary btn-icon">
@@ -174,14 +161,14 @@
                                         </a>
                                     </li>
                                 @endif
-                            
+
                                 <!-- Tombol Nomor Halaman -->
                                 @for ($i = 1; $i <= $kendaraans->lastPage(); $i++)
                                     <li class="page-item {{ $i == $kendaraans->currentPage() ? 'active' : '' }}">
                                         <a class="page-link" href="{{ $kendaraans->url($i) }}">{{ $i }}</a>
                                     </li>
                                 @endfor
-                            
+
                                 <!-- Tombol Next -->
                                 @if ($kendaraans->hasMorePages())
                                     <li class="page-item">
@@ -205,7 +192,7 @@
                                     </li>
                                 @endif
                             </ul>
-                            
+
                         </div>
                     </div>
                 </div>
