@@ -15,8 +15,11 @@
                             </div> --}}
                             <div class="mb-3">
                                 <label class="form-label">Plat Nomor</label>
-                                <input type="text" name="nomor_polisi" class="form-control" data-mask="B 0000 ***"
-                                    data-mask-visible="true" placeholder="B 1234 XYZ" autocomplete="off">
+                                <input type="text" name="nomor_polisi" class="form-control @error('nomor_polisi') is-invalid @enderror"
+                                    value="{{ old('nomor_polisi') }}" placeholder="B 1234 XYZ" autocomplete="off">
+                                @error('nomor_polisi')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
@@ -67,7 +70,7 @@
                             <div class="mb-3">
                                 <label for="tahun" class="form-label">Tahun</label>
                                 <input type="number" name="tahun" id="tahun" class="form-control" min="1901"
-                                    max="3000" placeholder="2024" value="{{ old('tahun') }}">
+                                    placeholder="2024" value="{{ old('tahun') }}">
                             </div>
                             <x-Input label="Warna" name="warna" type="text" class=""
                                 value="{{ old('warna') }}" />
@@ -77,6 +80,11 @@
                                 value="{{ old('nomor_mesin') }}" />
                             <x-Input label="Bahan Bakar" name="bahan_bakar" type="text" class=""
                                 value="{{ old('bahan_bakar') }}" />
+                            <x-Input label="Nomor BPKB" name="nomor_bpkb type="text" class=""
+                                value="{{ old('bahan_bakar') }}" />
+                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" class=""
+                                value="{{ old('tahun_registrasi') }}" />
+                            <x-Input label="Ident" name="ident" class="" value="{{ old('ident') }}" />
                         </div>
                         <x-cardFooter route="{{ route('kendaraan-index') }}" />
                     </form>

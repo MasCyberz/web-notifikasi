@@ -124,6 +124,13 @@
                 <div class="col-md-12 mb-3">
                     <h3 class="page-title"><span>H-10 Perpanjangan</span></h3>
                 </div>
+                @if (count($hMinus10STNK) == 0 && count($hMinus10KIR) == 0)
+                    <div class="col-md-12"></div>
+                        <div class="alert alert-info" role="alert">
+                            Tidak ada Perpanjangan dalam H-10.
+                        </div>
+                    </div>
+                @endif
                 @foreach ($hMinus10STNK as $stnk)
                     @php
                         $now = \Carbon\Carbon::now();

@@ -34,6 +34,12 @@ class KendaraanController extends Controller
     return view('kendaraan.index', compact('kendaraans'));
     }
 
+    public function detail($id)
+    {
+        $kendaraan = Kendaraan::with('modelKendaraan')->find($id);
+        return view('kendaraan.detail', compact('kendaraan'));
+    }
+
     public function create()
     {
         $models = ModelKendaraan::all();
@@ -42,10 +48,21 @@ class KendaraanController extends Controller
 
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'nomor_polisi' => 'required|string|max:255',
-        //     'merk_kendaraan' => 'required|string|max:255'
-        // ]);
+        $request->validate([
+            'nomor_polisi' => 'required|string|max:255',
+            'merk_kendaraan' => 'required|string|max:255',
+            'tipe' => 'required|string|max:255',
+            'jenis_kendaraan' => 'required|string|max:255',
+            'model_kendaraan_id' => 'required|exists:model_kendaraans,id',
+            'tahun' => 'required|integer|digits:4',
+            'warna' => 'required|string|max:255',
+            'nomor_rangka' => 'required|string|max:255',
+            'nomor_mesin' => 'required|string|max:255',
+            'bahan_bakar' => 'required|string|max:255',
+            'nomor_bpkb' => 'required|string|max:255',
+            'tahun_registrasi' => 'required|string|max:255',
+            'ident' => 'required|string|max:255',
+        ]);
 
         // dd($request->all());
 
@@ -60,6 +77,10 @@ class KendaraanController extends Controller
             'nomor_rangka' => $request->nomor_rangka,
             'nomor_mesin' => $request->nomor_mesin,
             'bahan_bakar' => $request->bahan_bakar,
+            'nomor_bpkb' => $request->nomor_bpkb,
+            'tahun_registrasi' => $request->tahun_registrasi,
+            'ident' => $request->ident,
+
         ]);
 
         return redirect()->route('kendaraan-index')->with('success', 'Kendaraan berhasil ditambahkan.');
@@ -113,6 +134,6 @@ class KendaraanController extends Controller
         $kendaraan = Kendaraan::findOrFail($id);
         $kendaraan->delete();
 
-        return redirect()->route('pelatihan')->with('success', 'Kendaraan berhasil dihapus');
+        return redirect()->route('kendaraan-index')->with('success', 'Kendaraan berhasil dihapus');
     }
 }

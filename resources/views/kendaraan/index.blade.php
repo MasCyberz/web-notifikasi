@@ -137,8 +137,10 @@
                                                 {{ $kendaraan->bahan_bakar }}
                                             </td>
                                             <td class="text-end">
+                                                <a href="{{ route('kendaraan-detail', $kendaraan->id) }}" class="btn btn-primary btn-icon">
+                                                    <i class="ti ti-alert-circle"></i></a>
                                                 <a href="{{ route('kendaraan-edit', $kendaraan->id) }}"
-                                                    class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
+                                                    class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
                                                 <a href="{{ route('kendaraan-store-delete', $kendaraan->id) }}"
                                                     class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                             </td>

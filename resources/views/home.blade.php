@@ -78,7 +78,7 @@
 
                 {{-- Notifikasi Hari H --}}
 
-                @foreach ($stnkToday as $stnk)
+                {{-- @foreach ($stnkToday as $stnk)
                     @php
                         $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
                         $message =
@@ -206,11 +206,11 @@
                             }
                         }
                     </script>
-                @endforeach
+                @endforeach --}}
 
                 {{-- Notifikasi 10 Hari --}}
 
-                @foreach ($stnkTenDays as $stnk)
+                {{-- @foreach ($stnkTenDays as $stnk)
                     @php
                         $now = \Carbon\Carbon::now();
                         $deadline = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan);
@@ -365,10 +365,10 @@
                             }
                         </script>
                     @endif
-                @endforeach
+                @endforeach --}}
 
                 {{-- Notifikasi PR (1,5 Bulan) --}}
-                @foreach ($kirPR->slice(0, 4) as $kir)
+                {{-- @foreach ($kirPR->slice(0, 4) as $kir)
                     @php
                         $now = \Carbon\Carbon::now();
                         $deadline = \Carbon\Carbon::parse($kir->tanggal_expired_kir);
@@ -503,7 +503,111 @@
                             }
                         </script>
                     @endif
-                @endforeach
+                @endforeach --}}
+
+                @forelse ($allNotifications as $notifikasi)
+                    @php
+                        $warna = '';
+                        $judul = '';
+
+                        if ($notifikasi->tipe_notifikasi === 'STNK') {
+                            if ($notifikasi->kategori_waktu === 'H-45') {
+                                $judul = 'Pembuatan PR STNK';
+                                $warna = 'primary'; // H-45 hingga H-11
+                            } elseif ($notifikasi->kategori_waktu === 'H-10') {
+                                $judul = 'Perpanjangan STNK';
+                                $warna = 'warning'; // H-10 hingga H-1
+                            } else {
+                                $judul = 'Perpanjangan STNK';
+                                $warna = 'danger'; // Hari H dan jatuh tempo
+                            }
+                        } elseif ($notifikasi->tipe_notifikasi === 'KIR') {
+                            if ($notifikasi->kategori_waktu === 'H-45') {
+                                $judul = 'Pembuatan PR KIR';
+                                $warna = 'primary'; // H-45 hingga H-11
+                            } elseif ($notifikasi->kategori_waktu === 'H-10') {
+                                $judul = 'Perpanjangan KIR';
+                                $warna = 'warning'; // H-10 hingga H-1
+                            } else {
+                                $judul = 'Perpanjangan KIR';
+                                $warna = 'danger'; // Hari H dan jatuh tempo
+                            }
+                        }
+                    @endphp
+
+                    <div class="col-xl-3">
+                        <div class="card text-bg-{{ $notifikasi->warna }} mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $notifikasi->judul }}</h5>
+                                <p class="card-text">
+                                    Plat Nomor: <span
+                                        class="fw-bold">{{ $notifikasi->relasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}</span>
+                                    <br>
+                                    Tenggat Waktu: {{ $notifikasi->message }}
+                                    <br>
+                                    Tanggal Perpanjangan:
+                                    {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan ?? $notifikasi->tanggal_expired_kir)->format('d-M-Y') }}
+                                </p>
+                                <a href="#" class="btn btn-light">Selengkapnya</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Script Notifikasi --}}
+                    @if ($notifikasi->showNotification)
+                        <script>
+                            function setCookie(name, value, days) {
+                                var expires = "";
+                                if (days) {
+                                    var date = new Date();
+                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                    expires = "; expires=" + date.toUTCString();
+                                }
+                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+                            }
+
+                            function getCookie(name) {
+                                var nameEQ = name + "=";
+                                var ca = document.cookie.split(';');
+                                for (var i = 0; i < ca.length; i++) {
+                                    var c = ca[i];
+                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                }
+                                return null;
+                            }
+
+                            function showNotification() {
+                                if (Notification.permission === "granted") {
+                                    var options = {
+                                        body: "{{ $notifikasi->message }}",
+                                        requireInteraction: true,
+                                    };
+                                    new Notification("Pengingat {{ $judul }}", options);
+                                    setCookie(
+                                        "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}",
+                                        "shown", 1);
+                                }
+                            }
+
+                            if (!getCookie(
+                                    "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}"
+                                )) {
+                                if (Notification.permission === "default") {
+                                    Notification.requestPermission().then(permission => {
+                                        if (permission === "granted") {
+                                            showNotification();
+                                        }
+                                    });
+                                } else if (Notification.permission === "granted") {
+                                    showNotification();
+                                }
+                            }
+                        </script>
+                    @endif
+                @empty
+                    <p>Tidak ada notifikasi yang tersedia.</p>
+                @endforelse
 
                 {{-- <div class="col-xl-3">
                     <div class="card text-bg-warning mb-3">
