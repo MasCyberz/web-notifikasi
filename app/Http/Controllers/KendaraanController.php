@@ -10,28 +10,28 @@ class KendaraanController extends Controller
 {
     public function index(Request $request)
     {
-         // Mengambil input dari search dan entries
-    $search = $request->input('search');
-    $entries = $request->input('entries', 10); // Default entries adalah 8 jika tidak ada input
+        // Mengambil input dari search dan entries
+        $search = $request->input('search');
+        $entries = $request->input('entries', 10); // Default entries adalah 8 jika tidak ada input
 
-    // Query dasar untuk mengambil data kendaraan
-    $query = Kendaraan::query();
+        // Query dasar untuk mengambil data kendaraan
+        $query = Kendaraan::query();
 
-    // Jika ada input search, lakukan pencarian berdasarkan beberapa kolom
-    if ($search) {
-        $query->where('nomor_polisi', 'like', "%{$search}%")
-              ->orWhere('merk_kendaraan', 'like', "%{$search}%")
-              ->orWhere('tipe', 'like', "%{$search}%")
-              ->orWhere('jenis_kendaraan', 'like', "%{$search}%")
+        // Jika ada input search, lakukan pencarian berdasarkan beberapa kolom
+        if ($search) {
+            $query->where('nomor_polisi', 'like', "%{$search}%")
+                ->orWhere('merk_kendaraan', 'like', "%{$search}%")
+                ->orWhere('tipe', 'like', "%{$search}%")
+                ->orWhere('jenis_kendaraan', 'like', "%{$search}%")
             //   ->orWhere('modelKendaraan.name', 'like', "%{$search}%")
-              ;
-    }
+            ;
+        }
 
-    // Mengambil data kendaraan dengan pagination berdasarkan input entries
-    $kendaraans = $query->paginate($entries);
+        // Mengambil data kendaraan dengan pagination berdasarkan input entries
+        $kendaraans = $query->paginate($entries);
 
-    // Melempar data ke view
-    return view('kendaraan.index', compact('kendaraans'));
+        // Melempar data ke view
+        return view('kendaraan.index', compact('kendaraans'));
     }
 
     public function detail($id)
@@ -59,7 +59,7 @@ class KendaraanController extends Controller
             'nomor_rangka' => 'required|string|max:255',
             'nomor_mesin' => 'required|string|max:255',
             'bahan_bakar' => 'required|string|max:255',
-            'nomor_bpkb' => 'required|string|max:255',
+            'nomor_bpkb' => 'required|numeric|max:255',
             'tahun_registrasi' => 'required|string|max:255',
             'ident' => 'required|string|max:255',
         ]);
