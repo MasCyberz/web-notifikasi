@@ -43,30 +43,38 @@
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <div class="d-flex">
-                                <div class="text-secondary">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm" value="8"
-                                            size="3" aria-label="Invoices count" fdprocessedid="7ljtz">
+                            <form action="{{ route('kendaraan-index') }}" method="GET">
+                                <div class="d-flex">
+                                    <!-- Entries Dropdown -->
+                                    <div class="text-secondary">
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <select name="entries" class="form-control form-control-sm" onchange="this.form.submit()">
+                                                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                            </select>
+                                        </div>
+                                        entries
                                     </div>
-                                    entries
-                                    <div class="mx-2 d-inline-block">
-                                        <input type="number" class="form-control form-control-sm"
-                                            value="{{ \Carbon\Carbon::now()->format('Y') }}" min="1900"
-                                            max="{{ \Carbon\Carbon::now()->year }}" size="3"
-                                            aria-label="Invoices count">
+                        
+                                    <!-- Search Input -->
+                                    <div class="ms-auto text-secondary">
+                                        Search:
+                                        <div class="ms-2 d-inline-block">
+                                            <input type="text" name="search" class="form-control form-control-sm"
+                                                value="{{ request('search') }}" aria-label="Search">
+                                        </div>
                                     </div>
-                                    Year
+                        
+                                    <!-- Submit Button -->
+                                    <div class="ms-2">
+                                        <button type="submit" class="btn btn-sm btn-primary">Apply</button>
+                                    </div>
                                 </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input type="text" class="form-control form-control-sm"
-                                            aria-label="Search invoice" fdprocessedid="f6xn2k">
-                                    </div>
-                                </div>
-                            </div>
+                            </form>    
                         </div>
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
@@ -139,41 +147,62 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            <p class="m-0 text-secondary">Showing <span>1</span> to <span>8</span> of
-                                <span>16</span>
-                                entries
-                            </p>
+                            <p class="m-0 text-secondary">Showing {{ $kendaraans->firstItem() }} to {{ $kendaraans->lastItem() }} of {{ $kendaraans->total() }} entries</p>
                             <ul class="pagination m-0 ms-auto">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                        <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M15 6l-6 6l6 6"></path>
-                                        </svg>
-                                        prev
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M9 6l6 6l-6 6"></path>
-                                        </svg>
-                                    </a>
-                                </li>
+                                <!-- Tombol Prev -->
+                                @if ($kendaraans->onFirstPage())
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M15 6l-6 6l6 6"></path>
+                                            </svg>
+                                            prev
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $kendaraans->previousPageUrl() }}" tabindex="-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M15 6l-6 6l6 6"></path>
+                                            </svg>
+                                            prev
+                                        </a>
+                                    </li>
+                                @endif
+                            
+                                <!-- Tombol Nomor Halaman -->
+                                @for ($i = 1; $i <= $kendaraans->lastPage(); $i++)
+                                    <li class="page-item {{ $i == $kendaraans->currentPage() ? 'active' : '' }}">
+                                        <a class="page-link" href="{{ $kendaraans->url($i) }}">{{ $i }}</a>
+                                    </li>
+                                @endfor
+                            
+                                <!-- Tombol Next -->
+                                @if ($kendaraans->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $kendaraans->nextPageUrl() }}">
+                                            next
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M9 6l6 6l-6 6"></path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                            next
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M9 6l6 6l-6 6"></path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
+                            
                         </div>
                     </div>
                 </div>

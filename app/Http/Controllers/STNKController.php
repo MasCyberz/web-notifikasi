@@ -10,10 +10,26 @@ class STNKController extends Controller
 {
     //
 
-    public function index()
-    {
-        $stnks = STNK::with('RelasiSTNKtoKendaraan')->get();
-        return view('stnk.index',  ['stnks' => $stnks]);
+    public function index(Request $request){
+        // Menerima input untuk pencarian, jumlah entries per halaman, dan tahun
+        $search = $request->input('search');
+        $entries = $request->input('entries', 10); // Default entries per halaman adalah 8
+        $year = $request->input('year', \Carbon\Carbon::now()->format('Y')); // Default tahun adalah tahun saat ini
+
+        // Query untuk mengambil data STNK dengan filter search dan year
+        $stnks = STNK::with('RelasiSTNKtoKendaraan')
+            ->whereHas('RelasiSTNKtoKendaraan', function ($query) use ($search) {
+                if ($search) {
+                    $query->where('merk_kendaraan', 'like', "%$search%")
+                        ->orWhere('tipe', 'like', "%$search%")
+                        ->orWhere('nomor_polisi', 'like', "%$search%");
+                }
+            })
+            ->whereYear('tanggal_perpanjangan', $year)
+            ->paginate($entries); // Pagination dengan jumlah entries yang dipilih
+
+        // Mengirim data ke view
+        return view('stnk.index', compact('stnks', 'search', 'entries', 'year'));
     }
 
     public function create()

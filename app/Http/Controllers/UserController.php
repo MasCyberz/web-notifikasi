@@ -7,9 +7,27 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function index(){
-        $users = User::all();
-        return view('admin.management-user.index', ['users' => $users]);
+    public function index(Request $request){
+        // Ambil nilai "search" dan "entries" dari request
+        $search = $request->input('search');
+        $entries = $request->input('entries', 10); // Default 8 entries per page
+
+        // Query dasar
+        $users = User::query();
+
+        // Jika ada pencarian
+        if ($search) {
+            $users->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%');
+        }
+
+        // Ambil data dengan pagination sesuai jumlah entries
+        $users = $users->paginate($entries)->appends($request->query());
+
+        return view('admin.management-user.index', compact('users'));
+       
+        // $users = User::all();
+        // return view('admin.management-user.index', ['users' => $users]);
     }
 
     public function createUser(){

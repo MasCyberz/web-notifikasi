@@ -9,11 +9,30 @@ use Illuminate\Validation\Rule;
 
 class KIRController extends Controller
 {
-    public function index()
-    {
-        $kir = KIR::with('kendaraan')->get();
-        return view('kir.index', compact('kir'));
-    }
+    public function index(Request $request)
+{
+    // Get search, entries, and year from request
+    $search = $request->input('search');
+    $entries = $request->input('entries', 10); // Default 8 entries per page
+    $year = $request->input('year', \Carbon\Carbon::now()->year); // Default to current year
+
+    // Query the KIR data
+    $kir = KIR::with('kendaraan')
+        ->whereHas('kendaraan', function($query) use ($search) {
+            // Filter by search if available
+            if ($search) {
+                $query->where('nomor_polisi', 'like', '%' . $search . '%')
+                      ->orWhere('tipe', 'like', '%' . $search . '%');
+            }
+        })
+        // Filter by year
+        ->whereYear('tanggal_expired_kir', $year)
+        // Paginate based on entries per page
+        ->paginate($entries)->appends($request->query());
+
+    return view('kir.index', compact('kir'));
+}
+
 
     public function create()
     {

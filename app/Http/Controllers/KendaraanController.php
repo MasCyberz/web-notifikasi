@@ -8,10 +8,30 @@ use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kendaraans = Kendaraan::with('modelKendaraan')->get();
-        return view('kendaraan.index', compact('kendaraans'));
+         // Mengambil input dari search dan entries
+    $search = $request->input('search');
+    $entries = $request->input('entries', 10); // Default entries adalah 8 jika tidak ada input
+
+    // Query dasar untuk mengambil data kendaraan
+    $query = Kendaraan::query();
+
+    // Jika ada input search, lakukan pencarian berdasarkan beberapa kolom
+    if ($search) {
+        $query->where('nomor_polisi', 'like', "%{$search}%")
+              ->orWhere('merk_kendaraan', 'like', "%{$search}%")
+              ->orWhere('tipe', 'like', "%{$search}%")
+              ->orWhere('jenis_kendaraan', 'like', "%{$search}%")
+            //   ->orWhere('modelKendaraan.name', 'like', "%{$search}%")
+              ;
+    }
+
+    // Mengambil data kendaraan dengan pagination berdasarkan input entries
+    $kendaraans = $query->paginate($entries);
+
+    // Melempar data ke view
+    return view('kendaraan.index', compact('kendaraans'));
     }
 
     public function create()
