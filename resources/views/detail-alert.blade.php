@@ -1,5 +1,6 @@
 <x-app-layout>
-    <x-PageHeader header="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }}" classcontainer="col-lg-8" />
+    <x-PageHeader header="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }}"
+        classcontainer="col-lg-8" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row justify-content-center">
@@ -36,6 +37,7 @@
                                         </div>
                                     </div>
                                 @endif
+
 
                                 {{-- Informasi Kendaraan --}}
 
@@ -145,6 +147,40 @@
                                     </div>
                                 </div>
                             </div>
+
+                            @if ($tipe === 'KIR')
+                                <div class="mt-4">
+
+
+                                    <form action="#" method="POST">
+                                        @csrf
+                                        <div class="d-flex justify-content-between">
+                                            <!-- Tombol Terima -->
+                                            <button type="submit" class="btn btn-success" name="action"
+                                                value="terima">Terima</button>
+
+                                            <!-- Tombol Tolak dengan Alpine.js -->
+                                            <div x-data="{ tolak: false }">
+                                                <button type="button" class="btn btn-danger"
+                                                    @click="tolak = !tolak">Tolak</button>
+
+                                                <!-- Input text muncul ketika tolak di-klik -->
+                                                <div x-show="tolak" class="mt-3">
+                                                    <label for="alasanTolak" class="form-label">Alasan
+                                                        Penolakan:</label>
+                                                    <textarea id="alasanTolak" class="form-control" name="alasan_tolak" rows="3"
+                                                        placeholder="Jelaskan alasan penolakan"></textarea>
+                                                </div>
+
+                                                <!-- Submit button jika tolak -->
+                                                <button type="submit" class="btn btn-danger mt-3" name="action"
+                                                    value="tolak">Submit Tolak</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            @endif
+
                             <x-cardFooter route="{{ route('dashboard') }}" />
                         </div>
                     </div>

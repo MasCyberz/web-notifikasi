@@ -28,7 +28,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Home / Dashboard
     Route::get('/dashboard', [Controller::class, 'dashboard'])->name('dashboard')->middleware('auth');
     Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya'])->name('pemberitahuan-lainnya');
-    Route::get('/detail-alert/{id}', [Controller::class, 'detailAlert'])->name('detail-alert');
+    Route::get('/detail-alert/{id}/{tipe}', [Controller::class, 'detailAlert'])->name('detail-alert');
 
 // Kendaraan
     Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');

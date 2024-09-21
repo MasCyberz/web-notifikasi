@@ -27,8 +27,15 @@
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
                                     </p>
-                                    <a href="{{ route('detail-alert', $item->id) }}"
-                                        class="btn btn-light">Selengkapnya</a>
+                                    {{-- <a href="{{ route('detail-alert', $item->id) }}"
+                                        class="btn btn-light">Selengkapnya</a> --}}
+                                    @if ($item->tipe_notifikasi === 'STNK')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @elseif ($item->tipe_notifikasi === 'KIR')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -67,8 +74,13 @@
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
                                     </p>
-                                    <a href="{{ route('detail-alert', $item->id) }}"
-                                        class="btn btn-light">Selengkapnya</a>
+                                    @if ($item->tipe_notifikasi === 'STNK')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @elseif ($item->tipe_notifikasi === 'KIR')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -106,8 +118,13 @@
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
                                     </p>
-                                    <a href="{{ route('detail-alert', $item->id) }}"
-                                        class="btn btn-light">Selengkapnya</a>
+                                    @if ($item->tipe_notifikasi === 'STNK')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @elseif ($item->tipe_notifikasi === 'KIR')
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                            class="btn btn-light">Selengkapnya</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>

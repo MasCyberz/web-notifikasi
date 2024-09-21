@@ -119,26 +119,30 @@
                                         @php
                                             $isExpired = \Carbon\Carbon::parse($item->tanggal_expired_kir)->isPast();
                                         @endphp
-                                        <tr class="{{ $isExpired ? 'bg-secondary-subtle text-warning' : '' }}">
+                                        <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
                                             <td><span
-                                                    class="text-secondary">{{ $loop->iteration + $kir->firstItem() - 1 }}</span>
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $kir->firstItem() - 1 }}</span>
                                             </td>
                                             <td>
-                                                <span class="flag flag-xs flag-country-us me-2"></span>
-                                                {{ $item->kendaraan->nomor_polisi }}
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->nomor_polisi }}</span>
                                             </td>
                                             <td>
-                                                {{ $item->kendaraan->tipe }}
+                                                <span class="{{ $isExpired ? 'text-white' : '' }}">
+                                                    {{ $item->kendaraan->tipe }}
+                                                </span>
                                             </td>
                                             <td>
-                                                {{ $item->nomor_uji_kendaraan }}
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->nomor_uji_kendaraan }}</span>
                                             </td>
                                             <td>
-                                                {{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}
+                                                <span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
-                                                    class="btn btn-primary btn-icon"><i class="ti ti-alert-circle"></i></a>
+                                                    class="btn btn-primary btn-icon"><i
+                                                        class="ti ti-alert-circle"></i></a>
                                                 <a href="{{ route('kir-edit', $item->id) }}"
                                                     class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
                                                 <a href="{{ route('kir-delete-store', $item->id) }}"

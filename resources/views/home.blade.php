@@ -550,7 +550,11 @@
                                     Tanggal Perpanjangan:
                                     {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan ?? $notifikasi->tanggal_expired_kir)->format('d-M-Y') }}
                                 </p>
-                                <a href="{{ route('detail-alert', $notifikasi->id) }}" class="btn btn-light">Selengkapnya</a>
+                            @if ($notifikasi->tipe_notifikasi === 'STNK')
+                            <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'STNK']) }}" class="btn btn-light">Selengkapnya</a>
+                            @elseif ($notifikasi->tipe_notifikasi === 'KIR')
+                            <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'KIR']) }}" class="btn btn-light">Selengkapnya</a>
+                            @endif
                             </div>
                         </div>
                     </div>

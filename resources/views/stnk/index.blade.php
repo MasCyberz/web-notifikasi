@@ -129,13 +129,15 @@
                                         @php
                                             $isExpired = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isPast();
                                         @endphp
-                                        <tr class="{{ $isExpired ? 'bg-secondary-subtle' : '' }}">
-                                            <td>{{ $loop->iteration + $stnks->firstItem() - 1 }}</td>
-                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</td>
-                                            <td>{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->translatedFormat('d F Y') }}
+                                        <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $stnks->firstItem() - 1 }}</span>
                                             </td>
-                                            <td>Rp.{{ $stnk->biaya }}</td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span></td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</span></td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ "Rp. " . $stnk->biaya }}</span></td>
                                             <td class="text-end">
                                                 <a href="{{ route('stnk-detail', $stnk->id) }}"
                                                     class="btn btn-primary btn-icon"><i
