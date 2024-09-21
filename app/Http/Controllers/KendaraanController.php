@@ -62,7 +62,7 @@ class KendaraanController extends Controller
             'nomor_rangka' => 'required|string|max:255',
             'nomor_mesin' => 'required|string|max:255',
             'bahan_bakar' => 'required|string|max:255',
-            'nomor_bpkb' => 'required|numeric',
+            'nomor_bpkb' => 'required|string',
             'tahun_registrasi' => 'required|string|max:255',
             'ident' => 'required|string|max:255',
         ]);

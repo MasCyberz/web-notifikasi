@@ -16,6 +16,12 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Nomor BPKB</label>
+                                        <div class="form-control">{{ $kendaraan->nomor_bpkb }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Merk Kendaraan</label>
                                         <div class="form-control">{{ $kendaraan->merk_kendaraan }}</div>
                                     </div>
@@ -46,8 +52,8 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Warna</label>
-                                        <div class="form-control">{{ $kendaraan->warna }}</div>
+                                        <label class="form-label">Tahun Registrasi</label>
+                                        <div class="form-control">{{ $kendaraan->tahun_registrasi }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -64,20 +70,14 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Warna</label>
+                                        <div class="form-control">{{ $kendaraan->warna }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Bahan Bakar</label>
                                         <div class="form-control">{{ $kendaraan->bahan_bakar }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nomor BPKB</label>
-                                        <div class="form-control">{{ $kendaraan->nomor_bpkb }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Tahun Registrasi</label>
-                                        <div class="form-control">{{ $kendaraan->tahun_registrasi }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -86,8 +86,9 @@
                                         <div class="form-control">{{ $kendaraan->ident }}</div>
                                     </div>
                                 </div>
+                                
                             </div>
-                            <x-cardFooter route="{{ route('kendaraan-index') }}" />
+                            <x-cardFooter route="{{ route('kendaraan-index') }}" :showSubmitButton="false" />
                         </div>
                     </div>
                 </div>

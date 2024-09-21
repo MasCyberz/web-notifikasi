@@ -1,12 +1,12 @@
 <x-app-layout>
-    <x-PageHeader header="Detail KIR Kendaraan" classcontainer="col-lg-8" />
+    <x-PageHeader header="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }}" classcontainer="col-lg-8" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card">
                         <x-cardHeader
-                            titleHeader="KIR Kendaraan {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}" />
+                            titleHeader="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }} {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}" />
                         <div class="card-body">
                             <div class="row">
                                 @if ($tipe === 'STNK')
@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
-                                            <label class="form-label">Tanggal Perpanjangan</label>
+                                            <label class="form-label">No Uji KIR</label>
                                             <div class="form-control">{{ $notifikasi->nomor_uji_kendaraan }}</div>
                                         </div>
                                     </div>

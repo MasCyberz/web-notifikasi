@@ -18,7 +18,7 @@
                                         {{ $totalStnk }} Total STNK {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{ $totalStnkBulanIni }} pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalStnkBulanIni }} perpanjangan pada bulan {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
                                         {{ $totalKIR }} Total KIR {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{ $totalKIRBulanIni }} pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalKIRBulanIni }} perpanjangan pada bulan {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>

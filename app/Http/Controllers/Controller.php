@@ -242,7 +242,7 @@ class Controller extends BaseController
                 'id' => $kir->id,
                 'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
                 'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 KIR' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan KIR' : 'KIR hari ini'),
-                'message' => $daysToExpire <= 0 ? 'Hari ini' : "akan jatuh tempo dalam $daysToExpire hari.",
+                'message' => $daysToExpire <= 0 ? 'Hari ini' : " $daysToExpire hari.",
                 'tanggal_perpanjangan' => $kir->tanggal_expired_kir,
                 'relasiSTNKtoKendaraan' => $kir->kendaraan,
             ]);
@@ -255,7 +255,7 @@ class Controller extends BaseController
                 'id' => $stnk->id,
                 'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
                 'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 STNK' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan STNK' : 'STNK hari ini'),
-                'message' => $daysToExpire <= 0 ? 'Hari ini' : "akan jatuh tempo dalam $daysToExpire hari.",
+                'message' => $daysToExpire <= 0 ? 'Hari ini' : " $daysToExpire hari.",
                 'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
                 'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
             ]);
