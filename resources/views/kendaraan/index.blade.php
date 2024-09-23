@@ -107,7 +107,7 @@
                                         <th>No. Polisi</th>
                                         <th>Merk</th>
                                         <th>Tipe Kendaraan</th>
-                                        <th></th>
+                                        <th>User Kendaraan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -122,6 +122,9 @@
                                             </td>
                                             <td>
                                                 {{ $kendaraan->tipe }}
+                                            </td>
+                                            <td>
+                                                {{ $kendaraan->user_kendaraan }}
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kendaraan-detail', $kendaraan->id) }}" class="btn btn-primary btn-icon">

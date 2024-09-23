@@ -23,6 +23,7 @@ class KendaraanController extends Controller
                 ->orWhere('merk_kendaraan', 'like', "%{$search}%")
                 ->orWhere('tipe', 'like', "%{$search}%")
                 ->orWhere('jenis_kendaraan', 'like', "%{$search}%")
+                ->orWhere('user_kendaraan', 'like', "%{$search}%")
             //   ->orWhere('modelKendaraan.name', 'like', "%{$search}%")
             ;
         }
@@ -58,6 +59,7 @@ class KendaraanController extends Controller
             'jenis_kendaraan' => 'required|string|max:255',
             'model_kendaraan_id' => 'required|exists:model_kendaraans,id',
             'tahun' => 'required|integer|digits:4',
+            'user_kendaraan' => 'required|string|max:255',
             'warna' => 'required|string|max:255',
             'nomor_rangka' => 'required|string|max:255',
             'nomor_mesin' => 'required|string|max:255',
@@ -76,6 +78,7 @@ class KendaraanController extends Controller
             'jenis_kendaraan' => $request->jenis_kendaraan,
             'model_kendaraan_id' => $request->model_kendaraan_id,
             'tahun' => $request->tahun,
+            'user_kendaraan' => $request->user,
             'warna' => $request->warna,
             'nomor_rangka' => $request->nomor_rangka,
             'nomor_mesin' => $request->nomor_mesin,
