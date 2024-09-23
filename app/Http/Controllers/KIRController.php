@@ -102,4 +102,11 @@ class KIRController extends Controller
         $kir->delete();
         return redirect()->route('kir-index')->with('success', 'KIR berhasil dihapus.');
     }
+
+    public function updateStatusKIR($id)
+    {
+        $kir = KIR::find($id);
+        dd($kir);
+        return redirect()->route('kir-index')->with('success', 'Status KIR berhasil diperbarui.');
+    }
 }

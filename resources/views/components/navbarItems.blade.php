@@ -54,7 +54,7 @@
 @endif
 
 
-<li class="display-block d-md-none">
+<li class="display-block d-lg-none">
     <form action="{{ route('logout') }}" method="POST" class="nav-item">
         @csrf
         {{-- <a class="nav-link" href="{{ route('kendaraan-index') }}">
