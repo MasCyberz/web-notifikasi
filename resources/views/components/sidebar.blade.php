@@ -11,6 +11,11 @@
             </a>
         </h1>
         <div class="collapse navbar-collapse" id="sidebar-menu">
+            <div class="d-sm-flex d-lg-none justify-content-center my-3 ">
+                <div class="">
+                    <span class="text-white fw-bold">{{"Halo, " . Auth::user()->name . "!"}}</span>
+                </div>
+            </div>
             <ul class="navbar-nav pt-lg-3">
                 <x-navbarItems />
             </ul>

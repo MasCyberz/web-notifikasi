@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <x-cardFooter route="{{ route('stnk-index') }}" />
+                            <x-cardFooter route="{{ route('stnk-index') }}" :showSubmitButton="false"/>
                         </div>
                     </div>
                 </div>

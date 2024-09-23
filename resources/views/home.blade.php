@@ -1,5 +1,38 @@
 <x-app-layout>
+
+    @push('styles')
+        <style>
+            /* Custom styles for full-width alert on mobile */
+            @media (max-width: 768px) {
+                .alert {
+                    width: 100%;
+                    right: 0;
+                    margin: 50px 0;
+                    position: absolute;
+                    top: 0;
+                }
+            }
+        </style>
+    @endpush
+
     <x-pageHeader header="Dashboard" classcontainer="" />
+
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Selamat!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
+            role="alert">
+            <strong>Gagal!</strong> {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="page-body">
         <div class="container-xl">
             <div class="row row-cards">
@@ -18,7 +51,8 @@
                                         {{ $totalStnk }} Total STNK {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{ $totalStnkBulanIni }} perpanjangan pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalStnkBulanIni }} perpanjangan pada bulan
+                                        {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +74,8 @@
                                         {{ $totalKIR }} Total KIR {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
                                     <div class="text-secondary">
-                                        {{ $totalKIRBulanIni }} perpanjangan pada bulan {{ \Carbon\Carbon::now()->format('F') }}
+                                        {{ $totalKIRBulanIni }} perpanjangan pada bulan
+                                        {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
                                 </div>
                             </div>
@@ -550,11 +585,13 @@
                                     Tanggal Perpanjangan:
                                     {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan ?? $notifikasi->tanggal_expired_kir)->format('d-M-Y') }}
                                 </p>
-                            @if ($notifikasi->tipe_notifikasi === 'STNK')
-                            <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'STNK']) }}" class="btn btn-light">Selengkapnya</a>
-                            @elseif ($notifikasi->tipe_notifikasi === 'KIR')
-                            <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'KIR']) }}" class="btn btn-light">Selengkapnya</a>
-                            @endif
+                                @if ($notifikasi->tipe_notifikasi === 'STNK')
+                                    <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'STNK']) }}"
+                                        class="btn btn-light">Selengkapnya</a>
+                                @elseif ($notifikasi->tipe_notifikasi === 'KIR')
+                                    <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'KIR']) }}"
+                                        class="btn btn-light">Selengkapnya</a>
+                                @endif
                             </div>
                         </div>
                     </div>

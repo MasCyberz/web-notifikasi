@@ -30,23 +30,23 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/pemberitahuan-lainnya', [Controller::class, 'pemberitahuanlainnya'])->name('pemberitahuan-lainnya');
     Route::get('/detail-alert/{id}/{tipe}', [Controller::class, 'detailAlert'])->name('detail-alert');
 
-// Kendaraan
+    // Kendaraan
     Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
-// Detail Kendaraan
+    // Detail Kendaraan
     Route::get('/data-kendaraan/detail/{id}', [KendaraanController::class, 'detail'])->name('kendaraan-detail');
-// Tambah Kendaraan
+    // Tambah Kendaraan
     Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
     Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
-// Edit Kendaraan
+    // Edit Kendaraan
     Route::get('/data-kendaraan/edit/{id}', [KendaraanController::class, 'edit'])->name('kendaraan-edit');
     Route::put('/data-kendaraan/edit-store/{id}', [KendaraanController::class, 'update'])->name('kendaraan-store-edit');
-// Delete
+    // Delete
     Route::get('/data-kendaraan/delete/{id}', [KendaraanController::class, 'delete'])->name('kendaraan-store-delete');
-// Tambah Models Baru
+    // Tambah Models Baru
     Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'storeNewModels'])->name('models-kendaraan-store-add');
     Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
 
-// STNK
+    // STNK
     Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
     Route::get('/data-stnk/detail/{id}', [STNKController::class, 'detail'])->name('stnk-detail');
     Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
@@ -55,21 +55,24 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
     Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
 
-// KIR
+    // KIR
     Route::get('/data-kir', [KIRController::class, 'index'])->name('kir-index');
     Route::get('/data-kir/detail/{id}', [KIRController::class, 'detail'])->name('kir-detail');
-// Create-KIR
+    // Create-KIR
     Route::get('/data-kir/tambah', [KIRController::class, 'create'])->name('kir-tambah');
     Route::post('/data-kir/store', [KIRController::class, 'store'])->name('kir-tambah-store');
-// Edit KIR
+    // Edit KIR
     Route::get('/data-kir/edit/{id}', [KIRController::class, 'edit'])->name('kir-edit');
     Route::put('/data-kir/edit-store/{id}', [KIRController::class, 'update'])->name('kir-edit-store');
-// Delete KIR
+    // Delete KIR
     Route::get('/data-kir/delete/{id}', [KIRController::class, 'delete'])->name('kir-delete-store');
+    // Update Status KIR (Lulus / Tidak Lulus)
+    Route::post('/data-kir/update-status-kir/{id}', [KIRController::class, 'updateStatusKIR'])->name('kir-update-status-kir')->middleware('auth');
 
     Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
-// ADMIN
-// Management User
+
+        // ADMIN
+        // Management User
         Route::get('/management-user', [UserController::class, 'index'])->name('management-user-index');
         Route::get('management-user/tambah', [UserController::class, 'createUser'])->name('management-user-tambah');
         Route::post('management-user/store', [UserController::class, 'storeUser'])->name('management-user-store');

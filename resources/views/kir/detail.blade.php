@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <x-cardFooter route="{{ route('kir-index') }}" />
+                            <x-cardFooter route="{{ route('kir-index') }}" :showSubmitButton="false"/>
                         </div>
                     </div>
                 </div>
