@@ -145,7 +145,7 @@
                                             @if ($item->status)
                                                 <td>
                                                     <span
-                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} {{ $item->status === 'Lulus' ? 'badge bg-success' : 'badge text-bg-danger' }}">
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} {{ $item->status === 'lulus' ? 'badge bg-success' : 'badge text-bg-danger' }}">
                                                         {{ $item->status }}
                                                     </span>
                                                 </td>

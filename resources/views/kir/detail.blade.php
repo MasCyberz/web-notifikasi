@@ -8,6 +8,15 @@
                         <x-cardHeader titleHeader="KIR Kendaraan {{ $kir->kir->kendaraan->nomor_polisi }}" />
                         <div class="card-body">
                             <div class="row">
+                                @if ($kir->status != null)
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <div
+                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $kir->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                {{ $kir->status }}</div>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">No. Uji Kendaraan</label>
@@ -17,16 +26,28 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tanggal Uji Kendaraan</label>
-                                        <div class="form-control">{{ \Carbon\Carbon::parse($kir->kir->tanggal_uji_kendaraan)->format('d-M-Y') }}</div>
+                                        <div class="form-control">
+                                            {{ \Carbon\Carbon::parse($kir->kir->tanggal_uji_kendaraan)->format('d-M-Y') }}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                @if ($kir->alasan_tidak_lulus != null)
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <label class="form-label">Keterangan</label>
+                                            <div class="form-control">{{ $kir->alasan_tidak_lulus }}</div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                {{-- Data Kendaraan --}}
+                                <div class="col-12 col-md-6 mt-4">
                                     <div class="mb-3">
                                         <label class="form-label">Nomor Polisi</label>
                                         <div class="form-control">{{ $kir->kir->kendaraan->nomor_polisi }}</div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-6 mt-4">
                                     <div class="mb-3">
                                         <label class="form-label">Nomor BPKB</label>
                                         <div class="form-control">{{ $kir->kir->kendaraan->nomor_bpkb }}</div>
@@ -53,7 +74,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Model</label>
-                                        <div class="form-control">{{ $kir->kir->kendaraan->modelKendaraan->name }}</div>
+                                        <div class="form-control">{{ $kir->kir->kendaraan->modelKendaraan->name }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
