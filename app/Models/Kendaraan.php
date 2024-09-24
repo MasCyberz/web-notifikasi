@@ -22,6 +22,7 @@ class Kendaraan extends Model
         'jenis_kendaraan',
         'model_kendaraan_id',
         'tahun',
+        'user_kendaraan',
         'warna',
         'nomor_rangka',
         'nomor_mesin',

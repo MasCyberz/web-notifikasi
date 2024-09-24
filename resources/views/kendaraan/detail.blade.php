@@ -80,7 +80,13 @@
                                         <div class="form-control">{{ $kendaraan->bahan_bakar }}</div>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">User Kendaraan</label>
+                                        <div class="form-control">{{ $kendaraan->user_kendaraan }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Ident</label>
                                         <div class="form-control">{{ $kendaraan->ident }}</div>

@@ -159,6 +159,12 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
+                            <x-Input label="User" name="user_kendaraan" type="text"
+                                class="" value="{{ old('user') }}" />
+                            @error('user')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+
                         </div>
                         <x-cardFooter route="{{ route('kendaraan-index') }}" />
                     </form>

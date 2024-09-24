@@ -100,6 +100,8 @@
                                 value="{{ old('tahun_registrasi', $kendaraan->tahun_registrasi) }}" />
                             <x-Input label="Ident" name="ident" type="text" class=""
                                 value="{{ old('ident', $kendaraan->ident) }}" />
+                            <x-Input label="User" name="user_kendaraan" type="text" class=""
+                                value="{{ old('user', $kendaraan->user_kendaraan) }}" />
                         </div>
                         <x-cardFooter route="{{ route('kendaraan-index') }}" />
                     </form>
