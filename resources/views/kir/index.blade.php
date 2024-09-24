@@ -111,6 +111,8 @@
                                         <th>Tipe Kendaraan</th>
                                         <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -125,26 +127,45 @@
                                             </td>
                                             <td>
                                                 <span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->nomor_polisi }}</span>
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->kendaraan->nomor_polisi }}</span>
                                             </td>
                                             <td>
                                                 <span class="{{ $isExpired ? 'text-white' : '' }}">
-                                                    {{ $item->kendaraan->tipe }}
+                                                    {{ $item->kir->kendaraan->tipe }}
                                                 </span>
                                             </td>
                                             <td>
                                                 <span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->nomor_uji_kendaraan }}</span>
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->nomor_uji_kendaraan }}</span>
                                             </td>
                                             <td>
-                                                <span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}</span>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            @if ($item->status)
+                                                <td>
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} {{ $item->status === 'Lulus' ? 'badge bg-success' : 'badge text-bg-danger' }}">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
+                                            @endif
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate" style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
                                                     class="btn btn-primary btn-icon"><i
                                                         class="ti ti-alert-circle"></i></a>
                                                 <a href="{{ route('kir-edit', $item->id) }}"
-                                                    class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
+                                                    class="btn btn-success btn-icon {{ $isExpired ? 'd-none' : '' }}"><i
+                                                        class="ti ti-edit"></i></a>
                                                 <a href="{{ route('kir-delete-store', $item->id) }}"
                                                     class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                             </td>

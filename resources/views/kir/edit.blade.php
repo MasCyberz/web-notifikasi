@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-6">
                             <x-Input label="Nomor Uji Kendaraan" name="nomor_uji_kendaraan" type="text"
-                                class="" :value="old('nomor_uji_kendaraan', $kir->nomor_uji_kendaraan)"/>
+                                class="" :value="old('nomor_uji_kendaraan', $kir->kir->nomor_uji_kendaraan)"/>
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-                <x-cardFooter route="{{ route('stnk-index') }}" />
+                <x-cardFooter route="{{ route('kir-index') }}" />
             </form>
         </div>
     </div>

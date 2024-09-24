@@ -16,6 +16,12 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Nomor BPKB</label>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_bpkb }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Merk Kendaraan</label>
                                         <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}</div>
                                     </div>
@@ -46,8 +52,8 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Warna</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->warna }}</div>
+                                        <label class="form-label">Tahun Registrasi</label>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->tahun_registrasi }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -64,23 +70,17 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Warna</label>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->warna }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Bahan Bakar</label>
                                         <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->bahan_bakar }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nomor BPKB</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_bpkb }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Tahun Registrasi</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->tahun_registrasi }}</div>
-                                    </div>
-                                </div>
-                                <div class="col-12">
                                     <div class="mb-3">
                                         <label class="form-label">Ident</label>
                                         <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->ident }}</div>

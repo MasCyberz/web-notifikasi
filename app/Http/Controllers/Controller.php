@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KIR;
+use App\Models\KIRHistories;
 use App\Models\STNK;
 use App\Models\User;
 use Carbon\Carbon;
@@ -26,10 +27,11 @@ class Controller extends BaseController
             ->whereMonth('tanggal_perpanjangan', $bulanIni)
             ->count();
 
-        // Total KIR
-        $totalKIR = KIR::whereYear('tanggal_expired_kir', Carbon::now()->year)->count();
+        // Total KIR berdasarkan tahun
+        $totalKIR = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)->count();
 
-        $totalKIRBulanIni = KIR::whereYear('tanggal_expired_kir', Carbon::now()->year)
+// Total KIR berdasarkan bulan dan tahun
+        $totalKIRBulanIni = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)
             ->whereMonth('tanggal_expired_kir', $bulanIni)
             ->count();
 
@@ -96,8 +98,8 @@ class Controller extends BaseController
         })->filter();
 
         // KIR Notifications
-        $kirNotifications = KIR::all()->map(function ($kir) use ($today) {
-            $deadline = Carbon::parse($kir->tanggal_expired_kir);
+        $kirNotifications = KIRHistories::all()->map(function ($kirHistory) use ($today) {
+            $deadline = Carbon::parse($kirHistory->tanggal_expired_kir);
             $diffInDays = $today->diffInDays($deadline, false);
             $diffInHours = $today->diffInHours($deadline, false);
             $diffInMinutes = $today->diffInMinutes($deadline, false);
@@ -144,14 +146,14 @@ class Controller extends BaseController
                 $warna = 'danger';
             }
 
-            $kir->message = $message;
-            $kir->kategori_waktu = $kategoriWaktu;
-            $kir->tipe_notifikasi = 'KIR';
-            $kir->warna = $warna;
-            $kir->judul = $judul;
-            $kir->tenggat = $deadline;
+            $kirHistory->message = $message;
+            $kirHistory->kategori_waktu = $kategoriWaktu;
+            $kirHistory->tipe_notifikasi = 'KIR';
+            $kirHistory->warna = $warna;
+            $kirHistory->judul = $judul;
+            $kirHistory->tenggat = $deadline;
 
-            return $kir;
+            return $kirHistory;
         })->filter();
 
         // Gabungkan notifikasi STNK dan KIR
@@ -181,10 +183,24 @@ class Controller extends BaseController
         $today = Carbon::today();
 
         // Ambil data dari model dan parse tanggal
-        $kirData = KIR::all()->map(function ($kir) use ($today) {
-            $kir->tanggal_expired_kir = Carbon::parse($kir->tanggal_expired_kir);
-            return $kir;
-        });
+        // Ambil data dari KIR dan relasi ke kir_histories untuk mendapatkan tanggal_expired_kir terbaru
+        $kirData = KIR::with(['kirHistories' => function ($query) {
+            $query->orderBy('tanggal_expired_kir', 'desc'); // Ambil kir_histories dengan tanggal_expired terbaru
+        }])
+            ->get()
+            ->map(function ($kir) use ($today) {
+                // Ambil kir_histories terbaru dari relasi
+                $latestKirHistory = $kir->kirHistories->first();
+                if ($latestKirHistory) {
+                    $kir->tanggal_expired_kir = Carbon::parse($latestKirHistory->tanggal_expired_kir);
+                } else {
+                    $kir->tanggal_expired_kir = null; // Jika tidak ada kir_histories, set null
+                }
+                return $kir;
+            })
+            ->filter(function ($kir) {
+                return $kir->tanggal_expired_kir !== null; // Hanya ambil yang memiliki kir_histories
+            });
 
         $stnkData = STNK::all()->map(function ($stnk) use ($today) {
             $stnk->tanggal_perpanjangan = Carbon::parse($stnk->tanggal_perpanjangan);
@@ -257,11 +273,15 @@ class Controller extends BaseController
             }
         } elseif ($tipe === 'KIR') {
             // Cari KIR dengan ID
-            $kir = KIR::where('id', $id)->first();
-            if ($kir && $kir->nomor_uji_kendaraan) {
+            $kir = KIRHistories::with('kir') // Ambil relasi dengan tabel KIR
+                ->where('id', $id)
+                ->first();
+
+            if ($kir && $kir->kir->nomor_uji_kendaraan) {
                 return view('detail-alert', [
-                    'notifikasi' => $kir,
+                    'notifikasi' => $kir->kir,
                     'tipe' => $tipe,
+                    'KIRHistory' => $kir, // Mengirimkan histori spesifik
                 ]);
             }
         }

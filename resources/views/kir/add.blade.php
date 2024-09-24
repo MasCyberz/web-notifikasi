@@ -16,7 +16,8 @@
                                 <div>
                                     <select class="form-select w-100 w-md-50" name="kendaraan_id">
                                         @foreach ($kendaraans as $item)
-                                            <option value="{{ $item->id }}">{{ $item->nomor_polisi }} | {{ $item->tipe }}</option>
+                                            <option value="{{ $item->id }}">{{ $item->nomor_polisi }} |
+                                                {{ $item->tipe }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -36,4 +37,13 @@
             </form>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+                document.querySelector('.tanggal-expired-kir input').setAttribute('min', today);
+            });
+        </script>
+    @endpush
 </x-app-layout>

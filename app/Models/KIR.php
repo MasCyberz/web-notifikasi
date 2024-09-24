@@ -26,4 +26,9 @@ class KIR extends Model
         return $this->belongsTo(Kendaraan::class, 'kendaraan_id', 'id');
     }
 
+    public function kirHistories()
+    {
+        return $this->hasMany(KIRHistories::class, 'kirs_id', 'id');
+    }
+
 }

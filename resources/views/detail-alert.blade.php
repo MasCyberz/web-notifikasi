@@ -27,7 +27,9 @@
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Tanggal Perpanjangan</label>
-                                            <div class="form-control">{{ $notifikasi->tanggal_expired_kir }}</div>
+                                            <div class="form-control">
+                                                {{ \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->format('d-m-Y') }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -47,6 +49,14 @@
                                         <label class="form-label">Nomor Polisi</label>
                                         <div class="form-control">
                                             {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nomor BPKB</label>
+                                        <div class="form-control">
+                                            {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_bpkb ?? ($notifikasi->kendaraan->nomor_bpkb ?? '-') }}
                                         </div>
                                     </div>
                                 </div>
@@ -92,9 +102,9 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Warna</label>
+                                        <label class="form-label">Tahun Registrasi</label>
                                         <div class="form-control">
-                                            {{ $notifikasi->RelasiSTNKtoKendaraan->warna ?? $notifikasi->kendaraan->warna }}
+                                            {{ $notifikasi->RelasiSTNKtoKendaraan->tahun_registrasi ?? ($notifikasi->kendaraan->tahun_registrasi ?? '-') }}
                                         </div>
                                     </div>
                                 </div>
@@ -116,25 +126,17 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
+                                        <label class="form-label">Warna</label>
+                                        <div class="form-control">
+                                            {{ $notifikasi->RelasiSTNKtoKendaraan->warna ?? $notifikasi->kendaraan->warna }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
                                         <label class="form-label">Bahan Bakar</label>
                                         <div class="form-control">
                                             {{ $notifikasi->RelasiSTNKtoKendaraan->bahan_bakar ?? $notifikasi->kendaraan->bahan_bakar }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Nomor BPKB</label>
-                                        <div class="form-control">
-                                            {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_bpkb ?? ($notifikasi->kendaraan->nomor_bpkb ?? '-') }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Tahun Registrasi</label>
-                                        <div class="form-control">
-                                            {{ $notifikasi->RelasiSTNKtoKendaraan->tahun_registrasi ?? ($notifikasi->kendaraan->tahun_registrasi ?? '-') }}
                                         </div>
                                     </div>
                                 </div>
@@ -148,40 +150,98 @@
                                 </div>
                             </div>
 
-                            @if ($tipe === 'KIR')
-                                <div class="mt-4">
+                            <div class="my-4">
+                                <div class="row">
+                                    <div class="col-md-6 mt-2 mt-lg-0">
+                                        <!-- Form untuk Tidak Lulus -->
+                                        <form id="tidakLulusForm"
+                                            action="{{ route('kir-update-status-kir', $KIRHistory->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <input type="hidden" name="action" value="tidak lulus">
+                                            <button type="button" class="btn btn-danger w-100"
+                                                data-bs-toggle="modal" data-bs-target="#tolakModal">Tidak
+                                                Lulus</button>
 
-
-                                    <form action="#" method="POST">
-                                        @csrf
-                                        <div class="d-flex justify-content-between">
-                                            <!-- Tombol Terima -->
-                                            <button type="submit" class="btn btn-success" name="action"
-                                                value="terima">Terima</button>
-
-                                            <!-- Tombol Tolak dengan Alpine.js -->
-                                            <div x-data="{ tolak: false }">
-                                                <button type="button" class="btn btn-danger"
-                                                    @click="tolak = !tolak">Tolak</button>
-
-                                                <!-- Input text muncul ketika tolak di-klik -->
-                                                <div x-show="tolak" class="mt-3">
-                                                    <label for="alasanTolak" class="form-label">Alasan
-                                                        Penolakan:</label>
-                                                    <textarea id="alasanTolak" class="form-control" name="alasan_tolak" rows="3"
-                                                        placeholder="Jelaskan alasan penolakan"></textarea>
+                                            <!-- Modal Konfirmasi Tidak Lulus -->
+                                            <div class="modal modal-blur fade" id="tolakModal" tabindex="-1"
+                                                aria-labelledby="tolakModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="tolakModalLabel">Alasan
+                                                                Tidak Lulus</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Silakan jelaskan alasan tidak lulus KIR ini. Dengan
+                                                            mengisi form, Anda akan menyatakan proses KIR sebagai
+                                                            tidak
+                                                            lulus.
+                                                            <div class="mb-3 mt-3">
+                                                                <label for="alasan_tidak_lulus"
+                                                                    class="form-label">Alasan
+                                                                    tidak lulus:</label>
+                                                                <textarea id="alasan_tidak_lulus" class="form-control" name="alasan_tidak_lulus" rows="3"
+                                                                    placeholder="Jelaskan alasan penolakan"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Batal</button>
+                                                            <button type="submit"
+                                                                class="btn btn-danger">Kirim</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Form untuk Lulus -->
+                                        <form id="lulusForm"
+                                            action="{{ route('kir-update-status-kir', $KIRHistory->id) }}"
+                                            method="POST">
+                                            @csrf
+                                            <input type="hidden" name="action" value="lulus">
+                                            <button type="button" class="btn btn-success w-100"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#terimaModal">Lulus</button>
+                                        </form>
+                                    </div>
+                                </div>
 
-                                                <!-- Submit button jika tolak -->
-                                                <button type="submit" class="btn btn-danger mt-3" name="action"
-                                                    value="tolak">Submit Tolak</button>
+                                <!-- Modal Konfirmasi Lulus -->
+                                <div class="modal modal-blur fade" id="terimaModal" tabindex="-1"
+                                    aria-labelledby="terimaModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="terimaModalLabel">Konfirmasi Lulus
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah Anda yakin ingin menyatakan KIR ini sebagai lulus?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-success"
+                                                    form="lulusForm">Ya, Lulus</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
+                            </div>
+                            @if ($tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
+
                             @endif
 
-                            <x-cardFooter route="{{ route('dashboard') }}" />
+                            <x-cardFooter route="{{ route('dashboard') }}" :showSubmitButton="false" />
                         </div>
                     </div>
                 </div>

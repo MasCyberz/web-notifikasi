@@ -1,4 +1,4 @@
-<li class="nav-item {{ Request::route()->named('dashboard', 'pemberitahuan-lainnya') ? 'active' : '' }}">
+<li class="nav-item {{ Request::route()->named('dashboard', 'pemberitahuan-lainnya', 'detail-alert') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('dashboard') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-home fs-2"></i>
@@ -8,7 +8,7 @@
         </span>
     </a>
 </li>
-<li class="nav-item {{ Request::route()->named('stnk-index', 'stnk-tambah') ? 'active' : '' }}">
+<li class="nav-item {{ Request::route()->named('stnk-index', 'stnk-tambah', 'stnk-detail', 'stnk-edit') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('stnk-index') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-car fs-2"></i>
@@ -18,7 +18,7 @@
         </span>
     </a>
 </li>
-<li class="nav-item {{ Request::route()->named('kir-index', 'kir-tambah') ? 'active' : '' }}">
+<li class="nav-item {{ Request::route()->named('kir-index', 'kir-tambah', 'kir-detail', 'kir-edit') ? 'active' : '' }}">
     <a class="nav-link" href="{{ Route('kir-index') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-truck fs-2"></i>
@@ -41,7 +41,7 @@
 </li>
 @if (Auth::user()->role_id == 1)
     <li
-        class="nav-item {{ Request::route()->named('management-user-index', 'management-user-tambah') ? 'active' : '' }}">
+        class="nav-item {{ Request::route()->named('management-user-index', 'management-user-tambah', 'management-user-edit', ) ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('management-user-index') }}">
             <span class="nav-link-icon d-md-none d-lg-inline-block">
                 <i class="ti ti-users fs-2"></i>

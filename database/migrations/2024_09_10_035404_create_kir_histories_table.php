@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('kirs_id')->references('id')->on('kirs')->onDelete('cascade');
             $table->date('tanggal_expired_kir');
             $table->enum('status', ['lulus', 'tidak lulus'])->nullable();
+            $table->text('alasan_tidak_lulus')->nullable();
             $table->timestamps();
         });
     }

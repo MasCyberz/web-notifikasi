@@ -542,6 +542,7 @@
                     @endif
                 @endforeach --}}
 
+
                 @forelse ($allNotifications as $notifikasi)
                     @php
                         $warna = '';
@@ -578,12 +579,12 @@
                                 <h5 class="card-title">{{ $notifikasi->judul }}</h5>
                                 <p class="card-text">
                                     Plat Nomor: <span
-                                        class="fw-bold">{{ $notifikasi->relasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}</span>
+                                        class="fw-bold">{{ $notifikasi->relasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kir->kendaraan->nomor_polisi }}</span>
                                     <br>
                                     Tenggat Waktu: {{ $notifikasi->message }}
                                     <br>
                                     Tanggal Perpanjangan:
-                                    {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan ?? $notifikasi->tanggal_expired_kir)->format('d-M-Y') }}
+                                    {{ \Carbon\Carbon::parse($notifikasi['tenggat'])->format('d-M-Y') }}
                                 </p>
                                 @if ($notifikasi->tipe_notifikasi === 'STNK')
                                     <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'STNK']) }}"
@@ -598,55 +599,57 @@
 
                     {{-- Script Notifikasi --}}
                     @if ($notifikasi->showNotification)
-                        <script>
-                            function setCookie(name, value, days) {
-                                var expires = "";
-                                if (days) {
-                                    var date = new Date();
-                                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
-                                    expires = "; expires=" + date.toUTCString();
+                        @push('scripts')
+                            <script>
+                                function setCookie(name, value, days) {
+                                    var expires = "";
+                                    if (days) {
+                                        var date = new Date();
+                                        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Set expiry date
+                                        expires = "; expires=" + date.toUTCString();
+                                    }
+                                    document.cookie = name + "=" + (value || "") + expires + "; path=/";
                                 }
-                                document.cookie = name + "=" + (value || "") + expires + "; path=/";
-                            }
 
-                            function getCookie(name) {
-                                var nameEQ = name + "=";
-                                var ca = document.cookie.split(';');
-                                for (var i = 0; i < ca.length; i++) {
-                                    var c = ca[i];
-                                    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-                                    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                function getCookie(name) {
+                                    var nameEQ = name + "=";
+                                    var ca = document.cookie.split(';');
+                                    for (var i = 0; i < ca.length; i++) {
+                                        var c = ca[i];
+                                        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                                        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+                                    }
+                                    return null;
                                 }
-                                return null;
-                            }
 
-                            function showNotification() {
-                                if (Notification.permission === "granted") {
-                                    var options = {
-                                        body: "{{ $notifikasi->message }}",
-                                        requireInteraction: true,
-                                    };
-                                    new Notification("Pengingat {{ $judul }}", options);
-                                    setCookie(
-                                        "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}",
-                                        "shown", 1);
+                                function showNotification() {
+                                    if (Notification.permission === "granted") {
+                                        var options = {
+                                            body: "{{ $notifikasi->message }}",
+                                            requireInteraction: true,
+                                        };
+                                        new Notification("Pengingat {{ $judul }}", options);
+                                        setCookie(
+                                            "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}",
+                                            "shown", 1);
+                                    }
                                 }
-                            }
 
-                            if (!getCookie(
-                                    "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}"
-                                )) {
-                                if (Notification.permission === "default") {
-                                    Notification.requestPermission().then(permission => {
-                                        if (permission === "granted") {
-                                            showNotification();
-                                        }
-                                    });
-                                } else if (Notification.permission === "granted") {
-                                    showNotification();
+                                if (!getCookie(
+                                        "notification-{{ $notifikasi->tipe_notifikasi }}-{{ $notifikasi->kategori_waktu }}-{{ $notifikasi->id }}"
+                                    )) {
+                                    if (Notification.permission === "default") {
+                                        Notification.requestPermission().then(permission => {
+                                            if (permission === "granted") {
+                                                showNotification();
+                                            }
+                                        });
+                                    } else if (Notification.permission === "granted") {
+                                        showNotification();
+                                    }
                                 }
-                            }
-                        </script>
+                            </script>
+                        @endpush
                     @endif
                 @empty
                     <p>Tidak ada notifikasi yang tersedia.</p>
