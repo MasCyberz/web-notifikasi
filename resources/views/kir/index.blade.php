@@ -28,11 +28,13 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
-                                    class="ti ti-plus fs-2"></i>Tambah Data
-                            </a>
-                        </div>
+                        @if (Auth::user()->role_id == 1)
+                            <div class="card-header d-flex flex-row-reverse">
+                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah Data
+                                </a>
+                            </div>
+                        @endif
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('kir-index') }}" method="GET" id="filter-form">
                                 <div class="row g-2 align-items-center">
@@ -166,11 +168,13 @@
                                                 <a href="{{ route('kir-detail', $item->id) }}"
                                                     class="btn btn-primary btn-icon"><i
                                                         class="ti ti-alert-circle"></i></a>
-                                                <a href="{{ route('kir-edit', $item->id) }}"
-                                                    class="btn btn-success btn-icon {{ $isExpired ? 'd-none' : '' }}"><i
-                                                        class="ti ti-edit"></i></a>
-                                                <a href="{{ route('kir-delete-store', $item->id) }}"
-                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @if (Auth::user()->role_id == 1)
+                                                    <a href="{{ route('kir-edit', $item->id) }}"
+                                                        class="btn btn-success btn-icon {{ $isExpired ? 'd-none' : '' }}"><i
+                                                            class="ti ti-edit"></i></a>
+                                                    <a href="{{ route('kir-delete-store', $item->id) }}"
+                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

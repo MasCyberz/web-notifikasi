@@ -34,40 +34,52 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/data-kendaraan', [KendaraanController::class, 'index'])->name('kendaraan-index');
     // Detail Kendaraan
     Route::get('/data-kendaraan/detail/{id}', [KendaraanController::class, 'detail'])->name('kendaraan-detail');
-    // Tambah Kendaraan
-    Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
-    Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
-    // Edit Kendaraan
-    Route::get('/data-kendaraan/edit/{id}', [KendaraanController::class, 'edit'])->name('kendaraan-edit');
-    Route::put('/data-kendaraan/edit-store/{id}', [KendaraanController::class, 'update'])->name('kendaraan-store-edit');
-    // Delete
-    Route::get('/data-kendaraan/delete/{id}', [KendaraanController::class, 'delete'])->name('kendaraan-store-delete');
-    // Tambah Models Baru
-    Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'storeNewModels'])->name('models-kendaraan-store-add');
-    Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
+
+    // Function Hanya Untuk Admin
+    Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
+        // Tambah Kendaraan
+        Route::get('/data-kendaraan/tambah', [KendaraanController::class, 'create'])->name('kendaraan-tambah');
+        Route::post('/data-kendaraan/tambah-store', [KendaraanController::class, 'store'])->name('kendaraan-store-add');
+        // Edit Kendaraan
+        Route::get('/data-kendaraan/edit/{id}', [KendaraanController::class, 'edit'])->name('kendaraan-edit');
+        Route::put('/data-kendaraan/edit-store/{id}', [KendaraanController::class, 'update'])->name('kendaraan-store-edit');
+        // Delete
+        Route::get('/data-kendaraan/delete/{id}', [KendaraanController::class, 'delete'])->name('kendaraan-store-delete');
+        // Tambah Models Baru
+        Route::post('/data-kendaraan/tambah-models', [KendaraanController::class, 'storeNewModels'])->name('models-kendaraan-store-add');
+        Route::post('/data-kendaraan/hapus-models', [KendaraanController::class, 'deleteModels'])->name('models-kendaraan-store-delete');
+    });
 
     // STNK
     Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
     Route::get('/data-stnk/detail/{id}', [STNKController::class, 'detail'])->name('stnk-detail');
-    Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
-    Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-store');
-    Route::get('stnk/edit/{id}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
-    Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
-    Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
+
+    // Function Hanya Untuk Admin
+    Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
+        Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
+        Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-store');
+        Route::get('stnk/edit/{id}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
+        Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
+        Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
+    });
 
     // KIR
     Route::get('/data-kir', [KIRController::class, 'index'])->name('kir-index');
     Route::get('/data-kir/detail/{id}', [KIRController::class, 'detail'])->name('kir-detail');
-    // Create-KIR
-    Route::get('/data-kir/tambah', [KIRController::class, 'create'])->name('kir-tambah');
-    Route::post('/data-kir/store', [KIRController::class, 'store'])->name('kir-tambah-store');
-    // Edit KIR
-    Route::get('/data-kir/edit/{id}', [KIRController::class, 'edit'])->name('kir-edit');
-    Route::put('/data-kir/edit-store/{id}', [KIRController::class, 'update'])->name('kir-edit-store');
-    // Delete KIR
-    Route::get('/data-kir/delete/{id}', [KIRController::class, 'delete'])->name('kir-delete-store');
-    // Update Status KIR (Lulus / Tidak Lulus)
-    Route::post('/data-kir/update-status-kir/{id}', [KIRController::class, 'updateStatusKIR'])->name('kir-update-status-kir')->middleware('auth');
+
+    // Function hanya khusus admin
+    Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
+        // Create-KIR
+        Route::get('/data-kir/tambah', [KIRController::class, 'create'])->name('kir-tambah');
+        Route::post('/data-kir/store', [KIRController::class, 'store'])->name('kir-tambah-store');
+        // Edit KIR
+        Route::get('/data-kir/edit/{id}', [KIRController::class, 'edit'])->name('kir-edit');
+        Route::put('/data-kir/edit-store/{id}', [KIRController::class, 'update'])->name('kir-edit-store');
+        // Delete KIR
+        Route::get('/data-kir/delete/{id}', [KIRController::class, 'delete'])->name('kir-delete-store');
+        // Update Status KIR (Lulus / Tidak Lulus)
+        Route::post('/data-kir/update-status-kir/{id}', [KIRController::class, 'updateStatusKIR'])->name('kir-update-status-kir')->middleware('auth');
+    });
 
     Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
 

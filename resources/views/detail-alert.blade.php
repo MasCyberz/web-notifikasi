@@ -168,7 +168,7 @@
                                 </div>
                             </div>
 
-                            @if ($tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
+                            @if (Auth::user()->role_id == 1 && $tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
                                 @if (empty($KIRHistory->status) && empty($KIRHistory->alasan_tidak_lulus))
                                     <div class="my-4">
                                         <div class="row">

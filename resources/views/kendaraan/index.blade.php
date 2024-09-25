@@ -36,12 +36,13 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
-                        {{-- {{$kendaraans->model_kendaraan_id}} --}}
-                        <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
-                                    class="ti ti-plus fs-2"></i>Tambah Data
-                            </a>
-                        </div>
+                        @if (Auth::user()->role_id == 1)
+                            <div class="card-header d-flex flex-row-reverse">
+                                <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah Data
+                                </a>
+                            </div>
+                        @endif
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('kendaraan-index') }}" method="GET">
                                 <div class="row g-2 align-items-center">
@@ -77,8 +78,8 @@
                                             Search:
                                             <div class="d-inline-block">
                                                 <input type="text" name="search"
-                                                    class="form-control form-control-sm"
-                                                    value="{{ request('search') }}" aria-label="Search">
+                                                    class="form-control form-control-sm" value="{{ request('search') }}"
+                                                    aria-label="Search">
                                             </div>
                                         </div>
 
@@ -113,7 +114,9 @@
                                 <tbody>
                                     @foreach ($kendaraans as $kendaraan)
                                         <tr>
-                                            <td><span class="text-secondary">{{ $loop->iteration + $kendaraans->firstItem() - 1 }}</span></td>
+                                            <td><span
+                                                    class="text-secondary">{{ $loop->iteration + $kendaraans->firstItem() - 1 }}</span>
+                                            </td>
                                             <td>
                                                 {{ $kendaraan->nomor_polisi }}
                                             </td>
@@ -127,12 +130,15 @@
                                                 {{ $kendaraan->user_kendaraan }}
                                             </td>
                                             <td class="text-end">
-                                                <a href="{{ route('kendaraan-detail', $kendaraan->id) }}" class="btn btn-primary btn-icon">
+                                                <a href="{{ route('kendaraan-detail', $kendaraan->id) }}"
+                                                    class="btn btn-primary btn-icon">
                                                     <i class="ti ti-alert-circle"></i></a>
-                                                <a href="{{ route('kendaraan-edit', $kendaraan->id) }}"
-                                                    class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
-                                                <a href="{{ route('kendaraan-store-delete', $kendaraan->id) }}"
-                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @if (Auth::user()->role_id == 1)
+                                                    <a href="{{ route('kendaraan-edit', $kendaraan->id) }}"
+                                                        class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
+                                                    <a href="{{ route('kendaraan-store-delete', $kendaraan->id) }}"
+                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -140,13 +146,17 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            <p class="m-0 text-secondary">Showing {{ $kendaraans->firstItem() }} to {{ $kendaraans->lastItem() }} of {{ $kendaraans->total() }} entries</p>
+                            <p class="m-0 text-secondary">Showing {{ $kendaraans->firstItem() }} to
+                                {{ $kendaraans->lastItem() }} of {{ $kendaraans->total() }} entries</p>
                             <ul class="pagination m-0 ms-auto">
                                 <!-- Tombol Prev -->
                                 @if ($kendaraans->onFirstPage())
                                     <li class="page-item disabled">
                                         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M15 6l-6 6l6 6"></path>
                                             </svg>
@@ -155,8 +165,12 @@
                                     </li>
                                 @else
                                     <li class="page-item">
-                                        <a class="page-link" href="{{ $kendaraans->previousPageUrl() }}" tabindex="-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                        <a class="page-link" href="{{ $kendaraans->previousPageUrl() }}"
+                                            tabindex="-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M15 6l-6 6l6 6"></path>
                                             </svg>
@@ -177,7 +191,10 @@
                                     <li class="page-item">
                                         <a class="page-link" href="{{ $kendaraans->nextPageUrl() }}">
                                             next
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M9 6l6 6l-6 6"></path>
                                             </svg>
@@ -187,7 +204,10 @@
                                     <li class="page-item disabled">
                                         <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
                                             next
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M9 6l6 6l-6 6"></path>
                                             </svg>

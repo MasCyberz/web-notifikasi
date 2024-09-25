@@ -38,11 +38,13 @@
             <div class="row row-deck row-cards">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header d-flex flex-row-reverse">
-                            <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
-                                    class="ti ti-plus fs-2"></i>Tambah Data
-                            </a>
-                        </div>
+                        @if (Auth::user()->role_id == 1)
+                            <div class="card-header d-flex flex-row-reverse">
+                                <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah Data
+                                </a>
+                            </div>
+                        @endif
                         <div class="card-body border-bottom py-3">
                             <form action="{{ route('stnk-index') }}" method="GET">
                                 <div class="row g-2 align-items-center">
@@ -134,19 +136,31 @@
                                             <td><span
                                                     class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $stnks->firstItem() - 1 }}</span>
                                             </td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span></td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</span></td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span></td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ "Rp. " . $stnk->biaya }}</span></td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->jenis_perpanjangan }}</span></td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ 'Rp. ' . $stnk->biaya }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->jenis_perpanjangan }}</span>
+                                            </td>
                                             <td class="text-end">
                                                 <a href="{{ route('stnk-detail', $stnk->id) }}"
                                                     class="btn btn-primary btn-icon"><i
                                                         class="ti ti-alert-circle"></i></a>
-                                                <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}"
-                                                    class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
-                                                <a href="{{ route('stnk-delete', ['id' => $stnk->id]) }}"
-                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @if (Auth::user()->role_id == 1)
+                                                    <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}"
+                                                        class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
+                                                    <a href="{{ route('stnk-delete', ['id' => $stnk->id]) }}"
+                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -176,7 +190,8 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}"
+                                                rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
