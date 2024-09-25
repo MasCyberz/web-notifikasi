@@ -211,7 +211,6 @@ class KIRController extends Controller
             KIRHistories::create([
                 'kirs_id' => $history->kirs_id, // ID KIR dari histori yang dipilih
                 'tanggal_expired_kir' => $nextMonthDate, // Tanggal expired 1 bulan ke depan
-                'status' => 'tidak lulus', // Set status tidak lulus untuk histori baru
             ]);
         }
 

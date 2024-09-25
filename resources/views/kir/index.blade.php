@@ -34,7 +34,7 @@
                             </a>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <form action="{{ route('kir-index') }}" method="GET">
+                            <form action="{{ route('kir-index') }}" method="GET" id="filter-form">
                                 <div class="row g-2 align-items-center">
                                     <!-- Entries and Year (Left Side) -->
                                     <div class="col-12 col-md-6 d-flex flex-wrap">
@@ -42,7 +42,8 @@
                                         <div class="me-3 text-secondary">
                                             Show
                                             <div class="d-inline-block">
-                                                <select name="entries" class="form-control form-control-sm">
+                                                <select name="entries" class="form-control form-control-sm"
+                                                    id="entries-dropdown">
                                                     <option value=""
                                                         {{ is_null(request('entries')) ? 'selected' : '' }}>Select
                                                         entries</option>
@@ -67,7 +68,7 @@
                                             <div class="d-inline-block">
                                                 <input type="number" name="year"
                                                     class="form-control form-control-sm" value="{{ request('year') }}"
-                                                    min="1900" aria-label="Year"
+                                                    min="1900" aria-label="Year" id="year-input"
                                                     placeholder="{{ \Carbon\Carbon::now()->year }}">
                                             </div>
                                         </div>
@@ -93,6 +94,7 @@
                                 </div>
                             </form>
                         </div>
+
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
@@ -157,7 +159,8 @@
                                             @endif
                                             <td>
                                                 <span
-                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate" style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
+                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
@@ -279,6 +282,18 @@
                     alert.classList.add('hide');
                 }
             }, 3000); // Menghilang setelah 5 detik
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Kirim form otomatis saat dropdown entries berubah
+                document.getElementById('entries-dropdown').addEventListener('change', function() {
+                    document.getElementById('filter-form').submit();
+                });
+
+                // Kirim form otomatis saat input tahun berubah
+                document.getElementById('year-input').addEventListener('input', function() {
+                    document.getElementById('filter-form').submit();
+                });
+            });
         </script>
     @endpush
 

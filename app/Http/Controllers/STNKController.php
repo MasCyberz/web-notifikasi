@@ -60,6 +60,8 @@ class STNKController extends Controller
 
     public function store(request $request)
     {
+        dd($request->all());
+
         $request->validate([
             'nomor_polisi' => 'required',
             'biaya' => 'required',

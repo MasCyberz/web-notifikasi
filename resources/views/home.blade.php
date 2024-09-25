@@ -654,26 +654,19 @@
                 @empty
                     <p>Tidak ada notifikasi yang tersedia.</p>
                 @endforelse
-
-                {{-- <div class="col-xl-3">
-                    <div class="card text-bg-warning mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Pembuatan PR dalam 1.5 Bulan</h5>
-                            <p class="card-text">PR untuk kendaraan B 1234 CD perlu dibuat dalam 1.5 bulan.</p>
-                            <a href="#" class="btn btn-primary">Selengkapnya</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <div class="card text-bg-danger mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">PR Jatuh Tempo H-10</h5>
-                            <p class="card-text">PR untuk kendaraan B 2345 EF jatuh tempo dalam 10 hari.</p>
-                            <a href="#" class="btn btn-primary">Selengkapnya</a>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            setTimeout(function() {
+                let alert = document.querySelector('.alert');
+                if (alert) {
+                    alert.classList.remove('show');
+                    alert.classList.add('hide');
+                }
+            }, 3000); // Menghilang setelah 5 detik
+        </script>
+    @endpush
 </x-app-layout>

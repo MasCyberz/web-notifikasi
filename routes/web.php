@@ -75,6 +75,7 @@ Route::group(['middleware' => ['auth']], function () {
         // Management User
         Route::get('/management-user', [UserController::class, 'index'])->name('management-user-index');
         Route::get('management-user/tambah', [UserController::class, 'createUser'])->name('management-user-tambah');
+        Route::post('management-user/check-email', [UserController::class, 'checkEmail'])->name('management-user-check-email');
         Route::post('management-user/store', [UserController::class, 'storeUser'])->name('management-user-store');
         Route::get('management-user/edit/{id}', [UserController::class, 'editUser'])->name('management-user-edit');
         Route::get('management-user/delete/{id}', [UserController::class, 'deleteUser'])->name('management-user-delete');

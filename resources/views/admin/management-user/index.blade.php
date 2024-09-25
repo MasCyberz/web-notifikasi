@@ -103,6 +103,7 @@
                                         </th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Role</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -113,6 +114,7 @@
                                             <td>{{ $no++ }}</td>
                                             <td>{{ $user->name }}</td>
                                             <td>{{ $user->email }}</td>
+                                            <td>{{ $user->role->name }}</td>
                                             <td class="text-end">
                                                 <a href="{{ route('management-user-edit', ['id' => $user->id]) }}"
                                                     class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
