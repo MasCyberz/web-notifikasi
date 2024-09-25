@@ -121,6 +121,7 @@
                                         <th>Tipe Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
                                         <th>Biaya Perpanjangan</th>
+                                        <th>Tipe Perpanjangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -135,9 +136,9 @@
                                             </td>
                                             <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span></td>
                                             <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</span></td>
-                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span>
-                                            </td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span></td>
                                             <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ "Rp. " . $stnk->biaya }}</span></td>
+                                            <td><span class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->jenis_perpanjangan }}</span></td>
                                             <td class="text-end">
                                                 <a href="{{ route('stnk-detail', $stnk->id) }}"
                                                     class="btn btn-primary btn-icon"><i

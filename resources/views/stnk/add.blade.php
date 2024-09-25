@@ -9,17 +9,26 @@
                 @csrf
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
-                    <div class="mb-3">
+                    <div class="mb-3 col-12">
                         <label class="form-label">Plat Nomor</label>
                         <select class="form-select tomselected" id="select-nomor-polisi" name="nomor_polisi"
                             placeholder="Pilih Plat Nomor...">
                             <option value="" disabled selected>Pilih Plat Nomor...</option> <!-- Placeholder -->
-                            @foreach ($kendaraanTanpaSTNK as $item)
+                            @foreach ($kendaraan as $item)
                                 <option value="{{ $item->id }}">{{ $item->nomor_polisi }}</option>
                             @endforeach
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Tipe Perpanjangan</label>
+                        <div>
+                            <select class="form-select w-25" name="jenis_perpanjangan">
+                                    <option value="1 Tahun">Perpanjangan 1 Tahun</option>
+                                    <option value="5 Tahun">Perpanjangan 5 Tahun</option>
+                            </select>
+                        </div>
+                    </div>
                     {{-- Nomor STNK --}}
                     <x-Input label="Biaya Perpanjangan Terakhir" name="biaya" type="text" placeholder="3.000.000"
                         class="" />

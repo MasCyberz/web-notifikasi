@@ -20,6 +20,15 @@
                             </select>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipe Perpanjangan</label>
+                        <div>
+                            <select class="form-select w-25" name="jenis_perpanjangan">
+                                    <option value="1 Tahun">Perpanjangan 1 Tahun</option>
+                                    <option value="5 Tahun">Perpanjangan 5 Tahun</option>
+                            </select>
+                        </div>
+                    </div>
                     {{-- Nomor STNK --}}
                     <x-Input label="Biaya Perpanjangan Terakhir" name="biaya" type="text" value="{{ $stnk->biaya }}"
                     class="" />
