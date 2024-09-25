@@ -17,6 +17,7 @@ class STNK extends Model
         'id_kendaraan',
         'biaya',
         'tanggal_perpanjangan',
+        'jenis_perpanjangan',
         'updated_at',
         'alasan'
     ];

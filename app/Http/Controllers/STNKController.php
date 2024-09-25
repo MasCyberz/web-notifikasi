@@ -43,19 +43,33 @@ class STNKController extends Controller
 
     public function detail($id)
     {
+        // Mengambil data STNK yang berelasi dengan kendaraan
         $stnk = STNK::with('RelasiSTNKtoKendaraan')->find($id);
-        return view('stnk.detail', compact('stnk'));
+
+        // Mengambil perpanjangan 1 tahun dan 5 tahun terbaru
+        $perpanjangan_satu_tahun = STNK::where('id_kendaraan', $stnk->id_kendaraan)
+            ->where('jenis_perpanjangan', '1 tahun')
+            ->orderBy('tanggal_perpanjangan', 'desc')
+            ->first();
+
+        $perpanjangan_lima_tahun = STNK::where('id_kendaraan', $stnk->id_kendaraan)
+            ->where('jenis_perpanjangan', '5 tahun')
+            ->orderBy('tanggal_perpanjangan', 'desc')
+            ->first();
+
+        return view('stnk.detail', compact('stnk', 'perpanjangan_satu_tahun', 'perpanjangan_lima_tahun'));
     }
+
 
     public function create()
     {
-        // Ambil semua id kendaraan yang sudah ada di tabel STNK
-        $kendaraanDenganSTNK = STNK::pluck('id_kendaraan')->toArray();
+        // public function create()
+        {
+            // Ambil semua kendaraan
+            $kendaraan = Kendaraan::all();
 
-        // Ambil kendaraan yang belum memiliki STNK
-        $kendaraanTanpaSTNK = Kendaraan::whereNotIn('id', $kendaraanDenganSTNK)->get();
-
-        return view('stnk.add', ['kendaraanTanpaSTNK' => $kendaraanTanpaSTNK]);
+            return view('stnk.add', ['kendaraan' => $kendaraan]);
+        }
     }
 
     public function store(request $request)
@@ -64,6 +78,7 @@ class STNKController extends Controller
             'nomor_polisi' => 'required',
             'biaya' => 'required',
             'tgl_perpanjangan' => 'required',
+            'jenis_perpanjangan' => 'required'
         ]);
 
         // dd($request->all());
@@ -72,6 +87,7 @@ class STNKController extends Controller
             'id_kendaraan' => $request->nomor_polisi,
             'biaya' => $request->biaya,
             'tanggal_perpanjangan' => $request->tgl_perpanjangan,
+            'jenis_perpanjangan' => $request->jenis_perpanjangan
         ]);
         return redirect()->route('stnk-index')->with('success', 'Data STNK berhasil ditambahkan');
     }

@@ -1,11 +1,11 @@
 <x-app-layout>
-    <x-PageHeader header="Detail KIR Kendaraan" classcontainer="col-lg-8" />
+    <x-PageHeader header="Detail STNK Kendaraan" classcontainer="col-lg-8" />
     <div class="page-body">
         <div class="container-xl">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card">
-                        <x-cardHeader titleHeader="KIR Kendaraan {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}" />
+                        <x-cardHeader titleHeader="STNK Kendaraan {{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}" />
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 col-md-6">
@@ -18,6 +18,30 @@
                                     <div class="mb-3">
                                         <label class="form-label">Nomor BPKB</label>
                                         <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_bpkb }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pajak 1 Tahun</label>
+                                        <div class="form-control">{{ \Carbon\Carbon::parse($perpanjangan_satu_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pajak 1 Tahun</label>
+                                        <div class="form-control">{{ $perpanjangan_satu_tahun->biaya }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pajak 5 Tahun</label>
+                                        <div class="form-control"></div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Pajak 5 Tahun</label>
+                                        <div class="form-control"></div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
