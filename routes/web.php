@@ -52,13 +52,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     // STNK
     Route::get('/data-stnk', [STNKController::class, 'index'])->name('stnk-index');
-    Route::get('/data-stnk/detail/{id}', [STNKController::class, 'detail'])->name('stnk-detail');
-
+    Route::get('/data-stnk/detail/{id_kendaraan}', [STNKController::class, 'detail'])->name('stnk-detail');
+    Route::get('/stnk-history', [STNKController::class, 'history'])->name('stnk-history');
     // Function Hanya Untuk Admin
     Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
         Route::get('data-stnk/tambah', [STNKController::class, 'create'])->name('stnk-tambah');
         Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-store');
-        Route::get('stnk/edit/{id}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
+        Route::get('stnk/edit/{id_kendaraan}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
         Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
         Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
     });

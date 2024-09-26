@@ -26,6 +26,15 @@
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
+                                        <!-- Tampilkan jenis perpanjangan -->
+                                        Jenis Perpanjangan:
+                                        @if ($item->jenis_perpanjangan === '1 Tahun')
+                                            1 Tahun
+                                        @elseif ($item->jenis_perpanjangan === '5 Tahun')
+                                            5 Tahun
+                                        @else
+                                            Tidak Diketahui
+                                        @endif
                                     </p>
                                     {{-- <a href="{{ route('detail-alert', $item->id) }}"
                                         class="btn btn-light">Selengkapnya</a> --}}
@@ -68,11 +77,24 @@
                                     <h5 class="card-title">{{ $item->judul }}</h5>
                                     <p class="card-text">
                                         Plat Nomor: <span
-                                            class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span>
-                                        <br>
-                                        Tenggat Waktu: {{ $item->message }}
-                                        <br>
-                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
+                                            class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span><br>
+                                        Tenggat Waktu: {{ $item->message }}<br>
+                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}<br>
+                                        <!-- Tampilkan jenis perpanjangan jika STNK -->
+                                        @if ($item->tipe_notifikasi === 'STNK')
+                                            Jenis Perpanjangan:
+                                            @if (isset($item->jenis_perpanjangan))
+                                                @if ($item->jenis_perpanjangan === '1 Tahun')
+                                                    1 Tahun
+                                                @elseif ($item->jenis_perpanjangan === '5 Tahun')
+                                                    5 Tahun
+                                                @else
+                                                    Tidak Diketahui
+                                                @endif
+                                            @else
+                                                Tidak Diketahui
+                                            @endif
+                                        @endif
                                     </p>
                                     @if ($item->tipe_notifikasi === 'STNK')
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
@@ -92,6 +114,7 @@
                         </div>
                     </div>
                 @endif
+
 
                 {{-- H-45 --}}
                 @php
@@ -117,6 +140,22 @@
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
+                                        <!-- Tampilkan jenis perpanjangan jika STNK -->
+                                        @if ($item->tipe_notifikasi === 'STNK')
+                                            Jenis Perpanjangan:
+                                            @if (isset($item->jenis_perpanjangan))
+                                                @if ($item->jenis_perpanjangan === '1 Tahun')
+                                                    1 Tahun
+                                                @elseif ($item->jenis_perpanjangan === '5 Tahun')
+                                                    5 Tahun
+                                                @else
+                                                    Tidak Diketahui
+                                                @endif
+                                            @else
+                                                Tidak Diketahui
+                                            @endif
+                                        @endif
+                                    
                                     </p>
                                     @if ($item->tipe_notifikasi === 'STNK')
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"

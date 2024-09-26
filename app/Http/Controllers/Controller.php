@@ -30,7 +30,7 @@ class Controller extends BaseController
         // Total KIR berdasarkan tahun
         $totalKIR = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)->count();
 
-// Total KIR berdasarkan bulan dan tahun
+        // Total KIR berdasarkan bulan dan tahun
         $totalKIRBulanIni = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)
             ->whereMonth('tanggal_expired_kir', $bulanIni)
             ->count();
@@ -233,6 +233,7 @@ class Controller extends BaseController
                 'message' => $daysToExpire <= 0 ? 'Hari ini' : " $daysToExpire hari.",
                 'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
                 'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+                'jenis_perpanjangan' => $stnk->jenis_perpanjangan, // Tambahkan jenis perpanjangan
                 'tipe_notifikasi' => 'STNK',
             ]);
         }
