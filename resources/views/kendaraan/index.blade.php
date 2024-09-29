@@ -109,6 +109,7 @@
                                         <th>Merk</th>
                                         <th>Tipe Kendaraan</th>
                                         <th>User Kendaraan</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>

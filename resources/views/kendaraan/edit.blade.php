@@ -26,6 +26,9 @@
                                     </option>
                                     <option value="DSFK" {{ $kendaraan->merk_kendaraan == 'DSFK' ? 'selected' : '' }}>
                                         DSFK</option>
+                                    <option value="Daihatsu"
+                                        {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
+                                    </option>
                                     <option value="Hyundai"
                                         {{ $kendaraan->merk_kendaraan == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
                                     <option value="Kia" {{ $kendaraan->merk_kendaraan == 'Kia' ? 'selected' : '' }}>

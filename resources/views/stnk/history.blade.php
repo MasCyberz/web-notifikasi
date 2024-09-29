@@ -152,9 +152,9 @@
                                                     class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->jenis_perpanjangan }}</span>
                                             </td>
                                             <td class="text-end">
-                                                <a href="{{ route('stnk-detail', $stnk->id) }}"
+                                                {{-- <a href="{{ route('stnk-detail', $stnk->id) }}"
                                                     class="btn btn-primary btn-icon"><i
-                                                        class="ti ti-alert-circle"></i></a>
+                                                        class="ti ti-alert-circle"></i></a> --}}
                                                 @if (Auth::user()->role_id == 1)
                                                     {{-- <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}"
                                                         class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>

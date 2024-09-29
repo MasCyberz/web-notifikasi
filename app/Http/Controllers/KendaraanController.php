@@ -78,7 +78,7 @@ class KendaraanController extends Controller
             'jenis_kendaraan' => $request->jenis_kendaraan,
             'model_kendaraan_id' => $request->model_kendaraan_id,
             'tahun' => $request->tahun,
-            'user_kendaraan' => $request->user,
+            'user_kendaraan' => $request->user_kendaraan,
             'warna' => $request->warna,
             'nomor_rangka' => $request->nomor_rangka,
             'nomor_mesin' => $request->nomor_mesin,
