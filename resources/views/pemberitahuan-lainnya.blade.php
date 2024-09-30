@@ -6,7 +6,7 @@
 
                 @php
                     $hariIni = $notifikasi->filter(function ($item) {
-                        return $item->tanggal_perpanjangan->isSameDay(\Carbon\Carbon::today());
+                        return $item->tanggal_perpanjangan->isToday();
                     });
                 @endphp
 
@@ -42,7 +42,7 @@
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @elseif ($item->tipe_notifikasi === 'KIR')
-                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                        <a href="{{ route('detail-alert', ['id' => $item->kirHistories->pluck('id')->first(), 'tipe' => 'KIR']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @endif
                                 </div>
@@ -100,7 +100,7 @@
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @elseif ($item->tipe_notifikasi === 'KIR')
-                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                        <a href="{{ route('detail-alert', ['id' => $item->kirHistories->pluck('id')->first(), 'tipe' => 'KIR']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @endif
                                 </div>
@@ -155,7 +155,7 @@
                                                 Tidak Diketahui
                                             @endif
                                         @endif
-                                    
+
                                     </p>
                                     @if ($item->tipe_notifikasi === 'STNK')
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"

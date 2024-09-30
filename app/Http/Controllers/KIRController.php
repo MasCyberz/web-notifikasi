@@ -69,12 +69,15 @@ class KIRController extends Controller
             }
         }
 
-        $query->orderBy('created_at', 'desc');
+        // Custom sorting: expired dates at the bottom
+        $query->orderByRaw('CASE WHEN tanggal_expired_kir >= NOW() THEN 0 ELSE 1 END')
+            ->orderBy('tanggal_expired_kir', 'asc'); // Then sort by the date itself
 
         // Paginate the results
         $kir = $query->with('kir.kendaraan')
             ->paginate($entries)
             ->appends($request->all());
+
         return view('kir.index', compact('kir'));
     }
 

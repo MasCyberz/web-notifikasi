@@ -37,7 +37,8 @@
                                     </option>
                                     <option value="DSFK" {{ old('merk_kendaraan') == 'DSFK' ? 'selected' : '' }}>DSFK
                                     </option>
-                                    <option value="Daihatsu" {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
+                                    <option value="Daihatsu"
+                                        {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
                                     </option>
                                     <option value="Hyundai" {{ old('merk_kendaraan') == 'Hyundai' ? 'selected' : '' }}>
                                         Hyundai</option>
@@ -90,22 +91,81 @@
                             </div>
 
                             <!-- Dropdown with Search Feature using Alpine.js -->
-                            <div class="mb-3 w-100 w-lg-50" x-data="{ search: '' }">
+                            <div class="mb-3 w-100 w-lg-50" x-data="{
+                                search: '',
+                                models: {{ json_encode($models) }},
+                                addNewModel() {
+                                    // Cek apakah input untuk nama model baru tidak kosong
+                                    if (this.search.trim() === '') {
+                                        alert('Silakan masukkan nama model yang ingin ditambahkan.');
+                                        return;
+                                    }
+
+                                    // Cek apakah model sudah ada
+                                    const existingModel = this.models.find(m => m.name.toLowerCase() === this.search.toLowerCase());
+
+                                    if (existingModel) {
+                                        alert('Model sudah ada.');
+                                        return;
+                                    }
+
+                                    // Tampilkan pesan konfirmasi untuk menambahkan model baru
+                                    if (confirm('Model tidak ditemukan. Apakah Anda ingin menambahkannya?')) {
+                                        fetch('/data-kendaraan/tambah-models', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({ name: this.search })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    this.models.push(data.model); // Tambahkan model baru ke dalam daftar
+                                                    this.search = ''; // Reset input pencarian
+                                                } else {
+                                                    alert('Gagal menambahkan model.');
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error:', error);
+                                            });
+                                    }
+                                }
+                            }">
                                 <label class="form-label">Model Kendaraan</label>
-                                <input type="text" x-model="search" class="form-control mb-2"
-                                    placeholder="Cari model...">
+
+                                <div class="input-group mb-2">
+                                    <input type="text" x-model="search" class="form-control"
+                                        placeholder="Cari model...">
+                                    <button type="button" class="btn btn-primary" @click="addNewModel()"
+                                        x-show="search && models.filter(m => m.name.toLowerCase().includes(search.toLowerCase())).length === 0">
+                                        Tambah Model
+                                    </button>
+                                </div>
+
                                 <select class="form-select @error('model_kendaraan_id') is-invalid @enderror"
                                     name="model_kendaraan_id">
                                     <template
-                                        x-for="model in {{ json_encode($models) }}.filter(model => model.name.toLowerCase().includes(search.toLowerCase()))"
-                                        :key="model.id">
-                                        <option :value="model.id" x-text="model.name"></option>
+                                        x-if="models.filter(m => m.name.toLowerCase().includes(search.toLowerCase())).length > 0">
+                                        <template
+                                            x-for="model in models.filter(m => m.name.toLowerCase().includes(search.toLowerCase()))"
+                                            :key="model.id">
+                                            <option :value="model.id" x-text="model.name"></option>
+                                        </template>
+                                    </template>
+                                    <template
+                                        x-if="search && models.filter(m => m.name.toLowerCase().includes(search.toLowerCase())).length === 0">
+                                        <option disabled>No results found</option>
                                     </template>
                                 </select>
+
                                 @error('model_kendaraan_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <div class="mb-3">
                                 <label for="tahun" class="form-label">Tahun Pembuatan</label>
@@ -117,52 +177,50 @@
                                 @enderror
                             </div>
 
-                            <x-Input label="Warna" name="warna" type="text"
-                                class="" value="{{ old('warna') }}" />
+                            <x-Input label="Warna" name="warna" type="text" class=""
+                                value="{{ old('warna') }}" />
                             @error('warna')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Nomor Rangka" name="nomor_rangka" type="text"
-                                class=""
+                            <x-Input label="Nomor Rangka" name="nomor_rangka" type="text" class=""
                                 value="{{ old('nomor_rangka') }}" />
                             @error('nomor_rangka')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Nomor Mesin" name="nomor_mesin" type="text"
-                                class="" value="{{ old('nomor_mesin') }}" />
+                            <x-Input label="Nomor Mesin" name="nomor_mesin" type="text" class=""
+                                value="{{ old('nomor_mesin') }}" />
                             @error('nomor_mesin')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Bahan Bakar" name="bahan_bakar" type="text"
-                                class="" value="{{ old('bahan_bakar') }}" />
+                            <x-Input label="Bahan Bakar" name="bahan_bakar" type="text" class=""
+                                value="{{ old('bahan_bakar') }}" />
                             @error('bahan_bakar')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Nomor BPKB" name="nomor_bpkb" type="text"
-                                class="" value="{{ old('nomor_bpkb') }}" />
+                            <x-Input label="Nomor BPKB" name="nomor_bpkb" type="text" class=""
+                                value="{{ old('nomor_bpkb') }}" />
                             @error('nomor_bpkb')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" type="text"
-                                class=""
+                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" type="text" class=""
                                 value="{{ old('tahun_registrasi') }}" />
                             @error('tahun_registrasi')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Ident" name="ident" type="text"
-                                class="" value="{{ old('ident') }}" />
+                            <x-Input label="Ident" name="ident" type="text" class=""
+                                value="{{ old('ident') }}" />
                             @error('ident')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="User" name="user_kendaraan" type="text"
-                                class="" value="{{ old('user') }}" />
+                            <x-Input label="User" name="user_kendaraan" type="text" class=""
+                                value="{{ old('user') }}" />
                             @error('user')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

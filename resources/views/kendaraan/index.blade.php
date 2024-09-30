@@ -49,14 +49,15 @@
                             </div>
                         @endif
                         <div class="card-body border-bottom py-3">
-                            <form action="{{ route('kendaraan-index') }}" method="GET">
+                            <form action="{{ route('kendaraan-index') }}" method="GET" id="filter-form">
                                 <div class="row g-2 align-items-center">
                                     <div class="col-12 col-md-6 d-flex flex-wrap">
                                         <!-- Entries Dropdown -->
                                         <div class="me-3 text-secondary">
                                             Show
                                             <div class="d-inline-block">
-                                                <select name="entries" class="form-control form-control-sm">
+                                                <select name="entries" class="form-control form-control-sm"
+                                                    id="entries-dropdown">
                                                     <option value=""
                                                         {{ is_null(request('entries')) ? 'selected' : '' }}>Select
                                                         entries</option>
@@ -313,7 +314,8 @@
                                         </div>
 
                                         <!-- Tombol Pilih/Jangan Pilih Semua -->
-                                        <button id="toggleSelectAll" type="button" class="btn btn-outline-primary mt-2">Pilih
+                                        <button id="toggleSelectAll" type="button"
+                                            class="btn btn-outline-primary mt-2">Pilih
                                             Semua</button>
                                     </div>
                                 </div>
@@ -381,6 +383,13 @@
                             div.style.display = 'none';
                         }
                     });
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Kirim form otomatis saat dropdown entries berubah
+                document.getElementById('entries-dropdown').addEventListener('change', function() {
+                    document.getElementById('filter-form').submit();
                 });
             });
         </script>

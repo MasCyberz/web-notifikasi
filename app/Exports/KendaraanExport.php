@@ -3,13 +3,13 @@
 namespace App\Exports;
 
 use App\Models\Kendaraan;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class KendaraanExport implements FromCollection, WithHeadings, WithMapping, WithStyles
@@ -62,63 +62,43 @@ class KendaraanExport implements FromCollection, WithHeadings, WithMapping, With
 
     public function styles(Worksheet $sheet)
     {
-
-        // Mendapatkan tahun dinamis saat ini
-        $tahunSekarang = date('Y');
-
-        // Menambahkan teks di atas heading dengan merge & center
-        $sheet->mergeCells('A1:M1'); // Merge cells dari kolom A sampai M di baris pertama
-        $sheet->setCellValue('A1', 'DATA KENDARAAN ' . $tahunSekarang); // Menambahkan teks dengan tahun dinamis
-
-        // Styling untuk judul
-        $sheet->getStyle('A1')->applyFromArray([
+        // Define styles for the headings
+        $styleArray = [
             'font' => [
                 'bold' => true,
-                'size' => 18, // Ukuran font lebih besar
+                'size' => 12,
             ],
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER, // Center horizontal
-                'vertical' => Alignment::VERTICAL_CENTER, // Center vertical
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => [
+                    'argb' => 'B7DEE8', // Change this to the desired fill color
+                ],
             ],
             'borders' => [
                 'allBorders' => [
-                    'borderStyle' => Border::BORDER_MEDIUM, // Border tebal untuk heading
+                    'borderStyle' => Border::BORDER_THICK,
+                    'color' => ['argb' => Color::COLOR_BLACK],
                 ],
             ],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID, // Filling tebal
-                'startColor' => [
-                    'argb' => 'C4D79B', // Warna tebal
+        ];
+
+        // Apply heading styles
+        $sheet->getStyle('A1:M1')->applyFromArray($styleArray);
+
+        // Apply border styles to data rows
+        $rowCount = $sheet->getHighestRow(); // Get the highest row count for data
+        $sheet->getStyle("A2:M{$rowCount}")->applyFromArray([
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => ['argb' => Color::COLOR_BLACK],
                 ],
             ],
         ]);
 
-        // Styling untuk heading (baris pertama)
-        $sheet->getStyle('A2:M2')->applyFromArray([
-            'font' => [
-                'bold' => true, // Membuat teks tebal
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_MEDIUM, // Border tebal untuk heading
-                ],
-            ],
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID, // Filling tebal
-                'startColor' => [
-                    'argb' => 'B7DEE8', // Warna tebal
-                ],
-            ],
-        ]);
-
-        // Styling untuk seluruh konten (baris di bawah heading)
-        $sheet->getStyle('A3:M' . ($sheet->getHighestRow()))
-            ->applyFromArray([
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN, // Border tipis untuk konten
-                    ],
-                ],
-            ]);
+        // Auto-size columns A to M
+        foreach (range('A', 'M') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
     }
 }

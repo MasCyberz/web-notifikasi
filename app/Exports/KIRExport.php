@@ -8,12 +8,13 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class KIRExport implements FromCollection, WithHeadings, WithStyles
+class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -128,6 +129,10 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles
             'Status',
             'Keterangan',
         ];
+    }
+
+    public function title(): string{
+        return 'KIR';
     }
 
     public function styles(Worksheet $sheet)

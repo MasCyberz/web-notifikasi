@@ -25,7 +25,7 @@ class ExportController extends Controller
             $month = $request->input('month');
             $platNomor = $request->input('platNomor', []);
 
-            $filename = 'kir_stnk_' . $year . '-' . $month . '_' . $hariIni . '.xlsx';
+            $filename = 'kir_stnk_' . $year . '_' . $month . '_' . $hariIni . '.xlsx';
 
             return Excel::download(new STNKKIRExport($year, $month, $platNomor), $filename);
         }

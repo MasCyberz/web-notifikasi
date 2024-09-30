@@ -101,7 +101,10 @@ class KendaraanController extends Controller
             'name' => $request->name,
         ]);
 
-        return response()->json($model);
+        return response()->json([
+            'success' => true,
+            'model' => $model, // Kembalikan model yang baru ditambahkan jika perlu
+        ]);
     }
 
     public function deleteModels(Request $request)

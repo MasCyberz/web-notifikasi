@@ -11,9 +11,10 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class STNKExport implements FromCollection, WithHeadings, WithStyles
+class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -103,6 +104,10 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles
             'Jenis Perpanjangan',
             'Biaya',
         ];
+    }
+
+    public function title(): string{
+        return 'STNK';
     }
 
     public function styles(Worksheet $sheet)
