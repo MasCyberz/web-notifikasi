@@ -15,7 +15,7 @@
         </style>
     @endpush
 
-    <x-PageHeader header="Data STNK" classcontainer="" />
+    <x-PageHeader header="History Data STNK" classcontainer="" />
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show position-fixed end-0 my-2 mx-2" style="z-index: 1050;"
@@ -41,9 +41,8 @@
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
                                 <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
-                                    class="ti ti-plus fs-2"></i>Tambah Data
+                                        class="ti ti-plus fs-2"></i>Tambah Data
                                 </a>
-                                <a href="{{ route('stnk-history') }}" class="btn btn-link">History</a>
                             </div>
                         @endif
                         <div class="card-body border-bottom py-3">
@@ -110,32 +109,57 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th class="w-1">No.</th>
+                                        <th class="w-1">No.
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-sm icon-thick">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M6 15l6 -6l6 6"></path>
+                                            </svg> --}}
+                                        </th>
                                         <th>Plat Nomor</th>
                                         <th>Tipe Kendaraan</th>
-                                        <th>Pajak 1 Tahun</th>
-                                        <th>Pajak 5 Tahun</th>
+                                        <th>Tanggal Perpanjangan</th>
+                                        <th>Biaya Perpanjangan</th>
+                                        <th>Tipe Perpanjangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($finalData as $key => $data)
-                                        <tr>
-                                            <td>{{ (($stnks->currentPage() - 1) * $stnks->perPage()) + $loop->iteration }}</td>
-
-                                            <td>{{ $data['nomor_polisi'] }}</td>
-                                            <td>{{ $data['tipe'] }}</td>
-                                            <td>{{ $data['tanggal_perpanjangan_1_tahun'] }}</td>
-                                            <td>{{ $data['tanggal_perpanjangan_5_tahun'] }}</td>
+                                    @foreach ($stnks as $stnk)
+                                        @php
+                                            $isExpired = \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isPast();
+                                        @endphp
+                                        <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $stnks->firstItem() - 1 }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->nomor_polisi }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->RelasiSTNKtoKendaraan->tipe }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($stnk->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ 'Rp. ' . $stnk->biaya }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $stnk->jenis_perpanjangan }}</span>
+                                            </td>
                                             <td class="text-end">
-                                                <a href="{{ route('stnk-detail', $data['id_kendaraan']) }}"
+                                                {{-- <a href="{{ route('stnk-detail', $stnk->id) }}"
                                                     class="btn btn-primary btn-icon"><i
-                                                        class="ti ti-alert-circle"></i></a>
+                                                        class="ti ti-alert-circle"></i></a> --}}
                                                 @if (Auth::user()->role_id == 1)
-                                                    <a href="{{ route('stnk-edit', ['id_kendaraan' => $data['id_kendaraan']]) }}"
+                                                    {{-- <a href="{{ route('stnk-edit', ['id' => $stnk->id]) }}"
                                                         class="btn btn-success btn-icon"><i class="ti ti-edit"></i></a>
-                                                    <a href="{{ route('stnk-delete', ['id' => $data['id_kendaraan']]) }}"
-                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                    <a href="{{ route('stnk-delete', ['id' => $stnk->id]) }}"
+                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a> --}}
                                                 @endif
                                             </td>
                                         </tr>
@@ -166,7 +190,8 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}"
+                                                rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -181,6 +206,13 @@
 
                                     {{-- Pagination Elements --}}
                                     @foreach ($stnks->links()->elements as $element)
+                                        {{-- "Three Dots" Separator --}}
+                                        @if (is_string($element))
+                                            <li class="page-item disabled" aria-disabled="true">
+                                                <span class="page-link">{{ $element }}</span>
+                                            </li>
+                                        @endif
+
                                         {{-- Array Of Links --}}
                                         @if (is_array($element))
                                             @foreach ($element as $page => $url)
@@ -189,13 +221,11 @@
                                                             class="page-link">{{ $page }}</a></li>
                                                 @else
                                                     <li class="page-item"><a class="page-link"
-                                                            href="{{ $url }}&entries={{ $entries }}&search={{ $search }}&year={{ $year }}">{{ $page }}</a>
-                                                    </li>
+                                                            href="{{ $url }}">{{ $page }}</a></li>
                                                 @endif
                                             @endforeach
                                         @endif
                                     @endforeach
-
 
                                     {{-- Next Page Link --}}
                                     @if ($stnks->hasMorePages())

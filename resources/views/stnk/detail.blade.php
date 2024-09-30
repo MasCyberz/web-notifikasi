@@ -28,20 +28,20 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Pajak 1 Tahun</label>
+                                        <label class="form-label">Biaya Pajak 1 Tahun</label>
                                         <div class="form-control">{{ $perpanjangan_satu_tahun->biaya }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Pajak 5 Tahun</label>
-                                        <div class="form-control"></div>
+                                        <div class="form-control">{{ \Carbon\Carbon::parse($perpanjangan_lima_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
-                                        <label class="form-label">Pajak 5 Tahun</label>
-                                        <div class="form-control"></div>
+                                        <label class="form-label"> Biaya Pajak 5 Tahun</label>
+                                        <div class="form-control">{{ $perpanjangan_lima_tahun->biaya }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">

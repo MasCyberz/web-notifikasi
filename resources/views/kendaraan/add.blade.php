@@ -37,6 +37,8 @@
                                     </option>
                                     <option value="DSFK" {{ old('merk_kendaraan') == 'DSFK' ? 'selected' : '' }}>DSFK
                                     </option>
+                                    <option value="Daihatsu" {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
+                                    </option>
                                     <option value="Hyundai" {{ old('merk_kendaraan') == 'Hyundai' ? 'selected' : '' }}>
                                         Hyundai</option>
                                     <option value="Kia" {{ old('merk_kendaraan') == 'Kia' ? 'selected' : '' }}>Kia
