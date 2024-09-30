@@ -179,39 +179,30 @@ class Controller extends BaseController
     }
 
     public function pemberitahuanlainnya()
-    {
-        $today = Carbon::today();
+{
+    $today = Carbon::today();
 
-        // Ambil data KIR dan kir_histories
-        $kirData = KIR::with(['kirHistories' => function ($query) {
-            $query->orderBy('tanggal_expired_kir', 'desc');
-        }])
-            ->get()
-            ->map(function ($kir) use ($today) {
-                $kir->kirHistories = $kir->kirHistories->filter(function ($history) use ($today) {
-                    // Ambil semua kir_histories yang memiliki tanggal yang sama dengan kir_histories terbaru
-                    return Carbon::parse($history->tanggal_expired_kir)->eq(Carbon::parse($history->tanggal_expired_kir));
-                });
-                return $kir;
-            })
-            ->filter(function ($kir) {
-                return $kir->kirHistories->isNotEmpty(); // Hanya ambil KIR yang memiliki kir_histories
-            });
+    // Ambil data KIR dan kir_histories
+    $kirData = KIR::with(['kirHistories' => function ($query) {
+        $query->orderBy('tanggal_expired_kir', 'asc'); // Ambil kir_histories urut dari yang paling awal
+    }])->get();
 
-        // Ambil data STNK
-        $stnkData = STNK::all()->map(function ($stnk) {
-            $stnk->tanggal_perpanjangan = Carbon::parse($stnk->tanggal_perpanjangan);
-            return $stnk;
-        });
+    // Ambil data STNK
+    $stnkData = STNK::all()->map(function ($stnk) {
+        $stnk->tanggal_perpanjangan = Carbon::parse($stnk->tanggal_perpanjangan);
+        return $stnk;
+    });
 
-        $notifikasi = collect();
+    $notifikasi = collect();
 
-        // Gabungkan data KIR
-        foreach ($kirData as $kir) {
-            foreach ($kir->kirHistories as $history) {
+    // Gabungkan data KIR
+    foreach ($kirData as $kir) {
+        foreach ($kir->kirHistories as $history) {
+            // Filter hanya kir_histories yang tanggal_expired_kir sama dengan hari ini
+            if (Carbon::parse($history->tanggal_expired_kir)->isToday()) {
                 $daysToExpire = Carbon::parse($history->tanggal_expired_kir)->diffInDays($today);
                 $notifikasi->push((object) [
-                    'id' => $kir->id,
+                    'id' => $history->id,  // Menggunakan id dari kir_histories
                     'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
                     'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 KIR' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan KIR' : 'KIR hari ini'),
                     'message' => $daysToExpire <= 0 ? 'Hari ini' : "$daysToExpire hari.",
@@ -222,35 +213,37 @@ class Controller extends BaseController
                 ]);
             }
         }
-
-        // Gabungkan data STNK
-        foreach ($stnkData as $stnk) {
-            $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
-            $notifikasi->push((object) [
-                'id' => $stnk->id,
-                'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
-                'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 STNK' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan STNK' : 'STNK hari ini'),
-                'message' => $daysToExpire <= 0 ? 'Hari ini' : "$daysToExpire hari.",
-                'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
-                'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
-                'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
-                'tipe_notifikasi' => 'STNK',
-            ]);
-        }
-
-        // Urutkan berdasarkan tanggal perpanjangan
-        $notifikasi = $notifikasi->sortBy(function ($item) {
-            return $item->tanggal_perpanjangan;
-        });
-
-        // Hanya tampilkan notifikasi yang jatuh tempo dalam 45 hari ke depan dan yang jatuh tempo hari ini
-        $notifikasi = $notifikasi->filter(function ($item) use ($today) {
-            $daysToExpire = $item->tanggal_perpanjangan->diffInDays($today);
-            return ($daysToExpire <= 45 && $item->tanggal_perpanjangan->isFuture()) || $item->tanggal_perpanjangan->isToday();
-        });
-
-        return view('pemberitahuan-lainnya', compact('today', 'notifikasi'));
     }
+
+    // Gabungkan data STNK
+    foreach ($stnkData as $stnk) {
+        $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
+        $notifikasi->push((object) [
+            'id' => $stnk->id,
+            'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
+            'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 STNK' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan STNK' : 'STNK hari ini'),
+            'message' => $daysToExpire <= 0 ? 'Hari ini' : "$daysToExpire hari.",
+            'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
+            'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+            'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
+            'tipe_notifikasi' => 'STNK',
+        ]);
+    }
+
+    // Urutkan berdasarkan tanggal perpanjangan
+    $notifikasi = $notifikasi->sortBy(function ($item) {
+        return $item->tanggal_perpanjangan;
+    });
+
+    // Hanya tampilkan notifikasi yang jatuh tempo dalam 45 hari ke depan dan yang jatuh tempo hari ini
+    $notifikasi = $notifikasi->filter(function ($item) use ($today) {
+        $daysToExpire = $item->tanggal_perpanjangan->diffInDays($today);
+        return ($daysToExpire <= 45 && $item->tanggal_perpanjangan->isFuture()) || $item->tanggal_perpanjangan->isToday();
+    });
+
+    return view('pemberitahuan-lainnya', compact('today', 'notifikasi'));
+}
+
 
 
     public function detailAlert($id, $tipe)
