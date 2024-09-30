@@ -10,24 +10,22 @@
                             titleHeader="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }} {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}" />
                         <div class="card-body">
                             <div class="row">
-                                @if ($tipe === 'KIR')
-
-
-                                    @if ($KIRHistory->status != null)
-                                        <div class="col-12">
-                                            <div class="mb-3">
-                                                <div
-                                                    class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
-                                                    {{ $KIRHistory->status }}</div>
+                                @if ($tipe === 'KIR' && isset($KIRHistory) && $KIRHistory->status != null)
+                                    <div class="col-12">
+                                        <div class="mb-3">
+                                            <div
+                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                {{ $KIRHistory->status }}
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
                                 @endif
+
                                 @if ($tipe === 'STNK')
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Tanggal Perpanjangan</label>
-                                            <div class="form-control">{{ $notifikasi->tanggal_perpanjangan }}</div>
+                                            <div class="form-control">{{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan)->format('d F Y') }}</div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
@@ -41,7 +39,7 @@
                                         <div class="mb-3">
                                             <label class="form-label">Tanggal Perpanjangan</label>
                                             <div class="form-control">
-                                                {{ \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->format('d-m-Y') }}
+                                                {{ \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->format('d F Y') }}
                                             </div>
                                         </div>
                                     </div>
@@ -51,16 +49,18 @@
                                             <div class="form-control">{{ $notifikasi->nomor_uji_kendaraan }}</div>
                                         </div>
                                     </div>
-                                    @if ($KIRHistory->alasan_tidak_lulus != null)
-                                        <div class="col-12">
-                                            <label class="form-label">Keterangan</label>
-                                            <div class="mb-3">
-                                                <div class="form-control">
-                                                    {{ $KIRHistory->alasan_tidak_lulus }}</div>
+                                @endif
+                                @if ($KIRHistory->alasan_tidak_lulus ?? null)
+                                    <div class="col-12">
+                                        <label class="form-label">Keterangan</label>
+                                        <div class="mb-3">
+                                            <div class="form-control">
+                                                {{ $KIRHistory->alasan_tidak_lulus }}
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
                                 @endif
+
 
 
                                 {{-- Informasi Kendaraan --}}
@@ -162,7 +162,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12 col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">User Kendaraan</label>
+                                        <div class="form-control">
+                                            {{ $notifikasi->RelasiSTNKtoKendaraan->user_kendaraan ?? ($notifikasi->kendaraan->user_kendaraan ?? '-') }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Ident</label>
                                         <div class="form-control">

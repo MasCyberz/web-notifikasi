@@ -28,7 +28,7 @@ class KendaraanController extends Controller
             ;
         }
 
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('nomor_polisi', 'asc');
 
         // Mengambil data kendaraan dengan pagination berdasarkan input entries
         $kendaraans = $query->paginate($entries)

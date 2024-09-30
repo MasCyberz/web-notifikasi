@@ -66,6 +66,9 @@ class STNKController extends Controller
             ];
         }
 
+        $finalData = collect($finalData)->sortBy('nomor_polisi')->values()->all();
+
+
         // Lakukan pagination pada finalData
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $itemCollection = collect($finalData);

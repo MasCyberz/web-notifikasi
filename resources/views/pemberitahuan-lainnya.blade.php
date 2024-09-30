@@ -25,16 +25,21 @@
                                         <br>
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>
-                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
+                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d M Y') }}
                                         <!-- Tampilkan jenis perpanjangan -->
                                         Jenis Perpanjangan:
-                                        @if ($item->jenis_perpanjangan === '1 Tahun')
-                                            1 Tahun
-                                        @elseif ($item->jenis_perpanjangan === '5 Tahun')
-                                            5 Tahun
+                                        @if (property_exists($item, 'jenis_perpanjangan'))
+                                            @if ($item->jenis_perpanjangan === '1 Tahun')
+                                                1 Tahun
+                                            @elseif ($item->jenis_perpanjangan === '5 Tahun')
+                                                5 Tahun
+                                            @else
+                                                Tidak Diketahui
+                                            @endif
                                         @else
-                                            Tidak Diketahui
+                                            KIR
                                         @endif
+
                                     </p>
                                     {{-- <a href="{{ route('detail-alert', $item->id) }}"
                                         class="btn btn-light">Selengkapnya</a> --}}
@@ -79,7 +84,7 @@
                                         Plat Nomor: <span
                                             class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span><br>
                                         Tenggat Waktu: {{ $item->message }}<br>
-                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}<br>
+                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d M Y') }}<br>
                                         <!-- Tampilkan jenis perpanjangan jika STNK -->
                                         @if ($item->tipe_notifikasi === 'STNK')
                                             Jenis Perpanjangan:
@@ -139,7 +144,7 @@
                                         <br>
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>
-                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d-M-Y') }}
+                                        Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d M Y') }}
                                         <!-- Tampilkan jenis perpanjangan jika STNK -->
                                         @if ($item->tipe_notifikasi === 'STNK')
                                             Jenis Perpanjangan:
@@ -155,13 +160,13 @@
                                                 Tidak Diketahui
                                             @endif
                                         @endif
-                                    
+
                                     </p>
                                     @if ($item->tipe_notifikasi === 'STNK')
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @elseif ($item->tipe_notifikasi === 'KIR')
-                                        <a href="{{ route('detail-alert', ['id' => $item->kirHistories->pluck('id')->first(), 'tipe' => 'KIR']) }}"
+                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @endif
                                 </div>

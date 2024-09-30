@@ -584,7 +584,7 @@
                                     Tenggat Waktu: {{ $notifikasi->message }}
                                     <br>
                                     Tanggal Perpanjangan:
-                                    {{ \Carbon\Carbon::parse($notifikasi['tenggat'])->format('d-M-Y') }}
+                                    {{ \Carbon\Carbon::parse($notifikasi['tenggat'])->format('d M Y') }}
                                 </p>
                                 @if ($notifikasi->tipe_notifikasi === 'STNK')
                                     <a href="{{ route('detail-alert', ['id' => $notifikasi->id, 'tipe' => 'STNK']) }}"
