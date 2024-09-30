@@ -31,8 +31,12 @@
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
                                 <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
-                                        class="ti ti-plus fs-2"></i>Tambah Data
+                                        class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
                                 </a>
+                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary m-2"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah KIR Baru
+                                </a>
+
                             </div>
                         @endif
                         <div class="card-body border-bottom py-3">
@@ -204,7 +208,8 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $kir->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="{{ $kir->previousPageUrl() }}"
+                                                rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
