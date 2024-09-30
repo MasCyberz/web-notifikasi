@@ -20,6 +20,10 @@ class KIRHistories extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'tanggal_expired_kir' => 'datetime', // Cast to DateTime
+    ];
+
     public function kir(){
         return $this->belongsTo(KIR::class, 'kirs_id', 'id');
     }

@@ -37,10 +37,15 @@
                 <div class="col-12">
                     <div class="card">
                         @if (Auth::user()->role_id == 1)
-                            <div class="card-header d-flex flex-row-reverse">
+                            <div class="card-header d-flex flex-row-reverse gap-2">
                                 <a href="{{ route('kendaraan-tambah') }}" class="btn btn-primary"> <i
                                         class="ti ti-plus fs-2"></i>Tambah Data
                                 </a>
+                                <button type="button" class="btn btn-large btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#exportModal">
+                                    <i class="ti ti-file-excel pe-2 fs-2"></i>
+                                    Export Excel
+                                </button>
                             </div>
                         @endif
                         <div class="card-body border-bottom py-3">
@@ -182,7 +187,8 @@
                                 <!-- Tombol Nomor Halaman -->
                                 @for ($i = 1; $i <= $kendaraans->lastPage(); $i++)
                                     <li class="page-item {{ $i == $kendaraans->currentPage() ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $kendaraans->url($i) }}">{{ $i }}</a>
+                                        <a class="page-link"
+                                            href="{{ $kendaraans->url($i) }}">{{ $i }}</a>
                                     </li>
                                 @endfor
 
@@ -221,6 +227,104 @@
                 </div>
             </div>
         </div>
+
+        {{-- Modal Export --}}
+
+        <!-- Modal Export -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exportModalLabel">Export Excel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="exportForm" action="{{ route('export-data-KendaraanKirStnk') }}" method="GET">
+                            <input type="hidden" id="exportType" name="exportType" value="vehicle">
+
+                            <!-- Tab Navigation -->
+                            <ul class="nav nav-tabs" id="exportTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="vehicle-tab" data-bs-toggle="tab" href="#vehicle"
+                                        role="tab" aria-controls="vehicle" aria-selected="true">
+                                        Data Kendaraan
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="kir-stnk-tab" data-bs-toggle="tab" href="#kir-stnk"
+                                        role="tab" aria-controls="kir-stnk" aria-selected="false">
+                                        KIR & STNK
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab Content -->
+                            <div class="tab-content mt-3" id="exportTabsContent">
+                                <!-- Tab Data Kendaraan -->
+                                <div class="tab-pane fade show active" id="vehicle" role="tabpanel"
+                                    aria-labelledby="vehicle-tab">
+                                    <!-- Tidak diperlukan input tambahan, langsung eksport semua data kendaraan -->
+                                    <p class="text-muted">Semua data kendaraan akan diekspor tanpa filter tambahan.</p>
+                                </div>
+
+                                <!-- Tab KIR & STNK -->
+                                <div class="tab-pane fade" id="kir-stnk" role="tabpanel"
+                                    aria-labelledby="kir-stnk-tab">
+                                    <!-- Form untuk ekspor KIR & STNK -->
+                                    <div class="mb-3">
+                                        <label for="year" class="form-label">Tahun (Opsional):</label>
+                                        <input class="form-control" type="number" id="year" name="year"
+                                            min="2000" max="3000" step="1"
+                                            value="{{ \Carbon\Carbon::now()->year }}" placeholder="Masukkan Tahun">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="month" class="form-label">Bulan (Opsional):</label>
+                                        <select id="month" name="month" class="form-control">
+                                            <option value="">Pilih Bulan</option>
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                <option value="{{ $i }}">
+                                                    {{ \Carbon\Carbon::create()->month($i)->format('F') }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="mb-3 col">
+                                        <label for="platNomor" class="form-label">Plat Nomor Kendaraan:</label>
+
+                                        <!-- Input untuk Pencarian -->
+                                        <input type="text" id="searchPlatNomor" class="form-control mb-2"
+                                            placeholder="Cari plat nomor...">
+
+                                        <!-- Wrapper untuk Daftar Plat Nomor -->
+                                        <div id="platNomorWrapper" class="form-control text-start"
+                                            style="height: 250px; overflow-y: auto;">
+                                            @foreach ($kendaraans as $kendaraan)
+                                                <div class="form-check text-start"
+                                                    data-plat-nomor="{{ strtolower($kendaraan->nomor_polisi) }}">
+                                                    <input type="checkbox" id="kendaraan{{ $kendaraan->id }}"
+                                                        value="{{ $kendaraan->nomor_polisi }}"
+                                                        class="form-check-input" name="plat_nomor[]">
+                                                    <label class="form-check-label"
+                                                        for="kendaraan{{ $kendaraan->id }}">{{ $kendaraan->nomor_polisi }}</label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Tombol Pilih/Jangan Pilih Semua -->
+                                        <button id="toggleSelectAll" type="button" class="btn btn-outline-primary mt-2">Pilih
+                                            Semua</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tombol Submit -->
+                            <button type="submit" class="btn btn-success mt-3">Export</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     @push('scripts')
@@ -232,6 +336,52 @@
                     alert.classList.add('hide');
                 }
             }, 5000); // Menghilang setelah 5 detik
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggleSelectAllButton = document.getElementById('toggleSelectAll');
+                const checkboxes = document.querySelectorAll('#platNomorWrapper input[type="checkbox"]');
+                const exportTypeInput = document.getElementById('exportType'); // Ambil input exportType
+                let allSelected = false; // Status apakah semua checkbox dipilih
+
+                // Tab navigation event listener
+                const vehicleTab = document.getElementById('vehicle-tab');
+                const kirStnkTab = document.getElementById('kir-stnk-tab');
+
+                // Set exportType saat tab vehicle diaktifkan
+                vehicleTab.addEventListener('shown.bs.tab', function() {
+                    exportTypeInput.value = 'vehicle'; // Set value ke vehicle saat tab vehicle aktif
+                });
+
+                // Set exportType saat tab kir-stnk diaktifkan
+                kirStnkTab.addEventListener('shown.bs.tab', function() {
+                    exportTypeInput.value = 'kir_stnk'; // Set value ke kir_stnk saat tab kir-stnk aktif
+                });
+
+                // Fungsi untuk Toggle Pilih/Jangan Pilih Semua
+                toggleSelectAllButton.addEventListener('click', function() {
+                    allSelected = !allSelected;
+                    checkboxes.forEach(function(checkbox) {
+                        checkbox.checked = allSelected;
+                    });
+                    toggleSelectAllButton.textContent = allSelected ? 'Jangan Pilih Semua' : 'Pilih Semua';
+                });
+
+                // Realtime Search Functionality
+                const searchInput = document.getElementById('searchPlatNomor');
+                searchInput.addEventListener('input', function() {
+                    const searchQuery = searchInput.value.toLowerCase();
+                    const platNomorDivs = document.querySelectorAll('#platNomorWrapper .form-check');
+
+                    platNomorDivs.forEach(function(div) {
+                        const platNomor = div.getAttribute('data-plat-nomor');
+                        if (platNomor.includes(searchQuery)) {
+                            div.style.display = '';
+                        } else {
+                            div.style.display = 'none';
+                        }
+                    });
+                });
+            });
         </script>
     @endpush
 </x-AppLayout>

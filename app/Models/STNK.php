@@ -19,10 +19,15 @@ class STNK extends Model
         'tanggal_perpanjangan',
         'jenis_perpanjangan',
         'updated_at',
-        'alasan'
+        'alasan',
     ];
 
-    public function RelasiSTNKtoKendaraan(){
+    protected $casts = [
+        'tanggal_perpanjangan' => 'datetime', // Cast to DateTime
+    ];
+
+    public function RelasiSTNKtoKendaraan()
+    {
         return $this->belongsTo(Kendaraan::class, 'id_kendaraan', 'id');
     }
 

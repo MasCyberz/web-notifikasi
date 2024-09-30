@@ -59,7 +59,7 @@ class KendaraanController extends Controller
             'jenis_kendaraan' => 'required|string|max:255',
             'model_kendaraan_id' => 'required|exists:model_kendaraans,id',
             'tahun' => 'required|integer|digits:4',
-            'user_kendaraan' => 'required|string|max:255',
+            'user_kendaraan' => 'required|string|max:100',
             'warna' => 'required|string|max:255',
             'nomor_rangka' => 'required|string|max:255',
             'nomor_mesin' => 'required|string|max:255',

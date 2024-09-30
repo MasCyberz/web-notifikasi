@@ -122,7 +122,7 @@
                                         <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'STNK']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @elseif ($item->tipe_notifikasi === 'KIR')
-                                        <a href="{{ route('detail-alert', ['id' => $item->id, 'tipe' => 'KIR']) }}"
+                                        <a href="{{ route('detail-alert', ['id' => $item->kirHistories->pluck('id')->first(), 'tipe' => 'KIR']) }}"
                                             class="btn btn-light">Selengkapnya</a>
                                     @endif
                                 </div>

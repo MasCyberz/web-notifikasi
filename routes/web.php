@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\KendaraanController;
 use App\Http\Controllers\KIRController;
 use App\Http\Controllers\STNKController;
@@ -92,6 +93,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('management-user/edit/{id}', [UserController::class, 'editUser'])->name('management-user-edit');
         Route::get('management-user/delete/{id}', [UserController::class, 'deleteUser'])->name('management-user-delete');
         Route::put('management-user/update/{id}', [UserController::class, 'updateUser'])->name('management-user-update');
+
+        // Export Data Kendaraan dan STNK&KIR
+
+        Route::get('/export-data', [ExportController::class, 'ExportKendaraanKirStnk'])->name('export-data-KendaraanKirStnk');
     });
 
 });

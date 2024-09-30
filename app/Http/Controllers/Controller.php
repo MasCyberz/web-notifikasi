@@ -220,6 +220,7 @@ class Controller extends BaseController
                 'tanggal_perpanjangan' => $kir->tanggal_expired_kir,
                 'relasiSTNKtoKendaraan' => $kir->kendaraan,
                 'tipe_notifikasi' => 'KIR',
+                'kirHistories' => $kir->kirHistories
             ]);
         }
 

@@ -18,7 +18,6 @@ class KIR extends Model
     protected $fillable = [
         'kendaraan_id',
         'nomor_uji_kendaraan',
-        'tanggal_expired_kir',
     ];
 
     public function kendaraan()

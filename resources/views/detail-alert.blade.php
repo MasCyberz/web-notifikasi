@@ -10,14 +10,18 @@
                             titleHeader="{{ $tipe === 'STNK' ? 'Detail STNK Kendaraan' : 'Detail KIR Kendaraan' }} {{ $notifikasi->RelasiSTNKtoKendaraan->nomor_polisi ?? $notifikasi->kendaraan->nomor_polisi }}" />
                         <div class="card-body">
                             <div class="row">
-                                @if ($KIRHistory->status != null)
-                                    <div class="col-12">
-                                        <div class="mb-3">
-                                            <div
-                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
-                                                {{ $KIRHistory->status }}</div>
+                                @if ($tipe === 'KIR')
+
+
+                                    @if ($KIRHistory->status != null)
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <div
+                                                    class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                    {{ $KIRHistory->status }}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
                                 @if ($tipe === 'STNK')
                                     <div class="col-12 col-md-6">
@@ -47,15 +51,15 @@
                                             <div class="form-control">{{ $notifikasi->nomor_uji_kendaraan }}</div>
                                         </div>
                                     </div>
-                                @endif
-                                @if ($KIRHistory->alasan_tidak_lulus != null)
-                                    <div class="col-12">
-                                        <label class="form-label">Keterangan</label>
-                                        <div class="mb-3">
-                                            <div class="form-control">
-                                                {{ $KIRHistory->alasan_tidak_lulus }}</div>
+                                    @if ($KIRHistory->alasan_tidak_lulus != null)
+                                        <div class="col-12">
+                                            <label class="form-label">Keterangan</label>
+                                            <div class="mb-3">
+                                                <div class="form-control">
+                                                    {{ $KIRHistory->alasan_tidak_lulus }}</div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
 
 
