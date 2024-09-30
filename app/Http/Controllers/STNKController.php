@@ -17,7 +17,8 @@ class STNKController extends Controller
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
             'entries' => 'nullable|integer|min:5|max:100',
-            'year' => 'nullable|integer|digits:4|min:1900|max:' . date('Y')
+            'year' => 'nullable|integer|digits:4|min:1900|max:' .  (intval(date('Y')) + 5)
+
         ]);
 
         // Menerima input untuk pencarian, jumlah entries per halaman, dan tahun
@@ -65,6 +66,9 @@ class STNKController extends Controller
                 'tanggal_perpanjangan_5_tahun' => $data5Tahun ? \Carbon\Carbon::parse($data5Tahun->tanggal_perpanjangan)->format('d F Y') : null,
             ];
         }
+
+        $finalData = collect($finalData)->sortBy('nomor_polisi')->values()->all();
+
 
         // Lakukan pagination pada finalData
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
