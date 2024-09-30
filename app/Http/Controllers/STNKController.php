@@ -17,7 +17,8 @@ class STNKController extends Controller
         $validated = $request->validate([
             'search' => 'nullable|string|max:255',
             'entries' => 'nullable|integer|min:5|max:100',
-            'year' => 'nullable|integer|digits:4|min:1900|max:' . date('Y')
+            'year' => 'nullable|integer|digits:4|min:1900|max:' .  (intval(date('Y')) + 5)
+
         ]);
 
         // Menerima input untuk pencarian, jumlah entries per halaman, dan tahun
