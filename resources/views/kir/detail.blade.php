@@ -27,7 +27,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Tanggal Uji Kendaraan</label>
                                         <div class="form-control">
-                                            {{ \Carbon\Carbon::parse($kir->kir->tanggal_uji_kendaraan)->format('d-M-Y') }}
+                                            {{ \Carbon\Carbon::parse($kir->tanggal_expired_kir)->format('d F Y') }}
                                         </div>
                                     </div>
                                 </div>

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class KIRHistories extends Model
 {
@@ -24,9 +25,21 @@ class KIRHistories extends Model
         'tanggal_expired_kir' => 'datetime', // Cast to DateTime
     ];
 
-    public function kir(){
+    public function kir()
+    {
         return $this->belongsTo(KIR::class, 'kirs_id', 'id');
     }
 
     use HasFactory;
+    public static function updateStatus()
+    {
+        $kirHistories = KIRHistories::where('status', '!=', 'pending')->get();
+
+        foreach ($kirHistories as $kirHistory) {
+            if (Carbon::parse($kirHistory->tanggal_expired_kir)->isPast()) {
+                $kirHistory->status = 'nonaktif';
+                $kirHistory->save();
+            }
+        }
+    }
 }

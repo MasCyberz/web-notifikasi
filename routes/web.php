@@ -73,6 +73,9 @@ Route::group(['middleware' => ['auth']], function () {
         // Create-KIR
         Route::get('/data-kir/tambah', [KIRController::class, 'create'])->name('kir-tambah');
         Route::post('/data-kir/store', [KIRController::class, 'store'])->name('kir-tambah-store');
+        Route::get('/data-kir/tambahPerpanjangan',[KIRController::class, 'createPerpanjanganKIR'])->name('kir-tambahPerpanjangan');
+        Route::post('/data-kir/storePerpanjangan',[KIRController::class, 'storePerpanjanganKIR'])->name('kir-storePerpanjangan');
+        Route::put('/kir/update-status/{id}', [KIRController::class, 'updateStatus'])->name('kir-update-status-pending');
         // Edit KIR
         Route::get('/data-kir/edit/{id}', [KIRController::class, 'edit'])->name('kir-edit');
         Route::put('/data-kir/edit-store/{id}', [KIRController::class, 'update'])->name('kir-edit-store');
