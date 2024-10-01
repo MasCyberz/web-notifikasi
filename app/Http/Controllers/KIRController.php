@@ -173,7 +173,7 @@ class KIRController extends Controller
 
         // Jika nomor uji kendaraan sudah ada pada bulan dan tahun yang sama, beri pesan error
         if ($existingKir) {
-            return back()->withErrors(['tanggal_expired_kir' => 'Nomor uji kendaraan sudah ada untuk bulan ini.']);
+            return back()->withErrors(['error' => 'Nomor uji kendaraan sudah ada untuk bulan ini.']);
         }
 
         // Simpan data ke tabel KIR

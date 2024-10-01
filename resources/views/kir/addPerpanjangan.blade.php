@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-PageHeader header="Data KIR" classcontainer="col-lg-8" />
+    <x-PageHeader header="Tambah Data Perpanjangan" classcontainer="col-lg-8" />
     <div class="page-body">
 
         {{-- {{ $>nomor_polisi }} --}}
@@ -9,6 +9,15 @@
                 @csrf
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="row row-cards">
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -17,7 +26,8 @@
                                     <select class="form-select w-100 w-md-50" name="kirs_id">
                                         @foreach ($KIRkendaraan as $kir)
                                             <option value="{{ $kir->id }}">
-                                                {{ $kir->kendaraan->nomor_polisi }} | {{ $kir->kendaraan->tipe }} | {{ $kir->nomor_uji_kendaraan }}
+                                                {{ $kir->kendaraan->nomor_polisi }} | {{ $kir->kendaraan->tipe }} |
+                                                {{ $kir->nomor_uji_kendaraan }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -26,7 +36,7 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
-                                class="" />
+                                class="" :value="old('tanggal_expired_kir')" />
                         </div>
                     </div>
                 </div>
@@ -36,11 +46,5 @@
     </div>
 
     @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-                document.querySelector('.tanggal-expired-kir input').setAttribute('min', today);
-            });
-        </script>
     @endpush
 </x-app-layout>

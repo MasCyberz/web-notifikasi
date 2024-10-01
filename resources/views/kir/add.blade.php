@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-PageHeader header="Data KIR" classcontainer="col-lg-8" />
+    <x-PageHeader header="Tambah Data KIR" classcontainer="col-lg-8" />
     <div class="page-body">
 
 
