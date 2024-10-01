@@ -30,7 +30,7 @@
                     <div class="card">
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
-                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary"> <i
+                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
                                         class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
                                 </a>
                                 <a href="{{ route('kir-tambah') }}" class="btn btn-primary m-2"> <i
@@ -101,6 +101,7 @@
                             </form>
                         </div>
 
+                        {{$kir}}
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
@@ -119,55 +120,55 @@
                                         <th>Tipe Kendaraan</th>
                                         <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
-                                        <th>Status</th>
-                                        <th>Keterangan</th>
+                                        {{-- <th>Status</th>
+                                        <th>Keterangan</th> --}}
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($kir as $item)
                                         @php
-                                            $latestHistory = $item->kirHistories
-                                                ->sortByDesc('tanggal_expired_kir')
-                                                ->first();
-                                            $isExpired = $latestHistory
-                                                ? \Carbon\Carbon::parse($latestHistory->tanggal_expired_kir)->isPast()
-                                                : false;
+                                            $isExpired = \Carbon\Carbon::parse($item->tanggal_expired_kir)->isPast();
                                         @endphp
                                         <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
                                             <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $kir->firstItem() - 1 }}</span>
+                                                    class="{{ $isExpired ? 'text-white' : '' }}"></span>
                                             </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->nomor_polisi }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->tipe }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->nomor_uji_kendaraan }}</span>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}"></span>
                                             </td>
                                             <td>
                                                 <span class="{{ $isExpired ? 'text-white' : '' }}">
-                                                    {{ $latestHistory ? \Carbon\Carbon::parse($latestHistory->tanggal_expired_kir)->isoFormat('D MMMM Y') : 'Tidak ada data' }}
+
                                                 </span>
                                             </td>
-                                            @if ($latestHistory && $latestHistory->status)
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}"></span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}"></span>
+                                            </td>
+                                            {{-- @if ($item->status)
                                                 <td>
-                                                    <span class="{{ $isExpired ? 'text-white text-capitalize' : '' }}">
-                                                        {{ $latestHistory->status }}
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} {{ $item->status === 'lulus' ? 'badge bg-success' : 'badge text-bg-danger' }}">
+                                                        {{ $item->status }}
                                                     </span>
                                                 </td>
                                             @else
-                                                <td><span></span></td>
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
                                             @endif
                                             <td>
                                                 <span
                                                     class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
-                                                    style="max-width: 150px">
-                                                    {{ $latestHistory ? $latestHistory->alasan_tidak_lulus : 'Tidak ada data' }}
-                                                </span>
-                                            </td>
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
+                                            </td> --}}
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
                                                     class="btn btn-primary btn-icon"><i
@@ -179,28 +180,17 @@
                                                     <a href="{{ route('kir-delete-store', $item->id) }}"
                                                         class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                                 @endif
-                                                @if ($latestHistory && $latestHistory->status === 'nonaktif')
-                                            <td>
-                                                <button type="button" class="btn btn-primary btn-icon"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#updateStatusModal{{ $latestHistory->id }}">
-                                                    Pending
-                                                </button>
-                                                <!-- Modal code here -->
                                             </td>
-                                    @endif
-                                    </td>
-                                    </tr>
+                                        </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            <p class="m-0 text-secondary">
+                            {{-- <p class="m-0 text-secondary">
                                 Showing {{ $kir->firstItem() }} to {{ $kir->lastItem() }} of {{ $kir->total() }}
                                 entries
-                            </p>
+                            </p> --}}
                             @if ($kir->hasPages())
                                 <ul class="pagination m-0 ms-auto">
                                     {{-- Previous Page Link --}}

@@ -30,7 +30,7 @@ return new class extends Migration
         });
 
         Schema::table('kir_histories', function (Blueprint $table) {
-            $table->enum('status', ['lulus', 'tidak lulus'])->default('aktif')->nullable()->after('tanggal_expired_kir');
+            $table->enum('status', ['lulus', 'tidak lulus'])->default('lulus')->nullable()->after('tanggal_expired_kir');
         });
     }
 };

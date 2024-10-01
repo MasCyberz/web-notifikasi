@@ -2,89 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use DB;
-use Carbon\Carbon;
-use App\Models\KIR;
 use App\Models\Kendaraan;
+use App\Models\KIR;
 use App\Models\KIRHistories;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KIRController extends Controller
 {
     public function index(Request $request)
-{
-    KIRHistories::updateStatus();
-    
-    // Retrieve the filter parameters
-    $entries = $request->input('entries', 10); // Default to 10 entries per page
-    $year = $request->input('year');
-    $search = $request->input('search');
+    {
+        KIRHistories::updateStatus();
 
-    // Build the query for KIR (left join with kir_histories)
-    $query = KIR::query();
+        // Retrieve the filter parameters
+        $entries = $request->input('entries', 10); // Default to 10 entries per page
+        $year = $request->input('year');
+        $search = $request->input('search');
 
-    if ($year) {
-        $query->whereHas('kirHistories', function ($q) use ($year) {
-            $q->whereYear('tanggal_expired_kir', $year);
-        });
-    }
+        // Build the query for KIR (left join with kir_histories)
+        $query = KIR::query();
 
-    $monthMap = [
-        'januari' => '01', 'jan' => '01', 'februari' => '02', 'feb' => '02',
-        'maret' => '03', 'mar' => '03', 'april' => '04', 'apr' => '04',
-        'mei' => '05', 'juni' => '06', 'jun' => '06', 'juli' => '07', 'jul' => '07',
-        'agustus' => '08', 'agus' => '08', 'agu' => '08', 'september' => '09',
-        'sep' => '09', 'oktober' => '10', 'okt' => '10', 'november' => '11',
-        'nov' => '11', 'desember' => '12', 'des' => '12',
-    ];
-
-    // Pencarian berdasarkan tanggal atau nomor polisi
-    if ($search) {
-        preg_match('/(\d{1,2})(?:\s+)?([a-zA-Z]+)/', strtolower($search), $matches);
-        if (empty($matches)) {
-            preg_match('/(\d{1,2})([a-zA-Z]+)/', strtolower($search), $matches);
+        if ($year) {
+            $query->whereHas('kirHistories', function ($q) use ($year) {
+                $q->whereYear('tanggal_expired_kir', $year);
+            });
         }
 
-        if (count($matches) == 3) {
-            $day = $matches[1];
-            $month = $matches[2];
+        $monthMap = [
+            'januari' => '01', 'jan' => '01', 'februari' => '02', 'feb' => '02',
+            'maret' => '03', 'mar' => '03', 'april' => '04', 'apr' => '04',
+            'mei' => '05', 'juni' => '06', 'jun' => '06', 'juli' => '07', 'jul' => '07',
+            'agustus' => '08', 'agus' => '08', 'agu' => '08', 'september' => '09',
+            'sep' => '09', 'oktober' => '10', 'okt' => '10', 'november' => '11',
+            'nov' => '11', 'desember' => '12', 'des' => '12',
+        ];
 
-            if (array_key_exists($month, $monthMap)) {
-                $monthNumber = $monthMap[$month];
-                $dateToSearch = Carbon::createFromFormat('Y-m-d', now()->year . '-' . $monthNumber . '-' . $day)->format('Y-m-d');
-                $query->whereHas('kirHistories', function ($q) use ($dateToSearch) {
-                    $q->whereDate('tanggal_expired_kir', $dateToSearch);
-                });
+        // Pencarian berdasarkan tanggal atau nomor polisi
+        if ($search) {
+            preg_match('/(\d{1,2})(?:\s+)?([a-zA-Z]+)/', strtolower($search), $matches);
+            if (empty($matches)) {
+                preg_match('/(\d{1,2})([a-zA-Z]+)/', strtolower($search), $matches);
             }
-        } else {
-            $query->where('nomor_polisi', 'like', "%$search%")
-                ->orWhere('tipe', 'like', "%$search%");
+
+            if (count($matches) == 3) {
+                $day = $matches[1];
+                $month = $matches[2];
+
+                if (array_key_exists($month, $monthMap)) {
+                    $monthNumber = $monthMap[$month];
+                    $dateToSearch = Carbon::createFromFormat('Y-m-d', now()->year . '-' . $monthNumber . '-' . $day)->format('Y-m-d');
+                    $query->whereHas('kirHistories', function ($q) use ($dateToSearch) {
+                        $q->whereDate('tanggal_expired_kir', $dateToSearch);
+                    });
+                }
+            } else {
+                $query->where('nomor_polisi', 'like', "%$search%")
+                    ->orWhere('tipe', 'like', "%$search%");
+            }
         }
+
+        // Subquery to get the latest tanggal_expired_kir per kendaraan
+        $latestKIRs = KIRHistories::select('kirs_id', DB::raw('MAX(tanggal_expired_kir) as max_tanggal'))
+            ->groupBy('kirs_id');
+
+        // Left join subquery to get the latest kir_histories data
+        $query->leftJoinSub($latestKIRs, 'latest_kirs', function ($join) {
+            $join->on('kirs.id', '=', 'latest_kirs.kirs_id');
+        });
+
+        // Sorting: expired dates at the bottom, then by date
+        $query->orderByRaw('CASE WHEN latest_kirs.max_tanggal >= NOW() THEN 0 ELSE 1 END')
+            ->orderBy('latest_kirs.max_tanggal', 'asc');
+
+        // Paginate the results
+        $kir = $query->with(['kendaraan', 'kirHistories'])
+            ->paginate($entries)
+            ->appends($request->all());
+
+
+        return view('kir.index', compact('kir'));
     }
-
-    // Subquery to get the latest tanggal_expired_kir per kendaraan
-    $latestKIRs = KIRHistories::select('kirs_id', DB::raw('MAX(tanggal_expired_kir) as max_tanggal'))
-        ->groupBy('kirs_id');
-
-    // Left join subquery to get the latest kir_histories data
-    $query->leftJoinSub($latestKIRs, 'latest_kirs', function ($join) {
-        $join->on('kirs.id', '=', 'latest_kirs.kirs_id');
-    });
-
-    // Sorting: expired dates at the bottom, then by date
-    $query->orderByRaw('CASE WHEN latest_kirs.max_tanggal >= NOW() THEN 0 ELSE 1 END')
-        ->orderBy('latest_kirs.max_tanggal', 'asc');
-
-    // Paginate the results
-    $kir = $query->with(['kendaraan', 'kirHistories'])
-        ->paginate($entries)
-        ->appends($request->all());
-
-    return view('kir.index', compact('kir'));
-}
-
-
-
 
     public function detail($id)
     {
@@ -93,7 +91,7 @@ class KIRController extends Controller
 
         // Subquery untuk mendapatkan data kir_histories terbaru untuk kirs_id yang sama
         $latestKIRs = KIRHistories::select('kirs_id', DB::raw('MAX(tanggal_expired_kir) as max_tanggal'))
-            ->where('kirs_id', $kirHistory->kirs_id)  // Sesuai dengan kirs_id dari kir yang dipilih
+            ->where('kirs_id', $kirHistory->kirs_id) // Sesuai dengan kirs_id dari kir yang dipilih
             ->groupBy('kirs_id')
             ->first();
 
@@ -101,12 +99,10 @@ class KIRController extends Controller
         $kir = KIRHistories::with('kir.kendaraan')
             ->where('kirs_id', $kirHistory->kirs_id)
             ->where('tanggal_expired_kir', $latestKIRs->max_tanggal)
-            ->firstOrFail();  // Ambil data terbaru yang sesuai
+            ->firstOrFail(); // Ambil data terbaru yang sesuai
 
         return view('kir.detail', compact('kir'));
     }
-
-
 
     public function create()
     {
@@ -147,7 +143,7 @@ class KIRController extends Controller
         // Validasi input awal
         $validate = $request->validate([
             'kirs_id' => 'required',
-            'tanggal_expired_kir' => 'required'
+            'tanggal_expired_kir' => 'required',
         ]);
 
         // Pengecekan manual untuk nomor_uji_kendaraan pada bulan yang sama
@@ -231,8 +227,60 @@ class KIRController extends Controller
 
         dd($kirHistory);
 
-
         // Redirect kembali dengan pesan sukses
         return redirect()->route('kir-index')->with('success', 'Status berhasil diubah menjadi pending.');
+    }
+
+    public function updateStatusKIR(Request $request, $id)
+    {
+// Cari histori KIR berdasarkan ID yang dipilih
+        $history = KIRHistories::findOrFail($id); // Mengambil histori KIR berdasarkan ID spesifik
+
+// Validasi input
+        $request->validate([
+            'action' => 'required|string',
+            'alasan_tidak_lulus' => 'nullable|string|max:255', // Validasi untuk alasan tidak lulus
+        ]);
+
+// Ambil tanggal_expired_kir dari histori KIR yang dipilih
+        $expiredDate = \Carbon\Carbon::parse($history->tanggal_expired_kir);
+
+// Cek aksi yang diterima dari form
+        if ($request->action === 'lulus') {
+            $history->status = 'aktif'; // Simpan status lulus ke history
+
+            // Tambahkan 6 bulan dari tanggal_expired_kir
+            $nextSixMonthsDate = $expiredDate->copy()->addMonthsNoOverflow(6);
+
+            // Buat histori baru dengan tanggal_expired_kir yang diperbarui
+            KIRHistories::create([
+                'kirs_id' => $history->kirs_id, // ID KIR dari histori yang dipilih
+                'tanggal_expired_kir' => $nextSixMonthsDate, // Tanggal expired 6 bulan ke depan
+            ]);
+
+        } elseif ($request->action === 'tidak lulus') {
+            $history->status = 'nonaktif'; // Simpan status tidak lulus ke history
+
+            // Simpan alasan tidak lulus jika ada
+            if ($request->filled('alasan_tidak_lulus')) {
+                $history->alasan_tidak_lulus = $request->alasan_tidak_lulus;
+            }
+
+            // Tambahkan 1 bulan dari tanggal_expired_kir
+            $nextMonthDate = $expiredDate->copy()->addMonthNoOverflow();
+
+            // Buat histori baru dengan tanggal_expired_kir yang diperbarui
+            KIRHistories::create([
+                'kirs_id' => $history->kirs_id, // ID KIR dari histori yang dipilih
+                'tanggal_expired_kir' => $nextMonthDate, // Tanggal expired 1 bulan ke depan
+            ]);
+        }
+
+// Simpan perubahan pada histori KIR yang dipilih
+        $history->save();
+
+// dd($request->all());
+
+        return redirect()->route('dashboard')->with('success', 'Status KIR berhasil diperbarui.');
     }
 }

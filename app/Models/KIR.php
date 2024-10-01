@@ -27,7 +27,7 @@ class KIR extends Model
 
     public function kirHistories()
     {
-        return $this->hasMany(KIRHistories::class, 'kirs_id', 'id');
+        return $this->hasMany(KIRHistories::class, 'kirs_id',);
     }
 
 }
