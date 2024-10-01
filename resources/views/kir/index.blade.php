@@ -29,14 +29,19 @@
                 <div class="col-12">
                     <div class="card">
                         @if (Auth::user()->role_id == 1)
-                            <div class="card-header d-flex flex-row-reverse">
-                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary"> <i
+                            <div class="card-header d-flex justify-content-end flex-wrap">
+                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary ms-2 d-none d-sm-inline"> <i
                                         class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
                                 </a>
-                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary m-2"> <i
+                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary d-block d-sm-none w-100 my-2"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
+                                </a>
+                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary ms-2 d-none d-sm-inline"> <i
                                         class="ti ti-plus fs-2"></i>Tambah KIR Baru
                                 </a>
-
+                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary d-block d-sm-none w-100"> <i
+                                        class="ti ti-plus fs-2"></i>Tambah KIR Baru
+                                </a>
                             </div>
                         @endif
                         <div class="card-body border-bottom py-3">
