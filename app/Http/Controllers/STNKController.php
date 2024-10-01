@@ -62,8 +62,8 @@ class STNKController extends Controller
                 'tipe' => $items->first()->RelasiSTNKtoKendaraan->tipe,
                 'pajak_1_tahun' => $data1Tahun ? $data1Tahun->biaya : 0,
                 'pajak_5_tahun' => $data5Tahun ? $data5Tahun->biaya : 0,
-                'tanggal_perpanjangan_1_tahun' => $data1Tahun ? \Carbon\Carbon::parse($data1Tahun->tanggal_perpanjangan)->format('d F Y') : null,
-                'tanggal_perpanjangan_5_tahun' => $data5Tahun ? \Carbon\Carbon::parse($data5Tahun->tanggal_perpanjangan)->format('d F Y') : null,
+                'tanggal_perpanjangan_1_tahun' => $data1Tahun ? \Carbon\Carbon::parse($data1Tahun->tanggal_perpanjangan)->translatedFormat('d F Y')  : null,
+                'tanggal_perpanjangan_5_tahun' => $data5Tahun ? \Carbon\Carbon::parse($data5Tahun->tanggal_perpanjangan)->translatedFormat('d F Y')  : null,
             ];
         }
 
