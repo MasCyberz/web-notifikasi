@@ -187,6 +187,7 @@ class KIRController extends Controller
 
     public function edit($id)
     {
+        // Ambil data KIR beserta kendaraan
         $kir = KIRHistories::with('kir.kendaraan')->findorfail($id);
         $kendaraans = Kendaraan::where('nomor_polisi', 'LIKE', '% 7%')
             ->orWhere('nomor_polisi', 'LIKE', '% 9%')
