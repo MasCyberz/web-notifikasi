@@ -14,7 +14,7 @@
                                     <div class="col-12">
                                         <div class="mb-3">
                                             <div
-                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'aktif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
                                                 {{ $KIRHistory->status }}
                                             </div>
                                         </div>
@@ -181,7 +181,7 @@
                             </div>
 
                             @if (Auth::user()->role_id == 1 && $tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
-                                @if (empty($KIRHistory->status) && empty($KIRHistory->alasan_tidak_lulus))
+                                @if (empty($KIRHistory->alasan_tidak_lulus))
                                     <div class="my-4">
                                         <div class="row">
                                             <div class="col-md-6 mt-2 mt-lg-0">

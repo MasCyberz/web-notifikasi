@@ -12,7 +12,7 @@
                                     <div class="col-12">
                                         <div class="mb-3">
                                             <div
-                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $kir->status === 'lulus' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $kir->status === 'aktif' ? 'bg-success text-white' : ($kir->status === 'pending' ? 'bg-secondary text-white' : 'bg-danger text-white') }}">
                                                 {{ $kir->status }}</div>
                                         </div>
                                     </div>

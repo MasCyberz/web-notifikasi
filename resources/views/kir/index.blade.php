@@ -168,7 +168,7 @@
                                                     <a href="{{ route('kir-delete-store', $item->id) }}"
                                                         class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                                     @if ($item->status === 'nonaktif')
-                                                        <button type="button" class="btn btn-primary btn-icon p-2"
+                                                        <button type="button" class="btn btn-warning btn-icon p-2"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#updateStatusModal{{ $item->id }}">
                                                             Pending
@@ -181,7 +181,7 @@
                                         <div class="modal fade" id="updateStatusModal{{ $item->id }}"
                                             tabindex="-1" aria-labelledby="updateStatusModalLabel{{ $item->id }}"
                                             aria-hidden="true">
-                                            <div class="modal-dialog">
+                                            <div class="modal-dialog modal-dialog-centered">
                                                 <form action="{{ route('kir-update-status-pending', $item->id) }}"
                                                     method="POST">
                                                     @csrf
@@ -189,23 +189,30 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
-                                                                id="updateStatusModalLabel{{ $item->id }}">
-                                                                Ubah Status KIR to Pending</h5>
+                                                                id="updateStatusModalLabel{{ $item->id }}">Ubah
+                                                                Status KIR ke Pending</h5>
                                                             <button type="button" class="btn-close"
                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
+                                                            <p class="text-muted">Anda akan menandai kendaraan ini
+                                                                sebagai "Pending" karena KIR tidak dapat dilakukan saat
+                                                                ini. Mohon berikan alasan mengapa KIR ditunda.</p>
                                                             <div class="form-group">
                                                                 <label for="keterangan">Keterangan (Alasan
                                                                     Pending)</label>
-                                                                <textarea class="form-control" id="keterangan" name="alasan_tidak_lulus" required></textarea>
+                                                                <textarea class="form-control" id="keterangan" name="alasan_tidak_lulus" rows="4" required
+                                                                    placeholder="Misalnya, perlu mengganti suku cadang yang hilang..."></textarea>
+                                                                <small class="form-text text-muted">Jelaskan alasan
+                                                                    penundaan, seperti kebutuhan perbaikan atau
+                                                                    penggantian suku cadang.</small>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit"
-                                                                class="btn btn-primary">Simpan</button>
+                                                            <button type="submit" class="btn btn-warning">Tandai
+                                                                Sebagai Pending</button>
                                                         </div>
                                                     </div>
                                                 </form>
