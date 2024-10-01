@@ -168,6 +168,24 @@
                                                     class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
                                                     style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
+                                            @if ($item->status)
+                                                <td>
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} ">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
+                                            @endif
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
+                                            </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
                                                     class="btn btn-primary btn-icon"><i

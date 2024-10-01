@@ -198,36 +198,44 @@ class Controller extends BaseController
         // Gabungkan data KIR
         foreach ($kirData as $kir) {
             foreach ($kir->kirHistories as $history) {
-                // Filter hanya kir_histories yang tanggal_expired_kir sama dengan hari ini
+                // Hitung selisih hari dari tanggal expired KIR ke hari ini
                 $daysToExpire = Carbon::parse($history->tanggal_expired_kir)->diffInDays($today, false);
-                if ($daysToExpire >= 0 && $daysToExpire <= 45) {
+
+                // Periksa apakah rentang berada antara H-45 sampai H-10 dan H-10 sampai hari H
+                if ($daysToExpire >= -45 && $daysToExpire <= 0) {
+                    // Push notifikasi untuk H-45 hingga H-10, dan H-10 hingga hari H
                     $notifikasi->push((object) [
                         'id' => $history->id,
-                        'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
-                        'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 KIR' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan KIR' : 'KIR hari ini'),
-                        'message' => $daysToExpire <= 0 ? 'Hari ini' : "$daysToExpire hari.",
+                        'warna' => ($daysToExpire >= -10 && $daysToExpire <= 0) ? 'warning' : 'primary', // Warna untuk H-10 dan H lainnya
+                        'judul' => ($daysToExpire == 0) ? 'Hari ini KIR' : (($daysToExpire >= -10 && $daysToExpire < 0) ? "H$daysToExpire KIR" : '1,5 bulan KIR'),
+                        'message' => $daysToExpire == 0 ? 'Hari ini' : abs($daysToExpire) . ' hari.',
                         'tanggal_perpanjangan' => Carbon::parse($history->tanggal_expired_kir),
                         'relasiSTNKtoKendaraan' => $kir->kendaraan,
                         'tipe_notifikasi' => 'KIR',
-                        'kirHistories' => $kir->kirHistories
+                        'kirHistories' => $kir->kirHistories,
                     ]);
                 }
             }
         }
 
-        // Gabungkan data STNK
         foreach ($stnkData as $stnk) {
-            $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today);
-            $notifikasi->push((object) [
-                'id' => $stnk->id,
-                'warna' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
-                'judul' => ($daysToExpire > 0 && $daysToExpire <= 10) ? 'H-10 STNK' : ($daysToExpire > 10 && $daysToExpire <= 45 ? '1,5 bulan STNK' : 'STNK hari ini'),
-                'message' => $daysToExpire <= 0 ? 'Hari ini' : "$daysToExpire hari.",
-                'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
-                'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
-                'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
-                'tipe_notifikasi' => 'STNK',
-            ]);
+            // Hitung selisih hari dari tanggal perpanjangan STNK ke hari ini
+            $daysToExpire = $stnk->tanggal_perpanjangan->diffInDays($today, false);
+
+            // Periksa apakah rentang berada antara H-45 sampai H-10 dan H-10 sampai hari H
+            if ($daysToExpire >= -45 && $daysToExpire <= 0) {
+                // Push notifikasi untuk H-45 hingga H-10, dan H-10 hingga hari H
+                $notifikasi->push((object) [
+                    'id' => $stnk->id,
+                    'warna' => ($daysToExpire >= -10 && $daysToExpire <= 0) ? 'warning' : ($daysToExpire > 10 && $daysToExpire <= 45 ? 'primary' : 'danger'),
+                    'judul' => ($daysToExpire == 0) ? 'Hari ini STNK' : (($daysToExpire >= -10 && $daysToExpire < 0) ? "H$daysToExpire STNK" : '1,5 bulan STNK'),
+                    'message' => $daysToExpire == 0 ? 'Hari ini' : abs($daysToExpire) . ' hari.',
+                    'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
+                    'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+                    'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
+                    'tipe_notifikasi' => 'STNK',
+                ]);
+            }
         }
 
         // Urutkan berdasarkan tanggal perpanjangan
@@ -243,8 +251,6 @@ class Controller extends BaseController
 
         return view('pemberitahuan-lainnya', compact('today', 'notifikasi'));
     }
-
-
 
     public function detailAlert($id, $tipe)
     {

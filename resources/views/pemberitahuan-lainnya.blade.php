@@ -27,8 +27,8 @@
                                         <br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d M Y') }}
                                         <!-- Tampilkan jenis perpanjangan -->
-                                        Jenis Perpanjangan:
                                         @if (property_exists($item, 'jenis_perpanjangan'))
+                                        Jenis Perpanjangan:
                                             @if ($item->jenis_perpanjangan === '1 Tahun')
                                                 1 Tahun
                                             @elseif ($item->jenis_perpanjangan === '5 Tahun')
@@ -37,7 +37,7 @@
                                                 Tidak Diketahui
                                             @endif
                                         @else
-                                            KIR
+
                                         @endif
 
                                     </p>
