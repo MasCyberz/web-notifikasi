@@ -14,15 +14,12 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Kendaraan</label>
-                                <div>
-                                    <select class="form-select w-100 w-md-50" name="kendaraan_id_disabled" disabled>
-                                        @foreach ($kendaraans as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $item->id == $kir->kendaraan_id ? 'selected' : '' }}>
-                                                {{ $item->nomor_polisi }} | {{ $item->tipe }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <div class="input-group">
+                                    <!-- Menampilkan plat nomor dan tipe kendaraan -->
+                                    <span class="input-group-text w-100">
+                                        {{ $kir->kir->kendaraan->nomor_polisi }} |
+                                        {{ $kir->kir->kendaraan->tipe }}
+                                    </span>
                                     <!-- Input hidden untuk menyimpan nilai yang akan dikirim ke server -->
                                     <input type="hidden" name="kendaraan_id" value="{{ $kir->kendaraan_id }}">
                                 </div>
@@ -30,7 +27,7 @@
                         </div>
                         <div class="col-md-6">
                             <x-Input label="Nomor Uji Kendaraan" name="nomor_uji_kendaraan" type="text"
-                                class="" :value="old('nomor_uji_kendaraan', $kir->kir->nomor_uji_kendaraan)"/>
+                                class="" :value="old('nomor_uji_kendaraan', $kir->kir->nomor_uji_kendaraan)" />
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
