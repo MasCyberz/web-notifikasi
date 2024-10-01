@@ -15,7 +15,8 @@
                         <div>
                             <select class="form-select w-25" disabled name="nomor_polisi">
                                 {{-- @foreach ($kendaraanTanpaSTNK as $item) --}}
-                                    <option value="{{ $kendaraanTerkait->id }}">{{ $kendaraanTerkait->nomor_polisi }}</option>
+                                <option value="{{ $kendaraanTerkait->id }}">{{ $kendaraanTerkait->nomor_polisi }}
+                                </option>
                                 {{-- @endforeach --}}
                             </select>
                         </div>
@@ -30,12 +31,18 @@
                         </div>
                     </div> --}}
                     {{-- Nomor STNK --}}
-                    <x-Input label="Tgl Perpanjangan 1 Tahun" name="tgl_perpanjangan_1_tahun" value="{{ $perpanjangan_satu_tahun->tanggal_perpanjangan }}" type="date" class="w-25" />
-                    <x-Input label="Biaya Perpanjangan 1 Tahun" name="biaya_perpanjangan_1_tahun" type="text" value="{{ $perpanjangan_satu_tahun->biaya }}"
-                    class="" />
-                    <x-Input label="Tgl Perpanjangan 5 Tahun" name="tgl_perpanjangan_5_tahun" value="{{ $perpanjangan_lima_tahun->tanggal_perpanjangan }}" type="date" class="w-25" />
-                    <x-Input label="Biaya Perpanjangan 5 Tahun" name="biaya_perpanjangan_5_tahun" type="text" value="{{ $perpanjangan_lima_tahun->biaya }}"
-                    class="" />
+                    <x-Input label="Tgl Perpanjangan 1 Tahun" name="tgl_perpanjangan_1_tahun"
+                        value="{{ old('tgl_perpanjangan_1_tahun', $perpanjangan_satu_tahun->tanggal_perpanjangan ? $perpanjangan_satu_tahun->tanggal_perpanjangan->format('Y-m-d') : '') }}"
+                        type="date" class="w-25 mb-3" />
+
+                    <x-Input label="Biaya Perpanjangan 1 Tahun" name="biaya_perpanjangan_1_tahun" type="text"
+                        value="{{ $perpanjangan_satu_tahun->biaya }}" class="mb-3" />
+                    <x-Input label="Tgl Perpanjangan 5 Tahun" name="tgl_perpanjangan_5_tahun"
+                        value="{{ old('tgl_perpanjangan_5_tahun', $perpanjangan_lima_tahun->tanggal_perpanjangan ? $perpanjangan_lima_tahun->tanggal_perpanjangan->format('Y-m-d') : '') }}"
+                        type="date" class="w-25 mb-3" />
+
+                    <x-Input label="Biaya Perpanjangan 5 Tahun" name="biaya_perpanjangan_5_tahun" type="text"
+                        value="{{ $perpanjangan_lima_tahun->biaya }}" class="" />
                     {{-- Tanggal Perpanjangan --}}
                     {{-- <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
