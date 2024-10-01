@@ -30,7 +30,7 @@
                     <div class="card">
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
-                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
+                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary"> <i
                                         class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
                                 </a>
                                 <a href="{{ route('kir-tambah') }}" class="btn btn-primary m-2"> <i
@@ -101,7 +101,6 @@
                             </form>
                         </div>
 
-                        {{ $kir }}
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
@@ -111,6 +110,8 @@
                                         <th>Tipe Kendaraan</th>
                                         <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -130,6 +131,24 @@
                                                 {{ $item->kir->nomor_uji_kendaraan }}</td>
                                             <td class="{{ $isExpired ? 'text-white' : '' }}">
                                                 {{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}
+                                            </td>
+                                            @if ($item->status)
+                                                <td>
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} ">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
+                                            @endif
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
@@ -190,10 +209,10 @@
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            {{-- <p class="m-0 text-secondary">
+                            <p class="m-0 text-secondary">
                                 Showing {{ $kir->firstItem() }} to {{ $kir->lastItem() }} of {{ $kir->total() }}
                                 entries
-                            </p> --}}
+                            </p>
                             @if ($kir->hasPages())
                                 <ul class="pagination m-0 ms-auto">
                                     {{-- Previous Page Link --}}
