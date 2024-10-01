@@ -31,7 +31,11 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
-                                class="" :value="old('tanggal_expired_kir', $kir->tanggal_expired_kir)" />
+                                class="" :value="old(
+                                    'tanggal_expired_kir',
+                                    $kir->tanggal_expired_kir ? $kir->tanggal_expired_kir->format('Y-m-d') : '',
+                                )" />
+
                         </div>
                     </div>
                 </div>

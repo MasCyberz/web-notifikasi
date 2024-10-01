@@ -220,11 +220,22 @@ class KIRController extends Controller
     }
 
     public function delete($id)
-    {
-        $kir = KIR::find($id);
-        $kir->delete();
-        return redirect()->route('kir-index')->with('success', 'KIR berhasil dihapus.');
-    }
+{
+    // Ambil data KIR beserta kendaraan
+    $kir = KIRHistories::with('kir.kendaraan')->findOrFail($id);
+
+    // Ambil kirs_id yang terkait
+    $kirs_id = $kir->kirs_id;
+
+    // Hapus semua data di tabel kir_histories yang memiliki kirs_id sama
+    KIRHistories::where('kirs_id', $kirs_id)->delete();
+
+    // Hapus data di tabel kirs
+    KIR::where('id', $kirs_id)->delete();
+
+    // Redirect kembali ke halaman index dengan pesan sukses
+    return redirect()->route('kir-index')->with('success', 'KIR dan histori berhasil dihapus.');
+}
 
     public function updateStatus(Request $request, $id)
     {
