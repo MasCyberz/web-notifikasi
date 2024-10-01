@@ -127,46 +127,46 @@
                                 <tbody>
                                     @foreach ($kir as $item)
                                         @php
-                                            $latestHistory = $item->kirHistories
-                                                ->sortByDesc('tanggal_expired_kir')
-                                                ->first();
-                                            $isExpired = $latestHistory
-                                                ? \Carbon\Carbon::parse($latestHistory->tanggal_expired_kir)->isPast()
-                                                : false;
+                                            $isExpired = \Carbon\Carbon::parse($item->tanggal_expired_kir)->isPast();
                                         @endphp
                                         <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
                                             <td><span
                                                     class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $kir->firstItem() - 1 }}</span>
                                             </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->nomor_polisi }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kendaraan->tipe }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->nomor_uji_kendaraan }}</span>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->kendaraan->nomor_polisi }}</span>
                                             </td>
                                             <td>
                                                 <span class="{{ $isExpired ? 'text-white' : '' }}">
-                                                    {{ $latestHistory ? \Carbon\Carbon::parse($latestHistory->tanggal_expired_kir)->isoFormat('D MMMM Y') : 'Tidak ada data' }}
+                                                    {{ $item->kir->kendaraan->tipe }}
                                                 </span>
                                             </td>
-                                            @if ($latestHistory && $latestHistory->status)
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->nomor_uji_kendaraan }}</span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            @if ($item->status)
                                                 <td>
-                                                    <span class="{{ $isExpired ? 'text-white text-capitalize' : '' }}">
-                                                        {{ $latestHistory->status }}
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} ">
+                                                        {{ $item->status }}
                                                     </span>
                                                 </td>
                                             @else
-                                                <td><span></span></td>
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
                                             @endif
                                             <td>
                                                 <span
                                                     class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
-                                                    style="max-width: 150px">
-                                                    {{ $latestHistory ? $latestHistory->alasan_tidak_lulus : 'Tidak ada data' }}
-                                                </span>
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
@@ -179,21 +179,57 @@
                                                     <a href="{{ route('kir-delete-store', $item->id) }}"
                                                         class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                                 @endif
-                                                @if ($latestHistory && $latestHistory->status === 'nonaktif')
+                                                @if ($item->status === 'nonaktif')
                                             <td>
                                                 <button type="button" class="btn btn-primary btn-icon"
                                                     data-bs-toggle="modal"
-                                                    data-bs-target="#updateStatusModal{{ $latestHistory->id }}">
+                                                    data-bs-target="#updateStatusModal{{ $item->id }}">
                                                     Pending
                                                 </button>
-                                                <!-- Modal code here -->
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="updateStatusModal{{ $item->id }}"
+                                                    tabindex="-1"
+                                                    aria-labelledby="updateStatusModalLabel{{ $item->id }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form
+                                                            action="{{ route('kir-update-status-pending', $item->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="updateStatusModalLabel{{ $item->id }}">
+                                                                        Ubah Status KIR to Pending</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="keterangan">Keterangan (Alasan
+                                                                            Pending)</label>
+                                                                        <textarea class="form-control" id="keterangan" name="alasan_tidak_lulus" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Batal</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Simpan</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </td>
                                     @endif
                                     </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">

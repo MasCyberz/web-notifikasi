@@ -12,77 +12,93 @@ use Illuminate\Http\Request;
 class KIRController extends Controller
 {
     public function index(Request $request)
-{
-    KIRHistories::updateStatus();
-    
-    // Retrieve the filter parameters
-    $entries = $request->input('entries', 10); // Default to 10 entries per page
-    $year = $request->input('year');
-    $search = $request->input('search');
+    {
+        KIRHistories::updateStatus();
+        // Retrieve the filter parameters
+        $entries = $request->input('entries', 10); // Default to 10 entries per page
+        $year = $request->input('year');
+        $search = $request->input('search');
 
-    // Build the query for KIR (left join with kir_histories)
-    $query = KIR::query();
+        // Build the query with filters
+        $query = KIRHistories::query();
 
-    if ($year) {
-        $query->whereHas('kirHistories', function ($q) use ($year) {
-            $q->whereYear('tanggal_expired_kir', $year);
-        });
-    }
-
-    $monthMap = [
-        'januari' => '01', 'jan' => '01', 'februari' => '02', 'feb' => '02',
-        'maret' => '03', 'mar' => '03', 'april' => '04', 'apr' => '04',
-        'mei' => '05', 'juni' => '06', 'jun' => '06', 'juli' => '07', 'jul' => '07',
-        'agustus' => '08', 'agus' => '08', 'agu' => '08', 'september' => '09',
-        'sep' => '09', 'oktober' => '10', 'okt' => '10', 'november' => '11',
-        'nov' => '11', 'desember' => '12', 'des' => '12',
-    ];
-
-    // Pencarian berdasarkan tanggal atau nomor polisi
-    if ($search) {
-        preg_match('/(\d{1,2})(?:\s+)?([a-zA-Z]+)/', strtolower($search), $matches);
-        if (empty($matches)) {
-            preg_match('/(\d{1,2})([a-zA-Z]+)/', strtolower($search), $matches);
+        if ($year) {
+            $query->whereYear('tanggal_expired_kir', $year);
         }
 
-        if (count($matches) == 3) {
-            $day = $matches[1];
-            $month = $matches[2];
+        $monthMap = [
+            'januari' => '01',
+            'jan' => '01',
+            'februari' => '02',
+            'feb' => '02',
+            'maret' => '03',
+            'mar' => '03',
+            'april' => '04',
+            'apr' => '04',
+            'mei' => '05',
+            'juni' => '06',
+            'jun' => '06',
+            'juli' => '07',
+            'jul' => '07',
+            'agustus' => '08',
+            'agus' => '08',
+            'agu' => '08',
+            'september' => '09',
+            'sep' => '09',
+            'sept' => '09',
+            'oktober' => '10',
+            'okt' => '10',
+            'november' => '11',
+            'nov' => '11',
+            'desember' => '12',
+            'des' => '12',
+        ];
 
-            if (array_key_exists($month, $monthMap)) {
-                $monthNumber = $monthMap[$month];
-                $dateToSearch = Carbon::createFromFormat('Y-m-d', now()->year . '-' . $monthNumber . '-' . $day)->format('Y-m-d');
-                $query->whereHas('kirHistories', function ($q) use ($dateToSearch) {
-                    $q->whereDate('tanggal_expired_kir', $dateToSearch);
+        // Pencarian berdasarkan tanggal atau nomor polisi
+        if ($search) {
+            preg_match('/(\d{1,2})(?:\s+)?([a-zA-Z]+)/', strtolower($search), $matches);
+            if (empty($matches)) {
+                preg_match('/(\d{1,2})([a-zA-Z]+)/', strtolower($search), $matches);
+            }
+
+            if (count($matches) == 3) {
+                $day = $matches[1];
+                $month = $matches[2];
+
+                if (array_key_exists($month, $monthMap)) {
+                    $monthNumber = $monthMap[$month];
+                    $dateToSearch = Carbon::createFromFormat('Y-m-d', now()->year . '-' . $monthNumber . '-' . $day)->format('Y-m-d');
+                    $query->whereDate('tanggal_expired_kir', $dateToSearch);
+                }
+            } else {
+                $query->whereHas('kir.kendaraan', function ($q) use ($search) {
+                    $q->where('nomor_polisi', 'like', "%$search%")
+                        ->orWhere('tipe', 'like', "%$search%");
                 });
             }
-        } else {
-            $query->where('nomor_polisi', 'like', "%$search%")
-                ->orWhere('tipe', 'like', "%$search%");
         }
+
+        // Subquery to get the latest tanggal_expired_kir per kendaraan
+        $latestKIRs = KIRHistories::select('kirs_id', DB::raw('MAX(tanggal_expired_kir) as max_tanggal'))
+            ->groupBy('kirs_id');
+
+        // Join subquery to get the latest records
+        $query->joinSub($latestKIRs, 'latest_kirs', function ($join) {
+            $join->on('kir_histories.kirs_id', '=', 'latest_kirs.kirs_id')
+                ->whereColumn('kir_histories.tanggal_expired_kir', 'latest_kirs.max_tanggal');
+        });
+
+        // Sorting: expired dates at the bottom, then by date
+        $query->orderByRaw('CASE WHEN tanggal_expired_kir >= NOW() THEN 0 ELSE 1 END')
+            ->orderBy('tanggal_expired_kir', 'asc');
+
+        // Paginate the results
+        $kir = $query->with('kir.kendaraan')
+            ->paginate($entries)
+            ->appends($request->all());
+
+        return view('kir.index', compact('kir'));
     }
-
-    // Subquery to get the latest tanggal_expired_kir per kendaraan
-    $latestKIRs = KIRHistories::select('kirs_id', DB::raw('MAX(tanggal_expired_kir) as max_tanggal'))
-        ->groupBy('kirs_id');
-
-    // Left join subquery to get the latest kir_histories data
-    $query->leftJoinSub($latestKIRs, 'latest_kirs', function ($join) {
-        $join->on('kirs.id', '=', 'latest_kirs.kirs_id');
-    });
-
-    // Sorting: expired dates at the bottom, then by date
-    $query->orderByRaw('CASE WHEN latest_kirs.max_tanggal >= NOW() THEN 0 ELSE 1 END')
-        ->orderBy('latest_kirs.max_tanggal', 'asc');
-
-    // Paginate the results
-    $kir = $query->with(['kendaraan', 'kirHistories'])
-        ->paginate($entries)
-        ->appends($request->all());
-
-    return view('kir.index', compact('kir'));
-}
-
 
 
 
