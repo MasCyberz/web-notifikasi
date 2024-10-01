@@ -4,7 +4,7 @@
         <input type="{{ $type }}" name="{{ $name }}" id="{{ $id }}"
             class="form-control @error($name) is-invalid @enderror {{ $class ?? '' }}" aria-describedby="emailHelp"
             placeholder="{{ $placeholder }}" value="{{ $value }}" {{ $required ? 'required' : '' }}
-            @if ($type == 'date') min="{{ \Carbon\Carbon::now()->toDateString() }}" @endif>
+            {{-- @if ($type == 'date') min="{{ \Carbon\Carbon::now()->toDateString() }}" @endif> --}}
         @if ($hint)
             <small class="form-hint">{{ $hint }}</small>
         @endif

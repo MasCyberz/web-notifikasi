@@ -30,7 +30,7 @@
                     <div class="card">
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
-                                <a href="{{ route('kir-tambah') }}" class="btn btn-primary"> <i
+                                <a href="{{ route('kir-tambahPerpanjangan') }}" class="btn btn-primary"> <i
                                         class="ti ti-plus fs-2"></i>Tambah Data Perpanjangan
                                 </a>
                                 <a href="{{ route('kir-tambah') }}" class="btn btn-primary m-2"> <i
@@ -101,16 +101,26 @@
                             </form>
                         </div>
 
-                        {{ $kir }}
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                     <tr>
-                                        <th>No.</th>
+                                        <th class="w-1">No.
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                                            {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-sm icon-thick">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M6 15l6 -6l6 6"></path>
+                                            </svg> --}}
+                                        </th>
                                         <th>Plat Nomor</th>
                                         <th>Tipe Kendaraan</th>
                                         <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -120,16 +130,43 @@
                                             $isExpired = \Carbon\Carbon::parse($item->tanggal_expired_kir)->isPast();
                                         @endphp
                                         <tr class="{{ $isExpired ? 'bg-dark-subtle' : '' }}">
-                                            <td class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration }}
+                                            <td><span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $loop->iteration + $kir->firstItem() - 1 }}</span>
                                             </td>
-                                            <td class="{{ $isExpired ? 'text-white' : '' }}">
-                                                {{ $item->kir->kendaraan->nomor_polisi }}</td>
-                                            <td class="{{ $isExpired ? 'text-white' : '' }}">
-                                                {{ $item->kir->kendaraan->tipe }}</td>
-                                            <td class="{{ $isExpired ? 'text-white' : '' }}">
-                                                {{ $item->kir->nomor_uji_kendaraan }}</td>
-                                            <td class="{{ $isExpired ? 'text-white' : '' }}">
-                                                {{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->kendaraan->nomor_polisi }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="{{ $isExpired ? 'text-white' : '' }}">
+                                                    {{ $item->kir->kendaraan->tipe }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ $item->kir->nomor_uji_kendaraan }}</span>
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }}">{{ \Carbon\Carbon::parse($item->tanggal_expired_kir)->isoFormat('D MMMM Y') }}</span>
+                                            </td>
+                                            @if ($item->status)
+                                                <td>
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} ">
+                                                        {{ $item->status }}
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
+                                            @endif
+                                            <td>
+                                                <span
+                                                    class="{{ $isExpired ? 'text-white' : '' }} d-inline-block text-truncate"
+                                                    style="max-width: 150px">{{ $item->alasan_tidak_lulus }}</span>
                                             </td>
                                             <td class="text-end">
                                                 <a href="{{ route('kir-detail', $item->id) }}"
@@ -141,59 +178,65 @@
                                                             class="ti ti-edit"></i></a>
                                                     <a href="{{ route('kir-delete-store', $item->id) }}"
                                                         class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
-                                                    @if ($item->status === 'nonaktif')
-                                                        <button type="button" class="btn btn-primary btn-icon"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#updateStatusModal{{ $item->id }}">
-                                                            Pending
-                                                        </button>
-                                                    @endif
                                                 @endif
-                                            </td>
-                                        </tr>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="updateStatusModal{{ $item->id }}"
-                                            tabindex="-1" aria-labelledby="updateStatusModalLabel{{ $item->id }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <form action="{{ route('kir-update-status-pending', $item->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title"
-                                                                id="updateStatusModalLabel{{ $item->id }}">
-                                                                Ubah Status KIR to Pending</h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="form-group">
-                                                                <label for="keterangan">Keterangan (Alasan
-                                                                    Pending)</label>
-                                                                <textarea class="form-control" id="keterangan" name="alasan_tidak_lulus" required></textarea>
+                                                @if ($item->status === 'nonaktif')
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-icon"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#updateStatusModal{{ $item->id }}">
+                                                    Pending
+                                                </button>
+
+                                                <!-- Modal -->
+                                                <div class="modal fade" id="updateStatusModal{{ $item->id }}"
+                                                    tabindex="-1"
+                                                    aria-labelledby="updateStatusModalLabel{{ $item->id }}"
+                                                    aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <form
+                                                            action="{{ route('kir-update-status-pending', $item->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="updateStatusModalLabel{{ $item->id }}">
+                                                                        Ubah Status KIR to Pending</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="keterangan">Keterangan (Alasan
+                                                                            Pending)</label>
+                                                                        <textarea class="form-control" id="keterangan" name="alasan_tidak_lulus" required></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Batal</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary">Simpan</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit"
-                                                                class="btn btn-primary">Simpan</button>
-                                                        </div>
+                                                        </form>
                                                     </div>
-                                                </form>
-                                            </div>
-                                        </div>
+                                                </div>
+                                            </td>
+                                    @endif
+                                    </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
-                            {{-- <p class="m-0 text-secondary">
+                            <p class="m-0 text-secondary">
                                 Showing {{ $kir->firstItem() }} to {{ $kir->lastItem() }} of {{ $kir->total() }}
                                 entries
-                            </p> --}}
+                            </p>
                             @if ($kir->hasPages())
                                 <ul class="pagination m-0 ms-auto">
                                     {{-- Previous Page Link --}}

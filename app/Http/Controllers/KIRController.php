@@ -243,7 +243,7 @@ class KIRController extends Controller
             $kirHistory->save();
         }
 
-        dd($kirHistory);
+        // dd($kirHistory);
 
         // Redirect kembali dengan pesan sukses
         return redirect()->route('kir-index')->with('success', 'Status berhasil diubah menjadi pending.');
@@ -251,19 +251,19 @@ class KIRController extends Controller
 
     public function updateStatusKIR(Request $request, $id)
     {
-// Cari histori KIR berdasarkan ID yang dipilih
+        // Cari histori KIR berdasarkan ID yang dipilih
         $history = KIRHistories::findOrFail($id); // Mengambil histori KIR berdasarkan ID spesifik
 
-// Validasi input
+        // Validasi input
         $request->validate([
             'action' => 'required|string',
             'alasan_tidak_lulus' => 'nullable|string|max:255', // Validasi untuk alasan tidak lulus
         ]);
 
-// Ambil tanggal_expired_kir dari histori KIR yang dipilih
+        // Ambil tanggal_expired_kir dari histori KIR yang dipilih
         $expiredDate = \Carbon\Carbon::parse($history->tanggal_expired_kir);
 
-// Cek aksi yang diterima dari form
+        // Cek aksi yang diterima dari form
         if ($request->action === 'lulus') {
             $history->status = 'aktif'; // Simpan status lulus ke history
 
@@ -275,7 +275,6 @@ class KIRController extends Controller
                 'kirs_id' => $history->kirs_id, // ID KIR dari histori yang dipilih
                 'tanggal_expired_kir' => $nextSixMonthsDate, // Tanggal expired 6 bulan ke depan
             ]);
-
         } elseif ($request->action === 'tidak lulus') {
             $history->status = 'nonaktif'; // Simpan status tidak lulus ke history
 
@@ -294,10 +293,10 @@ class KIRController extends Controller
             ]);
         }
 
-// Simpan perubahan pada histori KIR yang dipilih
+        // Simpan perubahan pada histori KIR yang dipilih
         $history->save();
 
-// dd($request->all());
+        // dd($request->all());
 
         return redirect()->route('dashboard')->with('success', 'Status KIR berhasil diperbarui.');
     }
