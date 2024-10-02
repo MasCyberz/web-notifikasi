@@ -12,86 +12,93 @@ class STNKController extends Controller
     //
 
     public function index(Request $request)
-    {
-        // Validasi input
-        $validated = $request->validate([
-            'search' => 'nullable|string|max:255',
-            'entries' => 'nullable|integer|min:5|max:100',
-            'year' => 'nullable|integer|digits:4|min:1900|max:' .  (intval(date('Y')) + 5)
+{
+    // Validasi input, termasuk pencarian berdasarkan bulan
+    $validated = $request->validate([
+        'search' => 'nullable|string|max:255',
+        'entries' => 'nullable|integer|min:5|max:100',
+        'year' => 'nullable|integer|digits:4|min:1900|max:' .  (intval(date('Y')) + 5),
+        'month' => 'nullable|integer|min:1|max:12', // Validasi input bulan
+    ]);
 
-        ]);
+    // Menerima input untuk pencarian, jumlah entries per halaman, tahun, dan bulan
+    $search = $validated['search'] ?? null;
+    $entries = $validated['entries'] ?? 10; // Default entries per halaman adalah 10
+    $year = $validated['year'] ?? null; // Ambil input year tanpa default value
+    $month = $validated['month'] ?? null; // Ambil input month tanpa default value
 
-        // Menerima input untuk pencarian, jumlah entries per halaman, dan tahun
-        $search = $validated['search'] ?? null;
-        $entries = $validated['entries'] ?? 10; // Default entries per halaman adalah 10
-        $year = $validated['year'] ?? null; // Ambil input year tanpa default value
+    // Query untuk mengambil semua data STNK
+    $stnksQuery = STNK::with('RelasiSTNKtoKendaraan')
+        ->whereHas('RelasiSTNKtoKendaraan', function ($query) use ($search) {
+            if ($search) {
+                $query->where('merk_kendaraan', 'like', "%$search%")
+                    ->orWhere('tipe', 'like', "%$search%")
+                    ->orWhere('nomor_polisi', 'like', "%$search%");
+            }
+        });
 
-        // Query untuk mengambil semua data STNK
-        $stnksQuery = STNK::with('RelasiSTNKtoKendaraan')
-            ->whereHas('RelasiSTNKtoKendaraan', function ($query) use ($search) {
-                if ($search) {
-                    $query->where('merk_kendaraan', 'like', "%$search%")
-                        ->orWhere('tipe', 'like', "%$search%")
-                        ->orWhere('nomor_polisi', 'like', "%$search%");
-                }
-            });
-
-        // Hanya tambahkan filter year jika year tidak kosong atau null
-        if (!empty($year)) {
-            $stnksQuery = $stnksQuery->whereYear('tanggal_perpanjangan', $year);
-        }
-
-        // Ambil semua data STNK terlebih dahulu (tanpa pagination)
-        $stnks = $stnksQuery->get();
-
-        // Group data berdasarkan id_kendaraan
-        $groupedData = $stnks->groupBy('id_kendaraan');
-
-        // Data yang akan ditampilkan
-        $finalData = [];
-
-        foreach ($groupedData as $id_kendaraan => $items) {
-            // Filter untuk mendapatkan jenis perpanjangan
-            $data1Tahun = $items->where('jenis_perpanjangan', '1 Tahun')->sortByDesc('tanggal_perpanjangan')->first();
-            $data5Tahun = $items->where('jenis_perpanjangan', '5 Tahun')->sortByDesc('tanggal_perpanjangan')->first();
-
-            // Ambil data terbaru dari masing-masing jenis perpanjangan
-            $finalData[] = [
-                'id_kendaraan' => $id_kendaraan,
-                'nomor_polisi' => $items->first()->RelasiSTNKtoKendaraan->nomor_polisi,
-                'tipe' => $items->first()->RelasiSTNKtoKendaraan->tipe,
-                'pajak_1_tahun' => $data1Tahun ? $data1Tahun->biaya : 0,
-                'pajak_5_tahun' => $data5Tahun ? $data5Tahun->biaya : 0,
-                'tanggal_perpanjangan_1_tahun' => $data1Tahun ? \Carbon\Carbon::parse($data1Tahun->tanggal_perpanjangan)->translatedFormat('d F Y')  : null,
-                'tanggal_perpanjangan_5_tahun' => $data5Tahun ? \Carbon\Carbon::parse($data5Tahun->tanggal_perpanjangan)->translatedFormat('d F Y')  : null,
-            ];
-        }
-
-        $finalData = collect($finalData)->sortBy('nomor_polisi')->values()->all();
-
-
-        // Lakukan pagination pada finalData
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $itemCollection = collect($finalData);
-
-        // Pagination collection berdasarkan entries yang dipilih user
-        $paginatedData = new LengthAwarePaginator(
-            $itemCollection->forPage($currentPage, $entries),
-            $itemCollection->count(),
-            $entries,
-            $currentPage,
-            ['path' => LengthAwarePaginator::resolveCurrentPath()]
-        );
-
-        // Mengirim data ke view
-        return view('stnk.index', [
-            'finalData' => $paginatedData, // Data yang sudah dipaginate
-            'stnks' => $paginatedData, // Tetap gunakan variabel ini untuk pagination
-            'search' => $search,
-            'entries' => $entries,
-            'year' => $year
-        ]);
+    // Hanya tambahkan filter year jika year tidak kosong atau null
+    if (!empty($year)) {
+        $stnksQuery->whereYear('tanggal_perpanjangan', $year);
     }
+
+    // Hanya tambahkan filter month jika month tidak kosong atau null
+    if (!empty($month)) {
+        $stnksQuery->whereMonth('tanggal_perpanjangan', $month);
+    }
+
+    // Ambil semua data STNK terlebih dahulu (tanpa pagination)
+    $stnks = $stnksQuery->get();
+
+    // Group data berdasarkan id_kendaraan
+    $groupedData = $stnks->groupBy('id_kendaraan');
+
+    // Data yang akan ditampilkan
+    $finalData = [];
+
+    foreach ($groupedData as $id_kendaraan => $items) {
+        // Filter untuk mendapatkan jenis perpanjangan
+        $data1Tahun = $items->where('jenis_perpanjangan', '1 Tahun')->sortByDesc('tanggal_perpanjangan')->first();
+        $data5Tahun = $items->where('jenis_perpanjangan', '5 Tahun')->sortByDesc('tanggal_perpanjangan')->first();
+
+        // Ambil data terbaru dari masing-masing jenis perpanjangan
+        $finalData[] = [
+            'id_kendaraan' => $id_kendaraan,
+            'nomor_polisi' => $items->first()->RelasiSTNKtoKendaraan->nomor_polisi,
+            'tipe' => $items->first()->RelasiSTNKtoKendaraan->tipe,
+            'pajak_1_tahun' => $data1Tahun ? $data1Tahun->biaya : 0,
+            'pajak_5_tahun' => $data5Tahun ? $data5Tahun->biaya : 0,
+            'tanggal_perpanjangan_1_tahun' => $data1Tahun ? \Carbon\Carbon::parse($data1Tahun->tanggal_perpanjangan)->Format('d F Y')  : null,
+            'tanggal_perpanjangan_5_tahun' => $data5Tahun ? \Carbon\Carbon::parse($data5Tahun->tanggal_perpanjangan)->Format('d F Y')  : null,
+        ];
+    }
+
+    $finalData = collect($finalData)->sortBy('nomor_polisi')->values()->all();
+
+    // Lakukan pagination pada finalData
+    $currentPage = LengthAwarePaginator::resolveCurrentPage();
+    $itemCollection = collect($finalData);
+
+    // Pagination collection berdasarkan entries yang dipilih user
+    $paginatedData = new LengthAwarePaginator(
+        $itemCollection->forPage($currentPage, $entries),
+        $itemCollection->count(),
+        $entries,
+        $currentPage,
+        ['path' => LengthAwarePaginator::resolveCurrentPath()]
+    );
+
+    // Mengirim data ke view
+    return view('stnk.index', [
+        'finalData' => $paginatedData, // Data yang sudah dipaginate
+        'stnks' => $paginatedData, // Tetap gunakan variabel ini untuk pagination
+        'search' => $search,
+        'entries' => $entries,
+        'year' => $year,
+        'month' => $month // Mengirim bulan ke view agar bisa diisi ulang
+    ]);
+}
+
 
     public function history(Request $request)
     {

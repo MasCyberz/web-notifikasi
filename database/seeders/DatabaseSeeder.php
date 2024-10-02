@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             [
                 'name' => 'Admin',
-                'email' => 'admin@gmail.com',
+                'username' => 'admin123',
                 'role_id' => 1, // Pastikan role_id sesuai dengan ID yang ada di tabel roles
                 'password' => Hash::make('admin#123'), // Ganti dengan password yang sesuai
                 'created_at' => Carbon::now(),

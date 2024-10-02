@@ -44,14 +44,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'username' => 'required|unique:users',
             'role_id' => 'required',
             'password' => 'required|confirmed|min:8',
         ]);
 
         $user = User::Create([
             'name' => $request->input('name'),
-            'email' => $request->input('email'),
+            'username' => $request->input('username'),
             'role_id' => $request->input('role_id'),
             'password' => bcrypt($request->input('password')),
         ]);

@@ -8,14 +8,14 @@
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
                     <x-Input label="Nama" name="name" type="text" placeholder="Isi Nama Anda Disini"
-                        class="" required=required />
+                        class="m-2" required=required />
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                    <x-Input label="Email" id="email" name="email" type="email"
-                        placeholder="Isi Email Anda Disini" class="" />
+                    <x-Input label="Username" id="username" name="username" type="text"
+                        placeholder="Isi Username Anda Disini" class="m-2" />
 
-                    <div class="mb-3 w-100 w-lg-50"">
+                    <div class="mb-3 w-100 w-lg-50 m-2">
                         <label class="form-label">Role</label>
                         <select class="form-select @error('role') is-invalid @enderror" name="role_id">
                             <option value="" selected>Pilih Role</option>
@@ -28,10 +28,10 @@
                         @enderror
                     </div>
                     <x-Input label="Password" id="password" name="password" type="password"
-                        placeholder="Isi Password Anda Disini" required=required class="" />
+                        placeholder="Isi Password Anda Disini" required=required class="m-2" />
 
                     <x-Input label="Konfirmasi Password" id="password_confirmation" name="password_confirmation"
-                        type="password" placeholder="Ulangi Password Anda" required=required class="" />
+                        type="password" placeholder="Ulangi Password Anda" required=required class="m-2" />
                 </div>
                 <x-cardFooter route="{{ route('management-user-index') }}" />
             </form>

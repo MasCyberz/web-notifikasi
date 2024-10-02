@@ -8,10 +8,9 @@
                 @method('PUT')
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
-                    <x-Input label="Name" name="name" type="text" value="{{ $user->name }}" class="" />
-                    <x-Input label="Email" name="email" type="email" value="{{ $user->email }}" class="" />
-        
-                    <x-Input label="Password" name="password" type="password" placeholder="Isi Password Anda Disini" class="" />
+                    <x-Input label="Name" name="name" type="text" value="{{ $user->name }}" class="m-2" />
+                    <x-Input label="Username" name="username" type="text" value="{{ $user->username }}" class="m-2" />
+                    <x-Input label="Password" name="password" type="password" placeholder="Isi Password Anda Disini" class="m-2" />
                 </div>
                 <x-cardFooter route="{{ route('management-user-index') }}" />
             </form>

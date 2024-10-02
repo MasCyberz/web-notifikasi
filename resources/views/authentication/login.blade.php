@@ -30,8 +30,8 @@
                     <form action="{{ route('authenticating') }}" method="POST" autocomplete="off" novalidate="">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label">Email address</label>
-                            <input type="email" name="email" class="form-control" placeholder="your@email.com"
+                            <label class="form-label">Username</label>
+                            <input type="email" name="username" class="form-control" placeholder="Your Username Here"
                                 autocomplete="off">
                         </div>
                         <div class="mb-2">
@@ -40,7 +40,7 @@
                             </label>
                             <div class="input-group input-group-flat">
                                 <input id="password" type="password" name="password" class="form-control"
-                                    placeholder="Your password" autocomplete="off">
+                                    placeholder="Your password Here" autocomplete="off">
                                 <span class="input-group-text">
                                     <a href="#" class="link-secondary" data-bs-toggle="tooltip"
                                         aria-label="Show password"
