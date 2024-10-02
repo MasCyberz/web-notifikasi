@@ -25,7 +25,6 @@ class KendaraanExport implements FromCollection, WithHeadings, WithMapping, With
     public function map($kendaraan): array
     {
         return [
-            $kendaraan->user_kendaraan,
             $kendaraan->nomor_polisi,
             $kendaraan->nomor_bpkb,
             $kendaraan->merk_kendaraan,
@@ -38,25 +37,26 @@ class KendaraanExport implements FromCollection, WithHeadings, WithMapping, With
             $kendaraan->nomor_mesin,
             $kendaraan->warna,
             $kendaraan->bahan_bakar,
+            $kendaraan->user_kendaraan,
         ];
     }
 
     public function headings(): array
     {
         return [
-            'User Kendaraan',
             'Plat Nomor',
             'Nomor BPKB',
             'Merk Kendaraan',
             'Tipe',
             'Jenis Kendaraan',
             'Model',
-            'Tahun',
+            'Tahun Pembuatan',
             'Tahun Registrasi',
             'Nomor Rangka',
             'Nomor Mesin',
             'Warna',
             'Bahan Bakar',
+            'User Kendaraan',
         ];
     }
 
