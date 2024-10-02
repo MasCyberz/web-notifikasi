@@ -102,7 +102,7 @@
                                             </svg>
                                         </th>
                                         <th>Name</th>
-                                        <th>Email</th>
+                                        <th>Username</th>
                                         <th>Role</th>
                                         <th></th>
                                     </tr>
@@ -113,7 +113,7 @@
                                         <tr>
                                             <td>{{ $no++ }}</td>
                                             <td>{{ $user->name }}</td>
-                                            <td>{{ $user->email }}</td>
+                                            <td>{{ $user->username }}</td>
                                             <td>{{ $user->role->name }}</td>
                                             <td class="text-end">
                                                 <a href="{{ route('management-user-edit', ['id' => $user->id]) }}"
