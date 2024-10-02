@@ -16,22 +16,15 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 {
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-
     protected $year;
     protected $month;
     protected $platNomor;
-    // protected $judulYear;
 
     public function __construct($year = null, $month = null, $platNomor = null)
     {
         $this->year = $year;
         $this->month = $month;
         $this->platNomor = $platNomor;
-        // Set judulYear ke tahun saat ini jika tidak ada input tahun
-        // $this->judulYear = $year ?? Carbon::now()->year;
     }
 
     public function collection()
@@ -66,58 +59,48 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                     $exportData->push([
                         'Plat Nomor' => $platNomor,
                         'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
-                        'Tanggal Perpanjangan' => $tanggalExpired->format('d-m-Y'), // Format date for display
+                        'Tanggal Perpanjangan' => $tanggalExpired, // Use raw Carbon instance for sorting
                         'Status' => $history->status,
                         'Keterangan' => $history->alasan_tidak_lulus,
                     ]);
                 }
-
-                // Add an empty row only if there are more entries to follow
-                if ($kir->kirHistories->isNotEmpty() && !$exportData->isEmpty() && $exportData->last()['Plat Nomor'] !== $platNomor) {
-                    $exportData->push([
-                        'Plat Nomor' => '',
-                        'Nomor Uji KIR' => '',
-                        'Tanggal Perpanjangan' => '',
-                        'Status' => '',
-                        'Keterangan' => '',
-                    ]);
-                }
             });
 
-        // Group by 'Plat Nomor'
-        $groupedData = $exportData->groupBy('Plat Nomor');
+        // Urutkan secara global berdasarkan 'Tanggal Perpanjangan' tanpa pengelompokan Plat Nomor
+        $sortedExportData = $exportData->sortBy('Tanggal Perpanjangan');
 
-        $sortedExportData = collect(); // New collection to hold sorted data
+        // Format tanggal setelah pengurutan, tambahkan baris kosong antar bulan
+        $previousMonth = null;
+        $finalExportData = collect(); // Final collection with spaces
+        $sortedExportData->each(function ($data) use (&$previousMonth, &$finalExportData) {
+            $currentMonth = Carbon::parse($data['Tanggal Perpanjangan'])->format('m-Y');
 
-        // Iterate through each group and sort items by 'Tanggal Perpanjangan'
-        foreach ($groupedData as $platNomor => $items) {
-            // Sort the items within the group by 'Tanggal Perpanjangan'
-            $sortedItems = $items->sortBy(function ($item) {
-                return Carbon::parse($item['Tanggal Perpanjangan']);
-            });
-
-            // Add sorted items to the new collection
-            $sortedExportData = $sortedExportData->merge($sortedItems);
-
-            // Add an empty row after each group
-            $sortedExportData->push([
-                'Plat Nomor' => '',
-                'Nomor Uji KIR' => '',
-                'Tanggal Perpanjangan' => '',
-                'Status' => '',
-                'Keterangan' => '',
-            ]);
-        }
-
-        // Reformat the 'Tanggal Perpanjangan' after sorting
-        $sortedExportData = $sortedExportData->map(function ($data) {
-            if ($data['Tanggal Perpanjangan'] instanceof Carbon) {
-                $data['Tanggal Perpanjangan'] = $data['Tanggal Perpanjangan']->format('d-m-Y');
+            // Add space if the month changes
+            if ($previousMonth !== null && $currentMonth !== $previousMonth) {
+                // Add an empty row for spacing
+                $finalExportData->push([
+                    'Plat Nomor' => '',
+                    'Nomor Uji KIR' => '',
+                    'Tanggal Perpanjangan' => '',
+                    'Status' => '',
+                    'Keterangan' => '',
+                ]);
             }
-            return $data;
+
+            // Add the current row to the final collection
+            $finalExportData->push([
+                'Plat Nomor' => $data['Plat Nomor'],
+                'Nomor Uji KIR' => $data['Nomor Uji KIR'],
+                'Tanggal Perpanjangan' => Carbon::parse($data['Tanggal Perpanjangan'])->format('d-m-Y'),
+                'Status' => $data['Status'],
+                'Keterangan' => $data['Keterangan'],
+            ]);
+
+            // Update previousMonth
+            $previousMonth = $currentMonth;
         });
 
-        return $sortedExportData->values(); // Reindex and return the sorted export data
+        return $finalExportData->values(); // Reindex and return the sorted export data with spaces
     }
 
     public function headings(): array
@@ -131,13 +114,13 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         ];
     }
 
-    public function title(): string{
+    public function title(): string
+    {
         return 'KIR';
     }
 
     public function styles(Worksheet $sheet)
     {
-        // Define styles for the headings
         $styleArray = [
             'font' => [
                 'bold' => true,
@@ -146,7 +129,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'B7DEE8', // Change this to the desired fill color
+                    'argb' => 'B7DEE8',
                 ],
             ],
             'borders' => [
@@ -157,11 +140,9 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ];
 
-        // Apply heading styles
         $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
 
-        // Apply border styles to data rows
-        $rowCount = count($this->collection()) + 1; // +1 for the heading row
+        $rowCount = count($this->collection()) + 1;
         $sheet->getStyle("A2:E{$rowCount}")->applyFromArray([
             'borders' => [
                 'allBorders' => [
@@ -171,7 +152,6 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ]);
 
-        // Auto-size columns A to E
         foreach (range('A', 'E') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }

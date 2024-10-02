@@ -2,16 +2,16 @@
 
 namespace App\Exports;
 
-use Carbon\Carbon;
 use App\Models\STNK;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\Color;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
@@ -57,25 +57,17 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                     'Jenis Perpanjangan' => $stnk->jenis_perpanjangan,
                     'Biaya' => $stnk->biaya,
                 ]);
-
-                // Add an empty row only if there are more entries to follow
-                if (!$exportData->isEmpty() && $exportData->last()['Plat Nomor'] !== $platNomor) {
-                    $exportData->push([
-                        'Plat Nomor' => '',
-                        'Tanggal Perpanjangan' => '',
-                        'Jenis Perpanjangan' => '',
-                        'Biaya' => '',
-                    ]);
-                }
             });
 
-        // Group by 'Plat Nomor'
-        $groupedData = $exportData->groupBy('Plat Nomor');
+        // Group by month of 'Tanggal Perpanjangan'
+        $groupedByMonth = $exportData->groupBy(function ($item) {
+            return Carbon::parse($item['Tanggal Perpanjangan'])->format('m-Y');
+        });
 
         $sortedExportData = collect(); // New collection to hold sorted data
 
         // Iterate through each group and sort items by 'Tanggal Perpanjangan'
-        foreach ($groupedData as $platNomor => $items) {
+        foreach ($groupedByMonth as $month => $items) {
             // Sort the items within the group by 'Tanggal Perpanjangan'
             $sortedItems = $items->sortBy(function ($item) {
                 return Carbon::parse($item['Tanggal Perpanjangan']);
@@ -84,7 +76,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             // Add sorted items to the new collection
             $sortedExportData = $sortedExportData->merge($sortedItems);
 
-            // Add an empty row after each group
+            // Add an empty row after each month
             $sortedExportData->push([
                 'Plat Nomor' => '',
                 'Tanggal Perpanjangan' => '',
@@ -106,7 +98,8 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         ];
     }
 
-    public function title(): string{
+    public function title(): string
+    {
         return 'STNK';
     }
 
