@@ -47,10 +47,10 @@
                                     </span>
                                 </div>
                                 <div class="col">
-                                    <div class="font-weight-medium">
+                                    <div class="fw-bold o">
                                         {{ $totalStnk }} Total STNK {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
-                                    <div class="text-secondary">
+                                    <div class="text-secondary fw-bold">
                                         {{ $totalStnkBulanIni }} perpanjangan pada bulan
                                         {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
@@ -70,10 +70,10 @@
                                     </span>
                                 </div>
                                 <div class="col">
-                                    <div class="font-weight-medium">
+                                    <div class="fw-bold o">
                                         {{ $totalKIR }} Total KIR {{ \Carbon\Carbon::now()->format('Y') }}
                                     </div>
-                                    <div class="text-secondary">
+                                    <div class="text-secondary fw-bold">
                                         {{ $totalKIRBulanIni }} perpanjangan pada bulan
                                         {{ \Carbon\Carbon::now()->format('F') }}
                                     </div>
@@ -89,12 +89,12 @@
                                 <div class="row align-items-center">
                                     <div class="col-auto">
                                         <span
-                                            class="bg-gray text-dark avatar"><!-- Download SVG icon from http://tabler-icons.io/i/brand-x -->
+                                            class="bg-yellow text-white avatar"><!-- Download SVG icon from http://tabler-icons.io/i/brand-x -->
                                             <i class="ti ti-users fs-2"></i>
                                         </span>
                                     </div>
                                     <div class="col">
-                                        <div class="font-weight-medium">
+                                        <div class="fw-bold">
                                             {{ $dataUser }} User
                                         </div>
                                     </div>
