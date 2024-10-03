@@ -16,34 +16,60 @@
                             </div>
                             <div class="mb-3 w-100 w-lg-50 ">
                                 <label class="form-label">Merk Kendaraan</label>
-                                <select class="form-select" name="merk_kendaraan">
+                                <select class="form-select" id="merk_kendaraan" name="merk_kendaraan">
                                     <option value="Toyota"
-                                        {{ $kendaraan->merk_kendaraan == 'Toyota' ? 'selected' : '' }}>Toyota</option>
+                                        {{ old('merk_kendaraan') == 'Toyota' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Toyota') ? 'selected' : '' }}>
+                                        Toyota</option>
                                     <option value="Wuling"
-                                        {{ $kendaraan->merk_kendaraan == 'Wuling' ? 'selected' : '' }}>Wuling</option>
+                                        {{ old('merk_kendaraan') == 'Wuling' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Wuling') ? 'selected' : '' }}>
+                                        Wuling</option>
                                     <option value="Mitsubishi"
-                                        {{ $kendaraan->merk_kendaraan == 'Mitsubishi' ? 'selected' : '' }}>Mitsubishi
-                                    </option>
-                                    <option value="DSFK" {{ $kendaraan->merk_kendaraan == 'DSFK' ? 'selected' : '' }}>
-                                        DSFK</option>
+                                        {{ old('merk_kendaraan') == 'Mitsubishi' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Mitsubishi') ? 'selected' : '' }}>
+                                        Mitsubishi</option>
+                                    <option value="DFSK"
+                                        {{ old('merk_kendaraan') == 'DFSK' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'DFSK') ? 'selected' : '' }}>
+                                        DFSK</option>
                                     <option value="Daihatsu"
-                                        {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
-                                    </option>
+                                        {{ old('merk_kendaraan') == 'Daihatsu' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Daihatsu') ? 'selected' : '' }}>
+                                        Daihatsu</option>
                                     <option value="Hyundai"
-                                        {{ $kendaraan->merk_kendaraan == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
-                                    <option value="Kia" {{ $kendaraan->merk_kendaraan == 'Kia' ? 'selected' : '' }}>
+                                        {{ old('merk_kendaraan') == 'Hyundai' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Hyundai') ? 'selected' : '' }}>
+                                        Hyundai</option>
+                                    <option value="Kia"
+                                        {{ old('merk_kendaraan') == 'Kia' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Kia') ? 'selected' : '' }}>
                                         Kia</option>
                                     <option value="Suzuki"
-                                        {{ $kendaraan->merk_kendaraan == 'Suzuki' ? 'selected' : '' }}>Suzuki</option>
-                                    <option value="BYD" {{ $kendaraan->merk_kendaraan == 'BYD' ? 'selected' : '' }}>
+                                        {{ old('merk_kendaraan') == 'Suzuki' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Suzuki') ? 'selected' : '' }}>
+                                        Suzuki</option>
+                                    <option value="BYD"
+                                        {{ old('merk_kendaraan') == 'BYD' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'BYD') ? 'selected' : '' }}>
                                         BYD</option>
                                     <option value="Honda"
-                                        {{ $kendaraan->merk_kendaraan == 'Honda' ? 'selected' : '' }}>Honda</option>
+                                        {{ old('merk_kendaraan') == 'Honda' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Honda') ? 'selected' : '' }}>
+                                        Honda</option>
                                     <option value="Yamaha"
-                                        {{ $kendaraan->merk_kendaraan == 'Yamaha' ? 'selected' : '' }}>Yamaha</option>
+                                        {{ old('merk_kendaraan') == 'Yamaha' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Yamaha') ? 'selected' : '' }}>
+                                        Yamaha</option>
                                     <option value="ISUZU"
-                                        {{ $kendaraan->merk_kendaraan == 'ISUZU' ? 'selected' : '' }}>ISUZU</option>
+                                        {{ old('merk_kendaraan') == 'ISUZU' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'ISUZU') ? 'selected' : '' }}>
+                                        ISUZU</option>
+                                    <option value="Volkswagen"
+                                        {{ old('merk_kendaraan') == 'Volkswagen' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Volkswagen') ? 'selected' : '' }}>
+                                        Volkswagen</option>
+                                    <option value="Nissan"
+                                        {{ old('merk_kendaraan') == 'Nissan' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Nissan') ? 'selected' : '' }}>
+                                        Nissan</option>
+                                    <option value="MG"
+                                        {{ old('merk_kendaraan') == 'MG' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'MG') ? 'selected' : '' }}>
+                                        MG</option>
                                 </select>
+                                <div class="mt-2">
+                                    <input type="text" class="form-control" id="merk_baru"
+                                        placeholder="Masukkan merk baru jika tidak ada di daftar">
+                                </div>
+                                @error('merk_kendaraan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"
                                 class="" value="{{ old('tipe', $kendaraan->tipe) }}" />
@@ -136,6 +162,34 @@
                         this.open = false;
                     }
                 }));
+            });
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var merkBaruInput = document.getElementById('merk_baru');
+                var merkKendaraanSelect = document.getElementById('merk_kendaraan');
+
+                merkBaruInput.addEventListener('input', function() {
+                    var newMerk = merkBaruInput.value;
+
+                    if (newMerk) {
+                        // Cari apakah opsi sudah ada di select
+                        var optionExists = Array.from(merkKendaraanSelect.options).some(option => option
+                            .value === newMerk);
+
+                        // Jika opsi belum ada, tambahkan opsi baru
+                        if (!optionExists) {
+                            var newOption = document.createElement('option');
+                            newOption.value = newMerk;
+                            newOption.text = newMerk;
+                            merkKendaraanSelect.appendChild(newOption);
+                        }
+
+                        // Pilih opsi baru yang ditambahkan
+                        merkKendaraanSelect.value = newMerk;
+                    }
+                });
             });
         </script>
     @endpush

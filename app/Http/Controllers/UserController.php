@@ -68,13 +68,13 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required',
+            'username' => 'required',
             'password' => 'nullable',
         ]);
 
         $user = User::findOrFail($id);
         $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        $user->username = $request->input('username');
 
         // Update the password if provided
         if ($request->filled('password')) {

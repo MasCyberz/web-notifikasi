@@ -33,6 +33,9 @@
                                             <label class="form-label">Biaya</label>
                                             <div class="form-control">{{ $notifikasi->biaya }}</div>
                                         </div>
+                                        <div class="">
+                                            <a href="https://samsat-pkb2.jakarta.go.id/" target="_blank" class="text-decoration-none">Cek Biaya Perpanjangan</a>
+                                        </div>
                                     </div>
                                 @elseif ($tipe === 'KIR')
                                     <div class="col-12 col-md-6">
