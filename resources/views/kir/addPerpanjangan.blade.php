@@ -35,7 +35,8 @@
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
                                 class="" :value="old('tanggal_expired_kir')" />
                         </div>
-                        <div class="col-12 col-md-7">
+                        <div class="col-12 col-md-6 d-sm-none d-md-block"></div>
+                        <div class="col-12 col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Periode</label>
                                 <div class="form-selectgroup">

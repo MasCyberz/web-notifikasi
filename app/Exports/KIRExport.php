@@ -62,6 +62,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                         'Tanggal Perpanjangan' => $tanggalExpired, // Use raw Carbon instance for sorting
                         'Status' => $history->status,
                         'Keterangan' => $history->alasan_tidak_lulus,
+                        'Periode' => $history->periode,
                     ]);
                 }
             });
@@ -84,6 +85,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                     'Tanggal Perpanjangan' => '',
                     'Status' => '',
                     'Keterangan' => '',
+                    'Periode' => '',
                 ]);
             }
 
@@ -94,6 +96,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 'Tanggal Perpanjangan' => Carbon::parse($data['Tanggal Perpanjangan'])->format('d-m-Y'),
                 'Status' => $data['Status'],
                 'Keterangan' => $data['Keterangan'],
+                'Periode' => $data['Periode'],
             ]);
 
             // Update previousMonth
@@ -111,6 +114,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             'Tanggal Perpanjangan',
             'Status',
             'Keterangan',
+            'Periode',
         ];
     }
 
@@ -140,10 +144,10 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ];
 
-        $sheet->getStyle('A1:E1')->applyFromArray($styleArray);
+        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
 
         $rowCount = count($this->collection()) + 1;
-        $sheet->getStyle("A2:E{$rowCount}")->applyFromArray([
+        $sheet->getStyle("A2:F{$rowCount}")->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -152,7 +156,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ]);
 
-        foreach (range('A', 'E') as $column) {
+        foreach (range('A', 'F') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
     }

@@ -18,7 +18,7 @@
         </span>
     </a>
 </li>
-<li class="nav-item {{ Request::route()->named('kir-index', 'kir-tambah', 'kir-detail', 'kir-edit') ? 'active' : '' }}">
+<li class="nav-item {{ Request::route()->named('kir-index', 'kir-tambah', 'kir-detail', 'kir-edit', 'kir-tambahPerpanjangan') ? 'active' : '' }}">
     <a class="nav-link" href="{{ Route('kir-index') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-truck fs-2"></i>

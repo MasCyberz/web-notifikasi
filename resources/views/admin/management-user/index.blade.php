@@ -122,6 +122,8 @@
                                                     class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
                                             </td>
                                         </tr>
+
+                                        <!-- Modal Delete -->
                                     @endforeach
                                 </tbody>
                             </table>

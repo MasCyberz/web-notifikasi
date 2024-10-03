@@ -5,7 +5,7 @@
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item fw-semibold">
                         Copyright © {{ \Carbon\Carbon::now()->format('Y') }}
-                        <a href="https://smkn12jkt.id/" class="link-secondary">SMKN 12 JAKARTA</a>.
+                        <a href="https://www.instagram.com/smkn12_jkt?igsh=MTRiZjQ5bzd4MXJsNA==" class="link-secondary">SMKN 12 JAKARTA</a>.
                         All rights reserved.
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
