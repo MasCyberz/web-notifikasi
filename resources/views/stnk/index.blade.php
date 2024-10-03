@@ -41,7 +41,7 @@
                         @if (Auth::user()->role_id == 1)
                             <div class="card-header d-flex flex-row-reverse">
                                 <a href="{{ route('stnk-tambah') }}" class="btn btn-primary"> <i
-                                    class="ti ti-plus fs-2"></i>Tambah Data
+                                        class="ti ti-plus fs-2"></i>Tambah Data
                                 </a>
                                 <a href="{{ route('stnk-history') }}" class="btn btn-link">History</a>
                             </div>
@@ -55,34 +55,46 @@
                                             Show
                                             <div class="d-inline-block">
                                                 <select name="entries" class="form-control form-control-sm">
-                                                    <option value="" {{ is_null(request('entries')) ? 'selected' : '' }}>Select entries</option>
-                                                    <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
-                                                    <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
-                                                    <option value="15" {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
-                                                    <option value="20" {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
-                                                    <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+                                                    <option value=""
+                                                        {{ is_null(request('entries')) ? 'selected' : '' }}>Select
+                                                        entries</option>
+                                                    <option value="5"
+                                                        {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                                                    <option value="10"
+                                                        {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                                                    <option value="15"
+                                                        {{ request('entries') == 15 ? 'selected' : '' }}>15</option>
+                                                    <option value="20"
+                                                        {{ request('entries') == 20 ? 'selected' : '' }}>20</option>
+                                                    <option value="25"
+                                                        {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
                                                 </select>
                                             </div>
                                             entries
                                         </div>
-                            
+
                                         <!-- Year Input -->
                                         <div class="me-3">
                                             Tahun
                                             <div class="d-inline-block">
-                                                <input type="number" name="year" class="form-control form-control-sm" value="{{ request('year') }}"
-                                                    min="1900" aria-label="Year" placeholder="{{ \Carbon\Carbon::now()->year }}">
+                                                <input type="number" name="year"
+                                                    class="form-control form-control-sm" value="{{ request('year') }}"
+                                                    min="1900" aria-label="Year"
+                                                    placeholder="{{ \Carbon\Carbon::now()->year }}">
                                             </div>
                                         </div>
-                            
+
                                         <!-- Month Input (New) -->
                                         <div class="me-3">
                                             Bulan
                                             <div class="d-inline-block">
                                                 <select name="month" class="form-control form-control-sm">
-                                                    <option value="" {{ is_null(request('month')) ? 'selected' : '' }}>Select month</option>
+                                                    <option value=""
+                                                        {{ is_null(request('month')) ? 'selected' : '' }}>Select month
+                                                    </option>
                                                     @for ($i = 1; $i <= 12; $i++)
-                                                        <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                                        <option value="{{ $i }}"
+                                                            {{ request('month') == $i ? 'selected' : '' }}>
                                                             {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
                                                         </option>
                                                     @endfor
@@ -90,18 +102,19 @@
                                             </div>
                                         </div>
                                     </div>
-                            
+
                                     <!-- Search and Apply (Right Side) -->
                                     <div class="col-12 col-md-6 d-flex justify-content-md-end flex-wrap">
                                         <!-- Search Input -->
                                         <div class="me-3 text-secondary">
                                             Search:
                                             <div class="d-inline-block">
-                                                <input type="text" name="search" class="form-control form-control-sm"
+                                                <input type="text" name="search"
+                                                    class="form-control form-control-sm"
                                                     value="{{ request('search') }}" aria-label="Search">
                                             </div>
                                         </div>
-                            
+
                                         <!-- Submit Button -->
                                         <div>
                                             <button type="submit" class="btn btn-sm btn-primary">Apply</button>
@@ -109,7 +122,7 @@
                                     </div>
                                 </div>
                             </form>
-                            
+
                         </div>
 
                         <div class="table-responsive">
@@ -127,30 +140,36 @@
                                 <tbody>
                                     @foreach ($finalData as $key => $data)
                                         <tr>
-                                            <td>{{ (($stnks->currentPage() - 1) * $stnks->perPage()) + $loop->iteration }}</td>
-                                
+                                            <td>{{ ($stnks->currentPage() - 1) * $stnks->perPage() + $loop->iteration }}
+                                            </td>
+
                                             <td>{{ $data['nomor_polisi'] }}</td>
                                             <td>{{ $data['tipe'] }}</td>
-                                
+
                                             <!-- Tanggal Perpanjangan 1 Tahun -->
-                                            <td class="{{ \Carbon\Carbon::parse($data['tanggal_perpanjangan_1_tahun'])->isPast() ? 'text-danger' : '' }}">
+                                            <td
+                                                class="{{ \Carbon\Carbon::parse($data['tanggal_perpanjangan_1_tahun'])->isPast() ? 'text-danger' : '' }}">
                                                 {{ $data['tanggal_perpanjangan_1_tahun'] }}
                                             </td>
-                                
+
                                             <!-- Tanggal Perpanjangan 5 Tahun -->
-                                            <td class="{{ \Carbon\Carbon::parse($data['tanggal_perpanjangan_5_tahun'])->isPast() ? 'text-danger' : '' }}">
+                                            <td
+                                                class="{{ \Carbon\Carbon::parse($data['tanggal_perpanjangan_5_tahun'])->isPast() ? 'text-danger' : '' }}">
                                                 {{ $data['tanggal_perpanjangan_5_tahun'] }}
                                             </td>
-                                
+
                                             <td class="text-end">
-                                                <a href="{{ route('stnk-detail', $data['id_kendaraan']) }}" class="btn btn-primary btn-icon">
+                                                <a href="{{ route('stnk-detail', $data['id_kendaraan']) }}"
+                                                    class="btn btn-primary btn-icon">
                                                     <i class="ti ti-alert-circle"></i>
                                                 </a>
                                                 @if (Auth::user()->role_id == 1)
-                                                    <a href="{{ route('stnk-edit', ['id_kendaraan' => $data['id_kendaraan']]) }}" class="btn btn-success btn-icon">
+                                                    <a href="{{ route('stnk-edit', ['id_kendaraan' => $data['id_kendaraan']]) }}"
+                                                        class="btn btn-success btn-icon">
                                                         <i class="ti ti-edit"></i>
                                                     </a>
-                                                    <a href="{{ route('stnk-delete', ['id' => $data['id_kendaraan']]) }}" class="btn btn-danger btn-icon">
+                                                    <a href="{{ route('stnk-delete', ['id' => $data['id_kendaraan']]) }}"
+                                                        class="btn btn-danger btn-icon">
                                                         <i class="ti ti-trash"></i>
                                                     </a>
                                                 @endif
@@ -158,7 +177,7 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-                                
+
                             </table>
                         </div>
                         <div class="card-footer d-flex align-items-center">
@@ -184,7 +203,8 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}"
+                                                rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

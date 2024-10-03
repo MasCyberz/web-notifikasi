@@ -269,7 +269,8 @@
                                                     <div class="modal-footer">
                                                         <div class="w-100">
                                                             <div class="row">
-                                                                <form action="{{ route('kir-delete-store', $item->id) }}">
+                                                                <form
+                                                                    action="{{ route('kir-delete-store', $item->id) }}">
                                                                     @csrf
                                                                     <div class="col"><a href="#"
                                                                             class="btn w-100" data-bs-dismiss="modal">
@@ -277,8 +278,8 @@
                                                                         </a></div>
                                                                     <div class="col">
                                                                         <button class="btn btn-danger w-100"
-                                                                        data-bs-dismiss="modal">
-                                                                        Ya, Hapus
+                                                                            data-bs-dismiss="modal">
+                                                                            Ya, Hapus
                                                                         </button>
                                                                     </div>
                                                                 </form>
@@ -405,9 +406,20 @@
                     document.getElementById('filter-form').submit();
                 });
 
-                // Kirim form otomatis saat input tahun berubah
+                // Menunggu beberapa waktu setelah input tahun berubah sebelum mengirim form
+                let typingTimer;
+                let doneTypingInterval = 600; // Waktu tunda (1 detik)
+
                 document.getElementById('year-input').addEventListener('input', function() {
-                    document.getElementById('filter-form').submit();
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(function() {
+                        document.getElementById('filter-form').submit();
+                    }, doneTypingInterval);
+                });
+
+                // Reset timer jika pengguna masih mengetik
+                document.getElementById('year-input').addEventListener('keydown', function() {
+                    clearTimeout(typingTimer);
                 });
             });
         </script>
