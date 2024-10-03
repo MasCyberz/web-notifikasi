@@ -26,7 +26,7 @@
                             <div class="mb-3 w-100 w-lg-50">
                                 <label class="form-label">Merk Kendaraan</label>
                                 <select class="form-select @error('merk_kendaraan') is-invalid @enderror"
-                                    name="merk_kendaraan">
+                                    name="merk_kendaraan" id="merk_kendaraan">
                                     <option value="" selected>Pilih Merk Kendaraan</option>
                                     <option value="Toyota" {{ old('merk_kendaraan') == 'Toyota' ? 'selected' : '' }}>
                                         Toyota</option>
@@ -35,11 +35,10 @@
                                     <option value="Mitsubishi"
                                         {{ old('merk_kendaraan') == 'Mitsubishi' ? 'selected' : '' }}>Mitsubishi
                                     </option>
-                                    <option value="DSFK" {{ old('merk_kendaraan') == 'DSFK' ? 'selected' : '' }}>DSFK
+                                    <option value="DFSK" {{ old('merk_kendaraan') == 'DFSK' ? 'selected' : '' }}>DFSK
                                     </option>
                                     <option value="Daihatsu"
-                                        {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu
-                                    </option>
+                                        {{ old('merk_kendaraan') == 'Daihatsu' ? 'selected' : '' }}>Daihatsu</option>
                                     <option value="Hyundai" {{ old('merk_kendaraan') == 'Hyundai' ? 'selected' : '' }}>
                                         Hyundai</option>
                                     <option value="Kia" {{ old('merk_kendaraan') == 'Kia' ? 'selected' : '' }}>Kia
@@ -54,11 +53,23 @@
                                         Yamaha</option>
                                     <option value="ISUZU" {{ old('merk_kendaraan') == 'ISUZU' ? 'selected' : '' }}>
                                         ISUZU</option>
+                                    <option value="Volkswagen"
+                                        {{ old('merk_kendaraan') == 'Volkswagen' ? 'selected' : '' }}>Volkswagen
+                                    </option>
+                                    <option value="Nissan" {{ old('merk_kendaraan') == 'Nissan' ? 'selected' : '' }}>
+                                        Nissan</option>
+                                    <option value="MG" {{ old('merk_kendaraan') == 'MG' ? 'selected' : '' }}>MG
+                                    </option>
                                 </select>
+                                <div class="mt-2">
+                                    <input type="text" class="form-control" id="merk_baru"
+                                        placeholder="Masukkan merk baru jika tidak ada di daftar">
+                                </div>
                                 @error('merk_kendaraan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
 
                             <x-Input label="Tipe Kendaraan" name="tipe" type="text" placeholder="Avanza 1.4 MT"
                                 class="" value="{{ old('tipe') }}" />
@@ -100,15 +111,15 @@
                                         alert('Silakan masukkan nama model yang ingin ditambahkan.');
                                         return;
                                     }
-
+                            
                                     // Cek apakah model sudah ada
                                     const existingModel = this.models.find(m => m.name.toLowerCase() === this.search.toLowerCase());
-
+                            
                                     if (existingModel) {
                                         alert('Model sudah ada.');
                                         return;
                                     }
-
+                            
                                     // Tampilkan pesan konfirmasi untuk menambahkan model baru
                                     if (confirm('Model tidak ditemukan. Apakah Anda ingin menambahkannya?')) {
                                         fetch('/data-kendaraan/tambah-models', {
@@ -233,6 +244,27 @@
         </div>
     </div>
     @push('scripts')
+    <script>
+        document.getElementById('merk_baru').addEventListener('change', function() {
+            var newMerk = this.value;
+            if (newMerk) {
+                var select = document.getElementById('merk_kendaraan');
+                var optionExists = Array.from(select.options).some(option => option.value === newMerk);
+    
+                // Jika opsi belum ada, tambahkan opsi baru
+                if (!optionExists) {
+                    var newOption = document.createElement('option');
+                    newOption.value = newMerk;
+                    newOption.text = newMerk;
+                    select.appendChild(newOption);
+                    
+                    // Pilih merk baru yang ditambahkan
+                    select.value = newMerk;
+                }
+            }
+        });
+    </script>
+    
     @endpush
 
 </x-app-layout>
