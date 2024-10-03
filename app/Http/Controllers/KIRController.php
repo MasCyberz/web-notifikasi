@@ -100,8 +100,6 @@ class KIRController extends Controller
         return view('kir.index', compact('kir'));
     }
 
-
-
     public function detail($id)
     {
         // Cari history KIR berdasarkan ID yang diterima
@@ -161,7 +159,8 @@ class KIRController extends Controller
         // Validasi input awal
         $validate = $request->validate([
             'kirs_id' => 'required',
-            'tanggal_expired_kir' => 'required',
+            'tanggal_expired_kir' => 'required|date',
+            'periode' => 'required|in:periode 1,periode 2', // Validasi input periode
         ]);
 
         // Pengecekan manual untuk nomor_uji_kendaraan pada bulan yang sama
@@ -171,18 +170,18 @@ class KIRController extends Controller
                     ->whereYear('tanggal_expired_kir', date('Y', strtotime($request->tanggal_expired_kir)));
             })->exists();
 
-        // Jika nomor uji kendaraan sudah ada pada bulan dan tahun yang sama, beri pesan error
         if ($existingKir) {
             return back()->withErrors(['error' => 'Nomor uji kendaraan sudah ada untuk bulan ini.']);
         }
 
-        // Simpan data ke tabel KIR
-        $kir = KIRHistories::create([
+        // Simpan data ke tabel KIR dengan periode yang ditentukan
+        KIRHistories::create([
             'kirs_id' => $request->kirs_id,
             'tanggal_expired_kir' => $request->tanggal_expired_kir,
+            'periode' => $request->periode, // Mengambil nilai periode dari input
         ]);
 
-        return redirect()->route('kir-index')->with('success', 'KIR berhasil ditambahkan.');
+        return redirect()->route('kir-index')->with('success', 'KIR berhasil ditambahkan dengan ' . $request->periode);
     }
 
     public function edit($id)
@@ -199,7 +198,8 @@ class KIRController extends Controller
     {
         $request->validate([
             'nomor_uji_kendaraan' => 'required',
-            'tanggal_expired_kir' => 'required',
+            'tanggal_expired_kir' => 'required|date|after_or_equal:today',
+            'periode' => 'nullable|in:periode 1,periode 2',
         ]);
 
         // Cari kirHistory berdasarkan ID
@@ -209,7 +209,7 @@ class KIRController extends Controller
         $kir = $kirHistory->kir;
 
         // Perbarui data kirHistory
-        $kirHistory->update($request->only(['nomor_uji_kendaraan', 'tanggal_expired_kir']));
+        $kirHistory->update($request->only(['nomor_uji_kendaraan', 'tanggal_expired_kir', 'periode']));
 
         // Periksa apakah kendaraan_id valid
         if (!$kir || !$kir->kendaraan_id) {
@@ -220,22 +220,23 @@ class KIRController extends Controller
     }
 
     public function delete($id)
-{
-    // Ambil data KIR beserta kendaraan
-    $kir = KIRHistories::with('kir.kendaraan')->findOrFail($id);
+    {
 
-    // Ambil kirs_id yang terkait
-    $kirs_id = $kir->kirs_id;
+        // Ambil data KIR beserta kendaraan
+        $kir = KIRHistories::with('kir.kendaraan')->findOrFail($id);
 
-    // Hapus semua data di tabel kir_histories yang memiliki kirs_id sama
-    KIRHistories::where('kirs_id', $kirs_id)->delete();
+        // Ambil kirs_id yang terkait
+        $kirs_id = $kir->kirs_id;
 
-    // Hapus data di tabel kirs
-    KIR::where('id', $kirs_id)->delete();
+        // Hapus semua data di tabel kir_histories yang memiliki kirs_id sama
+        KIRHistories::where('kirs_id', $kirs_id)->delete();
 
-    // Redirect kembali ke halaman index dengan pesan sukses
-    return redirect()->route('kir-index')->with('success', 'KIR dan histori berhasil dihapus.');
-}
+        // Hapus data di tabel kirs
+        KIR::where('id', $kirs_id)->delete();
+
+        // Redirect kembali ke halaman index dengan pesan sukses
+        return redirect()->route('kir-index')->with('success', 'KIR berhasil dihapus.');
+    }
 
     public function updateStatus(Request $request, $id)
     {

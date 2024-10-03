@@ -17,6 +17,7 @@ class KIRHistories extends Model
         'tanggal_expired_kir',
         'status',
         'alasan_tidak_lulus',
+        'periode',
         'created_at',
         'updated_at',
     ];

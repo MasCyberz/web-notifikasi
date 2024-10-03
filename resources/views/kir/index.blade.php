@@ -118,6 +118,7 @@
                                         <th>No. Uji Kendaraan</th>
                                         <th>Tanggal Perpanjangan</th>
                                         <th>Status</th>
+                                        <th>Periode</th>
                                         <th>Keterangan</th>
                                         <th></th>
                                     </tr>
@@ -142,9 +143,21 @@
                                             @if ($item->status)
                                                 <td>
                                                     <span
-                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} ">
+                                                        class="{{ $isExpired ? 'text-white text-capitalize' : '' }} {{ $item->status == 'aktif' ? 'badge text-bg-success' : ($item->status == 'nonaktif' ? 'badge text-bg-danger' : 'badge text-bg-warning') }} text-capitalize ">
                                                         {{ $item->status }}
                                                     </span>
+                                                </td>
+                                            @else
+                                                <!-- Jika tidak ada status, tampilkan string kosong -->
+                                                <td>
+                                                    <span></span>
+                                                </td>
+                                            @endif
+                                            @if ($item->periode)
+                                                <td>
+                                                    <span
+                                                        class="{{ $isExpired ? 'text-white' : '' }} d-inline-block badge text-bg-info text-capitalize"
+                                                        style="max-width: 150px">{{ $item->periode }}</span>
                                                 </td>
                                             @else
                                                 <!-- Jika tidak ada status, tampilkan string kosong -->
@@ -165,8 +178,13 @@
                                                     <a href="{{ route('kir-edit', $item->id) }}"
                                                         class="btn btn-success btn-icon {{ $isExpired ? 'd-none' : '' }}"><i
                                                             class="ti ti-edit"></i></a>
-                                                    <a href="{{ route('kir-delete-store', $item->id) }}"
-                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+                                                    {{-- <a href="{{ route('kir-delete-store', $item->id) }}"
+                                                        class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a> --}}
+                                                    <a href="#" class="btn btn-danger btn-icon"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modal-delete{{ $item->id }}">
+                                                        <i class="ti ti-trash"></i>
+                                                    </a>
                                                     @if ($item->status === 'nonaktif')
                                                         <button type="button" class="btn btn-warning btn-icon p-2"
                                                             data-bs-toggle="modal"
@@ -177,7 +195,7 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        <!-- Modal -->
+                                        <!-- Modal Ubah Status Pending -->
                                         <div class="modal fade" id="updateStatusModal{{ $item->id }}"
                                             tabindex="-1" aria-labelledby="updateStatusModalLabel{{ $item->id }}"
                                             aria-hidden="true">
@@ -216,6 +234,58 @@
                                                         </div>
                                                     </div>
                                                 </form>
+                                            </div>
+                                        </div>
+
+                                        {{-- Modal Delete --}}
+                                        <div class="modal modal-blur fade" id="modal-delete{{ $item->id }}"
+                                            tabindex="-1" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                    <div class="modal-status bg-danger"></div>
+                                                    <div class="modal-body text-center py-4">
+                                                        <!-- Download SVG icon from http://tabler-icons.io/i/alert-triangle -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="icon mb-2 text-danger icon-lg">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                            </path>
+                                                            <path d="M12 9v4"></path>
+                                                            <path
+                                                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z">
+                                                            </path>
+                                                            <path d="M12 16h.01"></path>
+                                                        </svg>
+                                                        <h3>Apakah Anda Yakin?</h3>
+                                                        <div class="text-secondary"> <span>Apakah anda yakin ingin
+                                                                menghapus KIR Kendaraan
+                                                                {{ $item->kir->kendaraan->nomor_polisi }} ?, data yang
+                                                                terhapus tidak dapat dikembalikan. </span></div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="w-100">
+                                                            <div class="row">
+                                                                <form action="{{ route('kir-delete-store', $item->id) }}">
+                                                                    @csrf
+                                                                    <div class="col"><a href="#"
+                                                                            class="btn w-100" data-bs-dismiss="modal">
+                                                                            Batal
+                                                                        </a></div>
+                                                                    <div class="col">
+                                                                        <button class="btn btn-danger w-100"
+                                                                        data-bs-dismiss="modal">
+                                                                        Ya, Hapus
+                                                                        </button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach

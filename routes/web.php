@@ -82,7 +82,7 @@ Route::group(['middleware' => ['auth']], function () {
         // Delete KIR
         Route::get('/data-kir/delete/{id}', [KIRController::class, 'delete'])->name('kir-delete-store');
         // Update Status KIR (Lulus / Tidak Lulus)
-        Route::post('/data-kir/update-status-kir/{id}', [KIRController::class, 'updateStatusKIR'])->name('kir-update-status-kir')->middleware('auth');
+        // Route::post('/data-kir/update-status-kir/{id}', [KIRController::class, 'updateStatusKIR'])->name('kir-update-status-kir')->middleware('auth');
     });
 
     Route::group(['middleware' => ['auth', 'khususAdmin']], function () {
@@ -94,7 +94,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('management-user/check-email', [UserController::class, 'checkEmail'])->name('management-user-check-email');
         Route::post('management-user/store', [UserController::class, 'storeUser'])->name('management-user-store');
         Route::get('management-user/edit/{id}', [UserController::class, 'editUser'])->name('management-user-edit');
-        Route::get('management-user/delete/{id}', [UserController::class, 'deleteUser'])->name('management-user-delete');
+        Route::delete('management-user/delete/{id}', [UserController::class, 'deleteUser'])->name('management-user-delete');
         Route::put('management-user/update/{id}', [UserController::class, 'updateUser'])->name('management-user-update');
 
         // Export Data Kendaraan dan STNK&KIR

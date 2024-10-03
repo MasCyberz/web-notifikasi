@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-PageHeader header="Data KIR" classcontainer="col-lg-8" />
+    <x-PageHeader header="Update Data KIR" classcontainer="col-lg-8" />
     <div class="page-body">
 
 
@@ -24,18 +24,32 @@
                                     <input type="hidden" name="kendaraan_id" value="{{ $kir->kendaraan_id }}">
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label">Periode</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="periode" value="periode 1"
+                                            class="form-selectgroup-input" {{ old('periode', $kir->periode) == 'periode 1' ? 'checked' : ''}}>
+                                        <span class="form-selectgroup-label">Periode 1</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="periode" value="periode 2"
+                                            class="form-selectgroup-input" {{ old('periode', $kir->periode) == 'periode 2' ? 'checked' : ''}}>
+                                        <span class="form-selectgroup-label">Periode 2</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <x-Input label="Nomor Uji Kendaraan" name="nomor_uji_kendaraan" type="text"
                                 class="" :value="old('nomor_uji_kendaraan', $kir->kir->nomor_uji_kendaraan)" />
                         </div>
-                        <div class="col-12 col-sm-12 col-md-6">
+                        <div class="col-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
                                 class="" :value="old(
                                     'tanggal_expired_kir',
                                     $kir->tanggal_expired_kir ? $kir->tanggal_expired_kir->format('Y-m-d') : '',
                                 )" />
-
                         </div>
                     </div>
                 </div>

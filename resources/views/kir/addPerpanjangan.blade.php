@@ -1,10 +1,7 @@
 <x-app-layout>
     <x-PageHeader header="Tambah Data Perpanjangan" classcontainer="col-lg-8" />
     <div class="page-body">
-
-        {{-- {{ $>nomor_polisi }} --}}
         <div class="col-12 col-lg-8 container-xl">
-            {{-- Form Create KIR --}}
             <form action="{{ route('kir-storePerpanjangan') }}" method="POST" class="card">
                 @csrf
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
@@ -19,7 +16,7 @@
                         </div>
                     @endif
                     <div class="row row-cards">
-                        <div class="col-md-6">
+                        <div class="col-12 col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">KIR Kendaraan</label>
                                 <div>
@@ -37,6 +34,23 @@
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
                                 class="" :value="old('tanggal_expired_kir')" />
+                        </div>
+                        <div class="col-12 col-md-7">
+                            <div class="mb-3">
+                                <label class="form-label">Periode</label>
+                                <div class="form-selectgroup">
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="periode" value="periode 1"
+                                            class="form-selectgroup-input">
+                                        <span class="form-selectgroup-label">Periode 1</span>
+                                    </label>
+                                    <label class="form-selectgroup-item">
+                                        <input type="radio" name="periode" value="periode 2"
+                                            class="form-selectgroup-input">
+                                        <span class="form-selectgroup-label">Periode 2</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

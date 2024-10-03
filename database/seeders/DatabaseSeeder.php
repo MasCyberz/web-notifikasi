@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
             ],
             [
                 'name' => 'Guest',
-                'email' => 'guest@gmail.com',
+                'username' => 'jiexpo',
                 'role_id' => 2, // Pastikan role_id sesuai dengan ID yang ada di tabel roles
                 'password' => Hash::make('123456'), // Ganti dengan password yang sesuai
                 'created_at' => Carbon::now(),

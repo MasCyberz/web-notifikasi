@@ -180,7 +180,7 @@
                                 </div>
                             </div>
 
-                            @if (Auth::user()->role_id == 1 && $tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
+                            {{-- @if (Auth::user()->role_id == 1 && $tipe === 'KIR' && \Carbon\Carbon::parse($KIRHistory->tanggal_expired_kir)->isPast())
                                 @if (empty($KIRHistory->alasan_tidak_lulus))
                                     <div class="my-4">
                                         <div class="row">
@@ -273,7 +273,7 @@
                                         </div>
                                     </div>
                                 @endif
-                            @endif
+                            @endif --}}
 
                             <x-cardFooter route="{{ route('dashboard') }}" :showSubmitButton="false" />
                         </div>
