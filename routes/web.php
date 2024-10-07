@@ -61,7 +61,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('data-stnk/store', [STNKController::class, 'store'])->name('stnk-store');
         Route::get('stnk/edit/{id_kendaraan}', [STNKController::class, 'editSTNK'])->name('stnk-edit');
         Route::put('stnk-update/{id}', [STNKController::class, 'updateSTNK'])->name('stnk-update');
-        Route::get('/data-stnk/delete/{id}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
+        Route::get('/data-stnk/delete/{id_kendaraan}', [STNKController::class, 'deleteSTNK'])->name('stnk-delete');
     });
 
     // KIR

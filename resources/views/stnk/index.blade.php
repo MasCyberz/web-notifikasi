@@ -207,14 +207,14 @@
                                                         <h3>Apakah Anda Yakin?</h3>
                                                         <div class="text-secondary"> <span>Apakah anda yakin ingin
                                                                 menghapus STNK Kendaraan
-                                                                {{ $data['nomor_polisi'] }} ?, data yang
+                                                                {{ $data['nomor_polisi'] }} ?, semua data perpanjangan yang
                                                                 terhapus tidak dapat dikembalikan. </span></div>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <div class="w-100">
                                                             <div class="row">
                                                                 <form
-                                                                    action="{{ route('stnk-delete', ['id' => $data['id_kendaraan']]) }}">
+                                                                    action="{{ route('stnk-delete', ['id_kendaraan' => $data['id_kendaraan']]) }}">
                                                                     @csrf
                                                                     <div class="col"><a href="#"
                                                                             class="btn w-100" data-bs-dismiss="modal">
