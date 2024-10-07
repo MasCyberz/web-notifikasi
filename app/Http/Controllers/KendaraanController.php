@@ -53,10 +53,10 @@ class KendaraanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nomor_polisi' => 'required|string|max:255',
+            'nomor_polisi' => 'required|unique:kendaraans|string|max:255',
             'merk_kendaraan' => 'required|string|max:255',
             'tipe' => 'required|string|max:255',
-            'jenis_kendaraan' => 'required|string|max:255',
+            'jenis_kendaraan' => 'required',
             'model_kendaraan_id' => 'required|exists:model_kendaraans,id',
             'tahun' => 'required|integer|digits:4',
             'user_kendaraan' => 'required|string|max:100',
@@ -65,7 +65,7 @@ class KendaraanController extends Controller
             'nomor_mesin' => 'required|string|max:255',
             'bahan_bakar' => 'required|string|max:255',
             'nomor_bpkb' => 'required|string',
-            'tahun_registrasi' => 'required|string|max:255',
+            'tahun_registrasi' => 'required|integer|digits:4',
             'ident' => 'required|string|max:255',
         ]);
 

@@ -111,15 +111,15 @@
                                         alert('Silakan masukkan nama model yang ingin ditambahkan.');
                                         return;
                                     }
-                            
+
                                     // Cek apakah model sudah ada
                                     const existingModel = this.models.find(m => m.name.toLowerCase() === this.search.toLowerCase());
-                            
+
                                     if (existingModel) {
                                         alert('Model sudah ada.');
                                         return;
                                     }
-                            
+
                                     // Tampilkan pesan konfirmasi untuk menambahkan model baru
                                     if (confirm('Model tidak ditemukan. Apakah Anda ingin menambahkannya?')) {
                                         fetch('/data-kendaraan/tambah-models', {
@@ -218,7 +218,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
-                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" type="text" class=""
+                            <x-Input label="Tahun Registrasi" name="tahun_registrasi" type="number" class=""
                                 value="{{ old('tahun_registrasi') }}" />
                             @error('tahun_registrasi')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -231,8 +231,8 @@
                             @enderror
 
                             <x-Input label="User" name="user_kendaraan" type="text" class=""
-                                value="{{ old('user') }}" />
-                            @error('user')
+                                value="{{ old('user_kendaraan') }}" />
+                            @error('user_kendaraan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
 
@@ -250,21 +250,21 @@
             if (newMerk) {
                 var select = document.getElementById('merk_kendaraan');
                 var optionExists = Array.from(select.options).some(option => option.value === newMerk);
-    
+
                 // Jika opsi belum ada, tambahkan opsi baru
                 if (!optionExists) {
                     var newOption = document.createElement('option');
                     newOption.value = newMerk;
                     newOption.text = newMerk;
                     select.appendChild(newOption);
-                    
+
                     // Pilih merk baru yang ditambahkan
                     select.value = newMerk;
                 }
             }
         });
     </script>
-    
+
     @endpush
 
 </x-app-layout>
