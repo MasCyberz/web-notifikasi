@@ -263,7 +263,7 @@
                                                         <h3>Apakah Anda Yakin?</h3>
                                                         <div class="text-secondary"> <span>Apakah anda yakin ingin
                                                                 menghapus KIR Kendaraan
-                                                                {{ $item->kir->kendaraan->nomor_polisi }} ?, data yang
+                                                                {{ $item->kir->kendaraan->nomor_polisi }} ?,semua data perpanjangan yang
                                                                 terhapus tidak dapat dikembalikan. </span></div>
                                                     </div>
                                                     <div class="modal-footer">
