@@ -2,16 +2,17 @@
 
 namespace App\Exports;
 
-use App\Models\STNK;
 use Carbon\Carbon;
+use App\Models\STNK;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithTitle;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use PhpOffice\PhpSpreadsheet\Style\Color;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
@@ -34,7 +35,8 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
     {
         $exportData = collect(); // Collection to store all data for export
 
-        STNK::with('RelasiSTNKtoKendaraan')
+        // Retrieve STNK data with kendaraan relationship
+        $stnks = STNK::with('RelasiSTNKtoKendaraan')
             ->when($this->year, function ($query) {
                 return $query->whereYear('tanggal_perpanjangan', $this->year);
             })
@@ -47,54 +49,75 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 });
             })
             ->get()
-            ->each(function ($stnk) use (&$exportData) {
-                $platNomor = $stnk->RelasiSTNKtoKendaraan->nomor_polisi ?? ''; // Get the vehicle's plate number
+            // Group data by month number (1 for January, 2 for February, etc.)
+            ->groupBy(function ($item) {
+                return $item->tanggal_perpanjangan->format('n Y'); // Group by month number and year
+            })
+            // Sort the groups by month number
+            ->sortBy(function ($group, $key) {
+                [$month, $year] = explode(' ', $key); // Extract month and year
+                return sprintf('%04d-%02d', $year, $month); // Create sortable string by year-month
+            });
 
-                // Create a row for the STNK entry
+        // Loop through each month group and build the data
+        foreach ($stnks as $monthYear => $groupedData) {
+            // Get the name of the month (January, February, etc.)
+            $monthName = Carbon::createFromFormat('n Y', $monthYear)->format('F Y');
+
+            // Add a header for the month (empty values for merging cells)
+            $exportData->push([
+                'Plat Nomor' => $monthName,  // This will be displayed as the month header
+                'Perpanjangan 1 Tahun' => '',
+                'Biaya 1 Tahun' => '',
+                'Perpanjangan 5 Tahun' => '',
+                'Biaya 5 Tahun' => ''
+            ]);
+
+            // Now handle the actual data rows for this month
+            $groupedData = $groupedData->groupBy('id_kendaraan');
+            $groupedData->each(function ($vehicleData) use (&$exportData) {
+                // Initialize columns for 1 and 5 year renewals
+                $perpanjangan1Tahun = '';
+                $perpanjangan5Tahun = '';
+                $biaya1Tahun = '';
+                $biaya5Tahun = '';
+                $platNomor = $vehicleData->first()->RelasiSTNKtoKendaraan->nomor_polisi ?? '';
+
+                // Loop through each STNK entry and assign data to the correct columns
+                foreach ($vehicleData as $stnk) {
+                    if ($stnk->jenis_perpanjangan == '1 Tahun') {
+                        $perpanjangan1Tahun = $stnk->tanggal_perpanjangan->format('d F Y');
+                        $biaya1Tahun = "'". $stnk->biaya;
+                    } elseif ($stnk->jenis_perpanjangan == '5 Tahun') {
+                        $perpanjangan5Tahun = $stnk->tanggal_perpanjangan->format('d F Y');
+                        $biaya5Tahun = "'". $stnk->biaya;
+                    }
+                }
+
+                // Add the row to the export data collection
                 $exportData->push([
                     'Plat Nomor' => $platNomor,
-                    'Tanggal Perpanjangan' => $stnk->tanggal_perpanjangan->format('d-m-Y'), // Format date for display
-                    'Jenis Perpanjangan' => $stnk->jenis_perpanjangan,
-                    'Biaya' => $stnk->biaya,
+                    'Perpanjangan 1 Tahun' => $perpanjangan1Tahun,
+                    'Biaya 1 Tahun' => $biaya1Tahun,
+                    'Perpanjangan 5 Tahun' => $perpanjangan5Tahun,
+                    'Biaya 5 Tahun' => $biaya5Tahun,
                 ]);
             });
-
-        // Group by month of 'Tanggal Perpanjangan'
-        $groupedByMonth = $exportData->groupBy(function ($item) {
-            return Carbon::parse($item['Tanggal Perpanjangan'])->format('m-Y');
-        });
-
-        $sortedExportData = collect(); // New collection to hold sorted data
-
-        // Iterate through each group and sort items by 'Tanggal Perpanjangan'
-        foreach ($groupedByMonth as $month => $items) {
-            // Sort the items within the group by 'Tanggal Perpanjangan'
-            $sortedItems = $items->sortBy(function ($item) {
-                return Carbon::parse($item['Tanggal Perpanjangan']);
-            });
-
-            // Add sorted items to the new collection
-            $sortedExportData = $sortedExportData->merge($sortedItems);
-
-            // Add an empty row after each month
-            $sortedExportData->push([
-                'Plat Nomor' => '',
-                'Tanggal Perpanjangan' => '',
-                'Jenis Perpanjangan' => '',
-                'Biaya' => '',
-            ]);
         }
 
-        return $sortedExportData->values(); // Reindex and return the sorted export data
+        return $exportData;
     }
+
+
 
     public function headings(): array
     {
         return [
             'Plat Nomor',
-            'Tanggal Perpanjangan',
-            'Jenis Perpanjangan',
-            'Biaya',
+            'Perpanjangan 1 Tahun',
+            'Biaya 1 Tahun',
+            'Perpanjangan 5 Tahun',
+            'Biaya 5 Tahun',
         ];
     }
 
@@ -105,7 +128,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 
     public function styles(Worksheet $sheet)
     {
-        // Define styles for the headings
+        // Gaya untuk heading kolom data
         $styleArray = [
             'font' => [
                 'bold' => true,
@@ -114,7 +137,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'B7DEE8', // Desired fill color
+                    'argb' => 'B7DEE8', // Ubah warna fill sesuai kebutuhan
                 ],
             ],
             'borders' => [
@@ -125,12 +148,12 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ];
 
-        // Apply heading styles
-        $sheet->getStyle('A1:D1')->applyFromArray($styleArray); // Change E1 to D1 since you have 4 headings
+        // Terapkan style untuk heading
+        $sheet->getStyle('A1:E1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-E)
 
-        // Apply border styles to data rows
-        $rowCount = count($this->collection()) + 1; // +1 for the heading row
-        $sheet->getStyle("A2:D{$rowCount}")->applyFromArray([ // Change E to D
+        // Terapkan border untuk data
+        $rowCount = $sheet->getHighestRow();
+        $sheet->getStyle("A2:E{$rowCount}")->applyFromArray([
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -139,9 +162,63 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ]);
 
-        // Auto-size columns A to D
-        foreach (range('A', 'D') as $column) { // Change E to D
+        // Auto-size untuk kolom A sampai E
+        foreach (range('A', 'E') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
+
+        // Gaya untuk setiap judul pemisah bulan
+        foreach ($sheet->getRowIterator() as $row) {
+            $rowIndex = $row->getRowIndex();
+            $cellValue = $sheet->getCell('A' . $rowIndex)->getValue();
+
+            // Jika cell A berisi nama bulan (sebagai pemisah), terapkan gaya khusus
+            if ($this->isMonthSeparator($cellValue)) {
+                // Merge seluruh kolom A sampai E untuk baris pemisah bulan
+                $sheet->mergeCells('A' . $rowIndex . ':E' . $rowIndex);
+                $sheet->getStyle('A' . $rowIndex)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                        'size' => 14, // Ukuran lebih besar untuk pemisah bulan
+                    ],
+                    'alignment' => [
+                        'horizontal' => Alignment::HORIZONTAL_CENTER, // Center alignment
+                        'vertical' => Alignment::VERTICAL_CENTER,
+                    ],
+                ]);
+                // Tambah tinggi baris untuk pemisah bulan
+                $sheet->getRowDimension($rowIndex)->setRowHeight(25);
+            }
+        }
+    }
+
+    /**
+     * Fungsi untuk mendeteksi apakah nilai di cell adalah nama bulan sebagai pemisah
+     */
+    private function isMonthSeparator($value)
+    {
+        // Logika sederhana untuk mendeteksi apakah cell berisi nama bulan
+        $months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+        ];
+
+        foreach ($months as $month) {
+            if (strpos($value, $month) !== false) {
+                return true; // Jika ditemukan nama bulan dalam value, return true
+            }
+        }
+
+        return false;
     }
 }
