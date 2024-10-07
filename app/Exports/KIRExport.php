@@ -32,15 +32,16 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
     {
         $exportData = collect(); // Collection to store all data for export
 
-        // Ambil data KIR dengan relasi kendaraan dan kirHistories
         KIR::with('kendaraan', 'kirHistories')
             ->when($this->year, function ($query) {
                 return $query->whereHas('kirHistories', function ($subQuery) {
+                    // Memastikan hanya mengambil data dengan tahun yang sesuai
                     $subQuery->whereYear('tanggal_expired_kir', $this->year);
                 });
             })
             ->when($this->month, function ($query) {
                 return $query->whereHas('kirHistories', function ($subQuery) {
+                    // Memastikan bulan juga difilter
                     $subQuery->whereMonth('tanggal_expired_kir', $this->month);
                 });
             })
@@ -54,18 +55,20 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 $platNomor = $kir->kendaraan->nomor_polisi ?? ''; // Ambil plat nomor kendaraan
 
                 foreach ($kir->kirHistories as $history) {
-                    // Konversi tanggal expired ke dalam instance Carbon
                     $tanggalExpired = Carbon::parse($history->tanggal_expired_kir);
 
-                    // Buat baris untuk riwayat KIR
-                    $exportData->push([
-                        'Plat Nomor' => $platNomor,
-                        'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
-                        'Tanggal Perpanjangan' => $tanggalExpired, // Gunakan instance Carbon untuk pengurutan
-                        'Status' => $history->status,
-                        'Keterangan' => $history->alasan_tidak_lulus,
-                        'Periode' => $history->periode,
-                    ]);
+                    // Memfilter hanya untuk tahun yang relevan
+                    if ($tanggalExpired->year == $this->year) {
+                        // Buat baris untuk riwayat KIR
+                        $exportData->push([
+                            'Plat Nomor' => $platNomor,
+                            'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
+                            'Tanggal Perpanjangan' => $tanggalExpired, // Gunakan instance Carbon untuk pengurutan
+                            'Status' => $history->status,
+                            'Keterangan' => $history->alasan_tidak_lulus,
+                            'Periode' => $history->periode,
+                        ]);
+                    }
                 }
             });
 

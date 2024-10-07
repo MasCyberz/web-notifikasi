@@ -20,34 +20,71 @@
                                         <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_bpkb }}</div>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Pajak 1 Tahun</label>
-                                        <div class="form-control">{{ \Carbon\Carbon::parse($perpanjangan_satu_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</div>
+                                @if ($perpanjangan_satu_tahun)
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Pajak 1 Tahun</label>
+                                            <div class="form-control">
+                                                {{ \Carbon\Carbon::parse($perpanjangan_satu_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Biaya Pajak 1 Tahun</label>
-                                        <div class="form-control">{{ $perpanjangan_satu_tahun->biaya }}</div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Biaya Pajak 1 Tahun</label>
+                                            <div class="form-control">{{ $perpanjangan_satu_tahun->biaya }}</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Pajak 5 Tahun</label>
-                                        <div class="form-control">{{ \Carbon\Carbon::parse($perpanjangan_lima_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}</div>
+                                @else
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Pajak 1 Tahun</label>
+                                            <div class="form-control">
+                                                -
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label"> Biaya Pajak 5 Tahun</label>
-                                        <div class="form-control">{{ $perpanjangan_lima_tahun->biaya }}</div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Biaya Pajak 1 Tahun</label>
+                                            <div class="form-control">-</div>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
+                                @if ($perpanjangan_lima_tahun)
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Pajak 5 Tahun</label>
+                                            <div class="form-control">
+                                                {{ \Carbon\Carbon::parse($perpanjangan_lima_tahun->tanggal_perpanjangan)->isoFormat('D MMMM Y') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"> Biaya Pajak 5 Tahun</label>
+                                            <div class="form-control">{{ $perpanjangan_lima_tahun->biaya }}</div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Pajak 5 Tahun</label>
+                                            <div class="form-control">-</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Biaya Pajak 5 Tahun</label>
+                                            <div class="form-control">-</div>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Merk Kendaraan</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}</div>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->merk_kendaraan }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -59,13 +96,15 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Jenis</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->jenis_kendaraan }}</div>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->jenis_kendaraan }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Model</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->modelKendaraan->name }}</div>
+                                        <div class="form-control">
+                                            {{ $stnk->RelasiSTNKtoKendaraan->modelKendaraan->name }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -77,13 +116,15 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Tahun Registrasi</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->tahun_registrasi }}</div>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->tahun_registrasi }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Nomor Rangka</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_rangka }}</div>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->nomor_rangka }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -107,7 +148,8 @@
                                 <div class="col-12 col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">User Kendaraan</label>
-                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->user_kendaraan }}</div>
+                                        <div class="form-control">{{ $stnk->RelasiSTNKtoKendaraan->user_kendaraan }}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -117,7 +159,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <x-cardFooter route="{{ route('stnk-index') }}" :showSubmitButton="false"/>
+                            <x-cardFooter route="{{ route('stnk-index') }}" :showSubmitButton="false" />
                         </div>
                     </div>
                 </div>

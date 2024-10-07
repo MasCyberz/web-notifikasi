@@ -8,7 +8,7 @@
         </span>
     </a>
 </li>
-<li class="nav-item {{ Request::route()->named('stnk-index', 'stnk-tambah', 'stnk-detail', 'stnk-edit') ? 'active' : '' }}">
+<li class="nav-item {{ Request::route()->named('stnk-index', 'stnk-tambah', 'stnk-detail', 'stnk-edit', 'stnk-history') ? 'active' : '' }}">
     <a class="nav-link" href="{{ route('stnk-index') }}">
         <span class="nav-link-icon d-md-none d-lg-inline-block">
             <i class="ti ti-car fs-2"></i>
