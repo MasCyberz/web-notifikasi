@@ -24,8 +24,8 @@
                         <label class="form-label">Tipe Perpanjangan</label>
                         <div>
                             <select class="form-select w-25" name="jenis_perpanjangan">
-                                    <option value="1 Tahun">Perpanjangan 1 Tahun</option>
-                                    <option value="5 Tahun">Perpanjangan 5 Tahun</option>
+                                <option value="1 Tahun">Perpanjangan 1 Tahun</option>
+                                <option value="5 Tahun">Perpanjangan 5 Tahun</option>
                             </select>
                         </div>
                     </div>
@@ -44,6 +44,13 @@
             </form>
         </div>
     </div>
+    @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show position-fixed end-0 my-2 mx-2"
+                style="z-index: 1050;" role="alert">
+                <strong>Gagal!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
     @push('scripts')
         <script>

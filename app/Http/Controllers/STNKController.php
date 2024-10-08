@@ -164,24 +164,39 @@ class STNKController extends Controller
         }
     }
 
-    public function store(request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'nomor_polisi' => 'required',
             'biaya' => 'required',
-            'tgl_perpanjangan' => 'required',
+            'tgl_perpanjangan' => 'required|date',
             'jenis_perpanjangan' => 'required'
         ]);
 
+        // Cek apakah kombinasi nomor_polisi, jenis_perpanjangan, dan tgl_perpanjangan sudah ada
+        $existingSTNK = STNK::where('id_kendaraan', $request->nomor_polisi)
+            ->where('jenis_perpanjangan', $request->jenis_perpanjangan)
+            ->where('tanggal_perpanjangan', $request->tgl_perpanjangan)
+            ->first();
 
-        $stnk = STNK::Create([
+        if ($existingSTNK) {
+            // Jika data sudah ada, return dengan pesan error
+            return redirect()->back()->with(
+                'error', 'Kombinasi jenis perpanjangan dan tanggal perpanjangan untuk kendaraan ini sudah ada.',
+            )->withInput();
+        }
+
+        // Jika validasi lolos, simpan data STNK
+        STNK::create([
             'id_kendaraan' => $request->nomor_polisi,
             'biaya' => $request->biaya,
             'tanggal_perpanjangan' => $request->tgl_perpanjangan,
             'jenis_perpanjangan' => $request->jenis_perpanjangan
         ]);
+
         return redirect()->route('stnk-index')->with('success', 'Data STNK berhasil ditambahkan');
     }
+
 
     public function editSTNK($id_kendaraan)
     {
@@ -256,7 +271,7 @@ class STNKController extends Controller
         foreach ($stnks as $stnk) {
             $stnk->delete();
         };
-        
+
         // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('stnk-index')->with('success', 'Data STNK berhasil dihapus');
     }
