@@ -244,13 +244,42 @@
                                     </li>
                                 @endif
 
-                                <!-- Tombol Nomor Halaman -->
-                                @for ($i = 1; $i <= $kendaraans->lastPage(); $i++)
-                                    <li class="page-item {{ $i == $kendaraans->currentPage() ? 'active' : '' }}">
+                                <!-- Tombol Nomor Halaman dengan Titik-Titik -->
+                                @php
+                                    $currentPage = $kendaraans->currentPage();
+                                    $lastPage = $kendaraans->lastPage();
+                                    $startPage = max(1, $currentPage - 2);
+                                    $endPage = min($lastPage, $currentPage + 2);
+                                @endphp
+
+                                <!-- Tampilkan Halaman Pertama Jika Halaman Saat Ini Lebih Dari 3 -->
+                                @if ($currentPage > 3)
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $kendaraans->url(1) }}">1</a>
+                                    </li>
+                                    @if ($currentPage > 4)
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    @endif
+                                @endif
+
+                                <!-- Tombol Halaman Di Sekitar Halaman Saat Ini -->
+                                @for ($i = $startPage; $i <= $endPage; $i++)
+                                    <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
                                         <a class="page-link"
                                             href="{{ $kendaraans->url($i) }}">{{ $i }}</a>
                                     </li>
                                 @endfor
+
+                                <!-- Tampilkan Halaman Terakhir Jika Halaman Sekarang Bukan Halaman Terakhir -->
+                                @if ($currentPage < $lastPage - 2)
+                                    @if ($currentPage < $lastPage - 3)
+                                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                                    @endif
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                            href="{{ $kendaraans->url($lastPage) }}">{{ $lastPage }}</a>
+                                    </li>
+                                @endif
 
                                 <!-- Tombol Next -->
                                 @if ($kendaraans->hasMorePages())
@@ -280,6 +309,7 @@
                                         </a>
                                     </li>
                                 @endif
+
                             </ul>
 
                         </div>
