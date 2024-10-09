@@ -57,8 +57,8 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 foreach ($kir->kirHistories as $history) {
                     $tanggalExpired = Carbon::parse($history->tanggal_expired_kir);
 
-                    // Memfilter hanya untuk tahun yang relevan
-                    if ($tanggalExpired->year == $this->year) {
+                    // Hanya filter berdasarkan tahun jika $this->year tidak kosong
+                    if ($this->year === null || $tanggalExpired->year == $this->year) {
                         // Buat baris untuk riwayat KIR
                         $exportData->push([
                             'Plat Nomor' => $platNomor,

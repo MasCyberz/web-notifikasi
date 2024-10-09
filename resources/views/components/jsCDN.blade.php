@@ -5,3 +5,5 @@
     {{-- Alpine JS --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    {{-- flatpickr --}}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-PageHeader header="Data STNK" classcontainer="col-lg-8" />
+    <x-PageHeader header="Tambah Data STNK" classcontainer="col-lg-8" />
     <div class="page-body">
 
 
@@ -9,7 +9,7 @@
                 @csrf
                 <x-cardHeader titleHeader="Silahkan isi data dibawah ini dengan benar!" />
                 <div class="card-body">
-                    <div class="mb-3 col-12">
+                    <div class="mb-3 ">
                         <label class="form-label">Plat Nomor</label>
                         <select class="form-select tomselected" id="select-nomor-polisi" name="nomor_polisi"
                             placeholder="Pilih Plat Nomor...">
@@ -23,9 +23,9 @@
                     <div class="mb-3">
                         <label class="form-label">Tipe Perpanjangan</label>
                         <div>
-                            <select class="form-select w-25" name="jenis_perpanjangan">
-                                    <option value="1 Tahun">Perpanjangan 1 Tahun</option>
-                                    <option value="5 Tahun">Perpanjangan 5 Tahun</option>
+                            <select class="form-select" name="jenis_perpanjangan">
+                                <option value="1 Tahun">Perpanjangan 1 Tahun</option>
+                                <option value="5 Tahun">Perpanjangan 5 Tahun</option>
                             </select>
                         </div>
                     </div>
@@ -33,7 +33,8 @@
                     <x-Input label="Biaya Perpanjangan Terakhir" name="biaya" type="text" placeholder="3.000.000"
                         class="" />
                     {{-- Tanggal Perpanjangan --}}
-                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" type="date" class="w-25" />
+                    <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" id="tgl_perpanjangan" type="date"
+                        class="flatpickr" placeholder="01-01-2024" />
                     {{-- <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
                         <input type="text" name="plat_nomor" class="form-control" data-mask="** 0000 ***"
@@ -58,6 +59,14 @@
                     onItemRemove(value) {
                         console.log('Item removed:', value);
                     }
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                flatpickr('.flatpickr', {
+                    dateFormat: "Y-m-d", // Sesuaikan format tanggal
+                    minDate: "today",
+                    dateFormat: "d-m-Y",
                 });
             });
         </script>
