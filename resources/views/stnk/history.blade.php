@@ -190,8 +190,7 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}"
-                                                rel="prev">
+                                            <a class="page-link" href="{{ $stnks->previousPageUrl() }}" rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -219,9 +218,15 @@
                                                 @if ($page == $stnks->currentPage())
                                                     <li class="page-item active"><a
                                                             class="page-link">{{ $page }}</a></li>
-                                                @else
+                                                @elseif (
+                                                    $page == 1 ||
+                                                        $page == $stnks->lastPage() ||
+                                                        ($page >= $stnks->currentPage() - 2 && $page <= $stnks->currentPage() + 2))
                                                     <li class="page-item"><a class="page-link"
                                                             href="{{ $url }}">{{ $page }}</a></li>
+                                                @elseif ($page == $stnks->currentPage() - 3 || $page == $stnks->currentPage() + 3)
+                                                    <li class="page-item disabled"><span class="page-link">...</span>
+                                                    </li>
                                                 @endif
                                             @endforeach
                                         @endif
@@ -257,6 +262,7 @@
                                     @endif
                                 </ul>
                             @endif
+
                         </div>
 
 

@@ -45,6 +45,13 @@
             </form>
         </div>
     </div>
+    @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show position-fixed end-0 my-2 mx-2"
+                style="z-index: 1050;" role="alert">
+                <strong>Gagal!</strong> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
     @push('scripts')
         <script>

@@ -118,12 +118,69 @@
                                             <td class="text-end">
                                                 <a href="{{ route('management-user-edit', ['id' => $user->id]) }}"
                                                     class="btn btn-primary btn-icon"><i class="ti ti-edit"></i></a>
-                                                <a href="{{ route('management-user-delete', ['id' => $user->id]) }}"
-                                                    class="btn btn-danger btn-icon"><i class="ti ti-trash"></i></a>
+
+                                                <!-- Button untuk membuka modal delete -->
+                                                <a href="#" class="btn btn-danger btn-icon" data-bs-toggle="modal"
+                                                    data-bs-target="#modal-delete-{{ $user->id }}">
+                                                    <i class="ti ti-trash"></i>
+                                                </a>
                                             </td>
                                         </tr>
 
                                         <!-- Modal Delete -->
+                                        <div class="modal modal-blur fade" id="modal-delete-{{ $user->id }}"
+                                            tabindex="-1" style="display: none;" aria-hidden="true">
+                                            <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+                                                <div class="modal-content">
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                    <div class="modal-status bg-danger"></div>
+                                                    <div class="modal-body text-center py-4">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                            height="24" viewBox="0 0 24 24" fill="none"
+                                                            stroke="currentColor" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round"
+                                                            class="icon mb-2 text-danger icon-lg">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none">
+                                                            </path>
+                                                            <path d="M12 9v4"></path>
+                                                            <path
+                                                                d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z">
+                                                            </path>
+                                                            <path d="M12 16h.01"></path>
+                                                        </svg>
+                                                        <h3>Apakah Anda Yakin?</h3>
+                                                        <div class="text-secondary">
+                                                            Apakah Anda yakin ingin menghapus user {{ $user->name }}?
+                                                            Data yang dihapus tidak dapat dikembalikan.
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <div class="w-100">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <a href="#" class="btn w-100"
+                                                                        data-bs-dismiss="modal">Batal</a>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <!-- Form untuk delete user -->
+                                                                    <form
+                                                                        action="{{ route('management-user-delete', ['id' => $user->id]) }}"
+                                                                        method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger w-100">
+                                                                            Ya, Hapus
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -151,7 +208,8 @@
                                         </li>
                                     @else
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $users->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="{{ $users->previousPageUrl() }}"
+                                                rel="prev">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

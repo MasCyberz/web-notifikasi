@@ -207,7 +207,8 @@
                                                         <h3>Apakah Anda Yakin?</h3>
                                                         <div class="text-secondary"> <span>Apakah anda yakin ingin
                                                                 menghapus STNK Kendaraan
-                                                                {{ $data['nomor_polisi'] }} ?, semua data perpanjangan yang
+                                                                {{ $data['nomor_polisi'] }} ?, semua data perpanjangan
+                                                                yang
                                                                 terhapus tidak dapat dikembalikan. </span></div>
                                                     </div>
                                                     <div class="modal-footer">
@@ -277,21 +278,32 @@
 
                                     {{-- Pagination Elements --}}
                                     @foreach ($stnks->links()->elements as $element)
+                                        {{-- "Three Dots" Separator --}}
+                                        @if (is_string($element))
+                                            <li class="page-item disabled" aria-disabled="true">
+                                                <span class="page-link">{{ $element }}</span>
+                                            </li>
+                                        @endif
+
                                         {{-- Array Of Links --}}
                                         @if (is_array($element))
                                             @foreach ($element as $page => $url)
                                                 @if ($page == $stnks->currentPage())
                                                     <li class="page-item active"><a
                                                             class="page-link">{{ $page }}</a></li>
-                                                @else
+                                                @elseif (
+                                                    $page == 1 ||
+                                                        $page == $stnks->lastPage() ||
+                                                        ($page >= $stnks->currentPage() - 2 && $page <= $stnks->currentPage() + 2))
                                                     <li class="page-item"><a class="page-link"
-                                                            href="{{ $url }}&entries={{ $entries }}&search={{ $search }}&year={{ $year }}">{{ $page }}</a>
+                                                            href="{{ $url }}">{{ $page }}</a></li>
+                                                @elseif ($page == $stnks->currentPage() - 3 || $page == $stnks->currentPage() + 3)
+                                                    <li class="page-item disabled"><span class="page-link">...</span>
                                                     </li>
                                                 @endif
                                             @endforeach
                                         @endif
                                     @endforeach
-
 
                                     {{-- Next Page Link --}}
                                     @if ($stnks->hasMorePages())
@@ -323,6 +335,7 @@
                                     @endif
                                 </ul>
                             @endif
+
                         </div>
 
 
