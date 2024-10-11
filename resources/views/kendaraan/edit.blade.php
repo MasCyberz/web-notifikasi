@@ -26,6 +26,9 @@
                                     <option value="Mitsubishi"
                                         {{ old('merk_kendaraan') == 'Mitsubishi' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Mitsubishi') ? 'selected' : '' }}>
                                         Mitsubishi</option>
+                                    <option value="Mercedes-Benz"
+                                        {{ old('merk_kendaraan') == 'Mercedes-Benz' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'Mercedes-Benz') ? 'selected' : '' }}>
+                                        Mercedes-Benz</option>
                                     <option value="DFSK"
                                         {{ old('merk_kendaraan') == 'DFSK' || (isset($kendaraan) && $kendaraan->merk_kendaraan == 'DFSK') ? 'selected' : '' }}>
                                         DFSK</option>

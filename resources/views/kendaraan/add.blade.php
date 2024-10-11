@@ -35,6 +35,9 @@
                                     <option value="Mitsubishi"
                                         {{ old('merk_kendaraan') == 'Mitsubishi' ? 'selected' : '' }}>Mitsubishi
                                     </option>
+                                    <option value="Mercedes-Benz"
+                                        {{ old('merk_kendaraan') == 'Mercedes-Benz' ? 'selected' : '' }}>Mercedes-Benz
+                                    </option>
                                     <option value="DFSK" {{ old('merk_kendaraan') == 'DFSK' ? 'selected' : '' }}>DFSK
                                     </option>
                                     <option value="Daihatsu"
