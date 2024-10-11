@@ -36,24 +36,26 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
             ->get();
     }
 
+
     public function map($kendaraan): array
     {
         $data = [];
 
-        // Jika merk kendaraan berubah, tambahkan 2 baris kosong dan judul merk baru
+        // Jika merk kendaraan berubah, tambahkan 2 baris kosong dan judul merk baru di kolom A
         if ($this->currentMerk !== $kendaraan->merk_kendaraan) {
             $this->currentMerk = $kendaraan->merk_kendaraan;
 
-            // Tambahkan baris kosong untuk spacing
-            $this->rowCounter++;
+            // Reset nomor urut untuk setiap grup baru
+            $this->rowCounter = 1;
 
-            // Tambahkan judul merk kendaraan (merge 2 row dan format besar serta bold)
-            $data[] = ['Merk: ' . $this->currentMerk]; // Baris pertama dengan judul merk kendaraan
-            $this->rowCounter++; // Increment row counter
+            // Tambahkan baris kosong untuk spacing
+            $data[] = []; // Baris kosong pertama
+            $data[] = ['Merk: ' . $this->currentMerk]; // Baris kedua dengan judul merk kendaraan di kolom A
         }
 
-        // Data kendaraan normal setelah judul merk
+        // Data kendaraan normal dimulai dari kolom B (termasuk nomor urut di kolom B)
         $data[] = [
+            $this->rowCounter, // Nomor urut dimulai dari 1 untuk setiap grup baru
             $kendaraan->nomor_polisi,
             $kendaraan->nomor_bpkb,
             $kendaraan->merk_kendaraan,
@@ -76,8 +78,9 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
 
     public function headings(): array
     {
-        // Headings untuk kolom data
+        // Tambahkan heading untuk kolom nomor urut
         return [
+            'No.', // Heading untuk nomor urut
             'Plat Nomor',
             'Nomor BPKB',
             'Merk Kendaraan',
@@ -94,6 +97,7 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
         ];
     }
 
+
     public function title(): string
     {
         return $this->jenisKendaraan;
@@ -101,16 +105,17 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
 
     public function styles(Worksheet $sheet)
     {
-        // Gaya untuk heading kolom data
+        // Terapkan style untuk heading mulai dari kolom B
         $styleArray = [
             'font' => [
                 'bold' => true,
                 'size' => 12,
+                'name' => 'Times New Roman', // Menambahkan Times New Roman sebagai font
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'B7DEE8', // Ubah warna fill sesuai kebutuhan
+                    'argb' => 'B7DEE8',
                 ],
             ],
             'borders' => [
@@ -121,39 +126,29 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
             ],
         ];
 
-        // Terapkan style untuk heading
-        $sheet->getStyle('A1:M1')->applyFromArray($styleArray);
+        // Terapkan style untuk heading mulai dari kolom B
+        $sheet->getStyle('A1:N1')->applyFromArray($styleArray);
 
-        // Terapkan border untuk data
-        $rowCount = $sheet->getHighestRow();
-        $sheet->getStyle("A2:M{$rowCount}")->applyFromArray([
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => Border::BORDER_THIN,
-                    'color' => ['argb' => Color::COLOR_BLACK],
-                ],
-            ],
-        ]);
-
-        // Auto-size untuk kolom A sampai M
-        foreach (range('A', 'M') as $column) {
+        // Auto-size untuk kolom B sampai N
+        foreach (range('B', 'N') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
-        // Gaya untuk setiap judul merk kendaraan
+        // Gaya untuk setiap judul merk kendaraan tetap di kolom A
         foreach ($sheet->getRowIterator() as $row) {
             $cellValue = $sheet->getCell('A' . $row->getRowIndex())->getValue();
 
             // Jika cell berisi teks "Merk: ", maka terapkan gaya
             if (strpos($cellValue, 'Merk: ') !== false) {
-                $sheet->mergeCells('A' . $row->getRowIndex() . ':M' . $row->getRowIndex()); // Merge row
+                $sheet->mergeCells('A' . $row->getRowIndex() . ':N' . $row->getRowIndex()); // Merge row A sampai N
                 $sheet->getStyle('A' . $row->getRowIndex())->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 14, // Ukuran lebih besar
+                        'name' => 'Times New Roman', // Font untuk judul merk kendaraan
                     ],
                     'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_LEFT, // Center alignment
+                        'horizontal' => Alignment::HORIZONTAL_LEFT,
                         'vertical' => Alignment::VERTICAL_CENTER,
                     ],
                 ]);
@@ -161,5 +156,36 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
                 $sheet->getRowDimension($row->getRowIndex())->setRowHeight(25);
             }
         }
+
+        // Terapkan border all untuk setiap cell yang memiliki nilai
+        $rowCount = $sheet->getHighestRow();
+
+        for ($row = 2; $row <= $rowCount; $row++) { // Mulai dari baris data pertama
+            for ($col = 'B'; $col <= 'N'; $col++) {
+                $cellValue = $sheet->getCell($col . $row)->getValue();
+                if ($cellValue !== null && $cellValue !== '') {
+                    $sheet->getStyle($col . $row)->applyFromArray([
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => Border::BORDER_THIN,
+                                'color' => ['argb' => Color::COLOR_BLACK],
+                            ],
+                        ],
+                    ]);
+                }
+            }
+        }
+
+        // Terapkan font 'Times New Roman' untuk seluruh data di kolom B hingga N
+        $sheet->getStyle("B2:N{$rowCount}")->applyFromArray([
+            'font' => [
+                'name' => 'Times New Roman', // Font untuk data
+                'size' => 12,
+            ],
+        ]);
+
+        // Bekukan heading
+        $sheet->freezePane('B2'); // Bekukan baris 1
     }
+
 }

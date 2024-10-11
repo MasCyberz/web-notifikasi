@@ -13,6 +13,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
@@ -49,11 +50,9 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 });
             })
             ->get()
-            // Group data by month number (1 for January, 2 for February, etc.)
             ->groupBy(function ($item) {
                 return $item->tanggal_perpanjangan->format('n Y'); // Group by month number and year
             })
-            // Sort the groups by month number
             ->sortBy(function ($group, $key) {
                 [$month, $year] = explode(' ', $key); // Extract month and year
                 return sprintf('%04d-%02d', $year, $month); // Create sortable string by year-month
@@ -64,8 +63,12 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             // Get the name of the month (January, February, etc.)
             $monthName = Carbon::createFromFormat('n Y', $monthYear)->format('F Y');
 
+            // Reset nomor urut for each month
+            $nomorUrut = 1;
+
             // Add a header for the month (empty values for merging cells)
             $exportData->push([
+                'No.' => '', // Kolom nomor untuk header
                 'Plat Nomor' => $monthName,  // This will be displayed as the month header
                 'Perpanjangan 1 Tahun' => '',
                 'Biaya 1 Tahun' => '',
@@ -75,7 +78,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 
             // Now handle the actual data rows for this month
             $groupedData = $groupedData->groupBy('id_kendaraan');
-            $groupedData->each(function ($vehicleData) use (&$exportData) {
+            $groupedData->each(function ($vehicleData) use (&$exportData, &$nomorUrut) {
                 // Initialize columns for 1 and 5 year renewals
                 $perpanjangan1Tahun = '';
                 $perpanjangan5Tahun = '';
@@ -87,15 +90,16 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 foreach ($vehicleData as $stnk) {
                     if ($stnk->jenis_perpanjangan == '1 Tahun') {
                         $perpanjangan1Tahun = $stnk->tanggal_perpanjangan->format('d F Y');
-                        $biaya1Tahun = "'". $stnk->biaya;
+                        $biaya1Tahun = $stnk->biaya;
                     } elseif ($stnk->jenis_perpanjangan == '5 Tahun') {
                         $perpanjangan5Tahun = $stnk->tanggal_perpanjangan->format('d F Y');
-                        $biaya5Tahun = "'". $stnk->biaya;
+                        $biaya5Tahun = $stnk->biaya;
                     }
                 }
 
-                // Add the row to the export data collection
+                // Add the row to the export data collection with nomor urut
                 $exportData->push([
+                    'No.' => $nomorUrut++,  // Tambahkan nomor urut yang di-reset per grup bulan
                     'Plat Nomor' => $platNomor,
                     'Perpanjangan 1 Tahun' => $perpanjangan1Tahun,
                     'Biaya 1 Tahun' => $biaya1Tahun,
@@ -110,9 +114,11 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 
 
 
+
     public function headings(): array
     {
         return [
+            'No.', // Kolom untuk nomor urut
             'Plat Nomor',
             'Perpanjangan 1 Tahun',
             'Biaya 1 Tahun',
@@ -120,6 +126,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             'Biaya 5 Tahun',
         ];
     }
+
 
     public function title(): string
     {
@@ -133,6 +140,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             'font' => [
                 'bold' => true,
                 'size' => 12,
+                'name' => 'Times New Roman',
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
@@ -149,11 +157,18 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         ];
 
         // Terapkan style untuk heading
-        $sheet->getStyle('A1:E1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-E)
+        $sheet->getStyle('A1:F1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-F)
+
+        // Bekukan baris pertama agar sticky
+        $sheet->freezePane('B2'); // Membekukan baris pertama
 
         // Terapkan border untuk data
         $rowCount = $sheet->getHighestRow();
-        $sheet->getStyle("A2:E{$rowCount}")->applyFromArray([
+        $sheet->getStyle("A2:F{$rowCount}")->applyFromArray([
+            'font' => [ // Menambahkan gaya font untuk seluruh data
+                'name' => 'Times New Roman', // Font untuk data
+                'size' => 12, // Ukuran font untuk data
+            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -162,24 +177,37 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ]);
 
-        // Auto-size untuk kolom A sampai E
-        foreach (range('A', 'E') as $column) {
+
+
+        // Auto-size untuk kolom B sampai F
+        foreach (range('B', 'F') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
+
+        // Format currency untuk kolom Biaya 1 Tahun (kolom D) dan Biaya 5 Tahun (kolom F)
+        // Format currency Indonesia untuk kolom Biaya 1 Tahun (kolom D) dan Biaya 5 Tahun (kolom F)
+        $sheet->getStyle('D2:D' . $rowCount)
+            ->getNumberFormat()
+            ->setFormatCode('"Rp"#,##0_-');
+
+        $sheet->getStyle('F2:F' . $rowCount)
+            ->getNumberFormat()
+            ->setFormatCode('"Rp"#,##0_-');
 
         // Gaya untuk setiap judul pemisah bulan
         foreach ($sheet->getRowIterator() as $row) {
             $rowIndex = $row->getRowIndex();
-            $cellValue = $sheet->getCell('A' . $rowIndex)->getValue();
+            $cellValue = $sheet->getCell('B' . $rowIndex)->getValue(); // Ubah ke kolom B untuk judul bulan
 
-            // Jika cell A berisi nama bulan (sebagai pemisah), terapkan gaya khusus
+            // Jika cell B berisi nama bulan (sebagai pemisah), terapkan gaya khusus
             if ($this->isMonthSeparator($cellValue)) {
-                // Merge seluruh kolom A sampai E untuk baris pemisah bulan
-                $sheet->mergeCells('A' . $rowIndex . ':E' . $rowIndex);
-                $sheet->getStyle('A' . $rowIndex)->applyFromArray([
+                // Merge seluruh kolom B sampai F untuk baris pemisah bulan
+                $sheet->mergeCells('B' . $rowIndex . ':F' . $rowIndex);
+                $sheet->getStyle('B' . $rowIndex)->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 14, // Ukuran lebih besar untuk pemisah bulan
+                        'name' => 'Times New Roman',
                     ],
                     'alignment' => [
                         'horizontal' => Alignment::HORIZONTAL_CENTER, // Center alignment
@@ -191,6 +219,7 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             }
         }
     }
+
 
     /**
      * Fungsi untuk mendeteksi apakah nilai di cell adalah nama bulan sebagai pemisah

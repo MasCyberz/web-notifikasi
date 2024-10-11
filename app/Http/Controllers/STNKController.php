@@ -168,7 +168,7 @@ class STNKController extends Controller
     {
         $request->validate([
             'nomor_polisi' => 'required',
-            'biaya' => 'required',
+            'biaya' => 'required|numeric',
             'tgl_perpanjangan' => 'required|date',
             'jenis_perpanjangan' => 'required'
         ]);
@@ -218,7 +218,7 @@ class STNKController extends Controller
         // Validasi input
         $request->validate([
             'tgl_perpanjangan_1_tahun' => 'nullable|date',
-            'biaya_perpanjangan_1_tahun' => 'nullable',
+            'biaya_perpanjangan_1_tahun' => 'nullable|numeric',
             'tgl_perpanjangan_5_tahun' => 'nullable|date',
             'biaya_perpanjangan_5_tahun' => 'nullable',
         ]);
