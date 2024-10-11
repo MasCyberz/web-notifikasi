@@ -79,16 +79,16 @@
                                     <option value="Mobil Penumpang"
                                         {{ $kendaraan->jenis_kendaraan == 'Mobil Penumpang' ? 'selected' : '' }}>MOBIL
                                         PENUMPANG</option>
-                                    <option value="MOBIL BARANG"
-                                        {{ $kendaraan->jenis_kendaraan == 'MOBIL BARANG' ? 'selected' : '' }}>MOBIL
+                                    <option value="Mobil Barang"
+                                        {{ $kendaraan->jenis_kendaraan == 'Mobil Barang' ? 'selected' : '' }}>MOBIL
                                         BARANG</option>
-                                    <option value="SEPEDA MOTOR"
-                                        {{ $kendaraan->jenis_kendaraan == 'SEPEDA MOTOR' ? 'selected' : '' }}>SEPEDA
+                                    <option value="Sepeda Motor"
+                                        {{ $kendaraan->jenis_kendaraan == 'Sepeda Motor' ? 'selected' : '' }}>SEPEDA
                                         MOTOR</option>
-                                    <option value="BUS"
-                                        {{ $kendaraan->jenis_kendaraan == 'BUS' ? 'selected' : '' }}>BUS</option>
-                                    <option value="KENDARAAN KHUSUS"
-                                        {{ $kendaraan->jenis_kendaraan == 'KENDARAAN KHUSUS' ? 'selected' : '' }}>
+                                    <option value="Bus"
+                                        {{ $kendaraan->jenis_kendaraan == 'Bus' ? 'selected' : '' }}>BUS</option>
+                                    <option value="Kendaraan Khusus"
+                                        {{ $kendaraan->jenis_kendaraan == 'Kendaraan Khusus' ? 'selected' : '' }}>
                                         KENDARAAN KHUSUS</option>
                                 </select>
                             </div>
