@@ -80,10 +80,14 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         $finalExportData = collect(); // Koleksi akhir dengan spasi
         $firstHeaderAdded = false; // Menandakan apakah header bulan pertama sudah ditambahkan
 
+        $rowNumber = 1;
         $sortedExportData->each(function ($data) use (&$previousMonth, &$finalExportData, &$firstHeaderAdded) {
             $currentMonth = Carbon::parse($data['Tanggal Perpanjangan']);
             $monthYear = $currentMonth->format('m Y'); // Ambil format bulan dan tahun
             $monthName = $currentMonth->format('F Y'); // Ambil nama bulan
+
+            // Inisialisasi nomor urut di luar callback
+            static $rowNumber = 1;
 
             // Tambahkan header bulan pertama jika belum ditambahkan
             if (!$firstHeaderAdded) {
@@ -109,13 +113,17 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                     'Keterangan' => '',
                     'Periode' => '',
                 ]);
+
+                // Reset nomor urut untuk grup baru
+                $rowNumber = 1;
             }
 
             // Tambahkan baris saat ini ke koleksi akhir
             $finalExportData->push([
+                'Nomor' => $rowNumber++, // Nomor urut
                 'Plat Nomor' => $data['Plat Nomor'],
                 'Nomor Uji KIR' => $data['Nomor Uji KIR'],
-                'Tanggal Perpanjangan' => Carbon::parse($data['Tanggal Perpanjangan'])->format('d-m-Y'),
+                'Tanggal Perpanjangan' => Carbon::parse($data['Tanggal Perpanjangan'])->format('d F Y'),
                 'Status' => $data['Status'],
                 'Keterangan' => $data['Keterangan'],
                 'Periode' => $data['Periode'],
@@ -125,12 +133,14 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             $previousMonth = $monthYear;
         });
 
+
         return $finalExportData->values(); // Reindex dan kembalikan data export yang terurut dengan spasi
     }
 
     public function headings(): array
     {
         return [
+            'Nomor',
             'Plat Nomor',
             'Nomor Uji KIR',
             'Tanggal Perpanjangan',
@@ -147,16 +157,17 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 
     public function styles(Worksheet $sheet)
     {
-        // Gaya untuk heading
+        // Gaya untuk heading kolom data
         $styleArray = [
             'font' => [
                 'bold' => true,
                 'size' => 12,
+                'name' => 'Times New Roman',
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => [
-                    'argb' => 'B7DEE8',
+                    'argb' => 'B7DEE8', // Ubah warna fill sesuai kebutuhan
                 ],
             ],
             'borders' => [
@@ -167,11 +178,19 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ];
 
-        $sheet->getStyle('A1:F1')->applyFromArray($styleArray);
+        // Terapkan style untuk heading
+        $sheet->getStyle('A1:G1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-F)
 
-        // Menambahkan border untuk data
+        // Bekukan baris pertama agar sticky
+        $sheet->freezePane('B2'); // Membekukan baris pertama
+
+        // Terapkan border dan gaya font untuk data
         $rowCount = $sheet->getHighestRow();
-        $sheet->getStyle("A2:F{$rowCount}")->applyFromArray([
+        $sheet->getStyle("A2:G{$rowCount}")->applyFromArray([
+            'font' => [ // Menambahkan gaya font untuk seluruh data
+                'name' => 'Times New Roman', // Font untuk data
+                'size' => 12, // Ukuran font untuk data
+            ],
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => Border::BORDER_THIN,
@@ -180,24 +199,25 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             ],
         ]);
 
-        // Mengatur ukuran otomatis untuk kolom
-        foreach (range('A', 'F') as $column) {
+        // Auto-size untuk kolom A sampai F
+        foreach (range('A', 'G') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
         // Gaya untuk setiap judul pemisah bulan
         foreach ($sheet->getRowIterator() as $row) {
             $rowIndex = $row->getRowIndex();
-            $cellValue = $sheet->getCell('A' . $rowIndex)->getValue();
+            $cellValue = $sheet->getCell('A' . $rowIndex)->getValue(); // Ubah ke kolom A untuk judul bulan
 
             // Jika cell A berisi nama bulan (sebagai pemisah), terapkan gaya khusus
             if ($this->isMonthSeparator($cellValue)) {
                 // Merge seluruh kolom A sampai F untuk baris pemisah bulan
-                $sheet->mergeCells('A' . $rowIndex . ':F' . $rowIndex);
+                $sheet->mergeCells('A' . $rowIndex . ':G' . $rowIndex);
                 $sheet->getStyle('A' . $rowIndex)->applyFromArray([
                     'font' => [
                         'bold' => true,
                         'size' => 14, // Ukuran lebih besar untuk pemisah bulan
+                        'name' => 'Times New Roman',
                     ],
                     'alignment' => [
                         'horizontal' => Alignment::HORIZONTAL_CENTER, // Center alignment
@@ -209,6 +229,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             }
         }
     }
+
 
     /**
      * Fungsi untuk mendeteksi apakah nilai di cell adalah nama bulan sebagai pemisah
