@@ -51,6 +51,9 @@
                                             <label class="form-label">No Uji KIR</label>
                                             <div class="form-control">{{ $notifikasi->nomor_uji_kendaraan }}</div>
                                         </div>
+                                        <div class="">
+                                            <a href="https://ekir.jakarta.go.id/" target="_blank" class="text-decoration-none">Booking Uji KIR </a>
+                                        </div>
                                     </div>
                                 @endif
                                 @if ($KIRHistory->alasan_tidak_lulus ?? null)

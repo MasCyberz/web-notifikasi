@@ -32,7 +32,7 @@
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Biaya Pajak 1 Tahun</label>
-                                            <div class="form-control">{{ number_format($perpanjangan_satu_tahun->biaya, 0, ',', '.') }}</div>
+                                            <div class="form-control">{{ is_numeric($perpanjangan_satu_tahun->biaya) ? number_format($perpanjangan_satu_tahun->biaya, 0, ',', '.') : '-' }}</div>
                                         </div>
                                     </div>
                                 @else
@@ -63,7 +63,7 @@
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label"> Biaya Pajak 5 Tahun</label>
-                                            <div class="form-control">{{ number_format($perpanjangan_lima_tahun->biaya, 0, ',', '.') }}</div>
+                                            <div class="form-control">{{ is_numeric($perpanjangan_lima_tahun->biaya) ? number_format($perpanjangan_lima_tahun->biaya, 0, ',', '.') : '-'}}</div>
                                         </div>
                                     </div>
                                 @else

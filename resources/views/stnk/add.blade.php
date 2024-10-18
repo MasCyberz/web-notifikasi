@@ -34,7 +34,7 @@
                         placeholder="3.000.000" class="" />
                     {{-- Tanggal Perpanjangan --}}
                     <x-Input label="Tgl. Perpanjangan STNK" name="tgl_perpanjangan" id="tgl_perpanjangan" type="date"
-                        class="flatpickr" placeholder="01-01-2024" />
+                        class="" placeholder="DD-MM-YYYY" />
                     {{-- <div class="mb-3">
                         <label class="form-label">Plat Nomor</label>
                         <input type="text" name="plat_nomor" class="form-control" data-mask="** 0000 ***"
@@ -66,14 +66,6 @@
                     onItemRemove(value) {
                         console.log('Item removed:', value);
                     }
-                });
-            });
-
-            document.addEventListener('DOMContentLoaded', function() {
-                flatpickr('.flatpickr', {
-                    dateFormat: "Y-m-d", // Sesuaikan format tanggal
-                    minDate: "today",
-                    dateFormat: "d-m-Y",
                 });
             });
 

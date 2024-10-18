@@ -159,8 +159,9 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         // Terapkan style untuk heading
         $sheet->getStyle('A1:F1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-F)
 
+
         // Bekukan baris pertama agar sticky
-        $sheet->freezePane('B2'); // Membekukan baris pertama
+        $sheet->freezePane('A2'); // Membekukan baris pertama
 
         // Terapkan border untuk data
         $rowCount = $sheet->getHighestRow();
@@ -176,6 +177,11 @@ class STNKExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 ],
             ],
         ]);
+        
+        // Alignment tengah untuk kolom nomor urut (kolom A)
+        $sheet->getStyle('A2:A' . $rowCount)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2:A' . $rowCount)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+
 
 
 

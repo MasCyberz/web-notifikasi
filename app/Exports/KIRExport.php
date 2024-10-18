@@ -182,7 +182,7 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         $sheet->getStyle('A1:G1')->applyFromArray($styleArray); // Sesuaikan kolom yang diperlukan (A-F)
 
         // Bekukan baris pertama agar sticky
-        $sheet->freezePane('B2'); // Membekukan baris pertama
+        $sheet->freezePane('A2'); // Membekukan baris pertama
 
         // Terapkan border dan gaya font untuk data
         $rowCount = $sheet->getHighestRow();
@@ -198,6 +198,10 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 ],
             ],
         ]);
+
+        // Alignment tengah untuk kolom nomor urut (kolom A)
+        $sheet->getStyle('A2:A' . $rowCount)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A2:A' . $rowCount)->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
 
         // Auto-size untuk kolom A sampai F
         foreach (range('A', 'G') as $column) {

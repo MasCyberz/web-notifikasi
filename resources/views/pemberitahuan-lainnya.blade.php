@@ -9,6 +9,17 @@
                         return $item->tanggal_perpanjangan->isToday();
                     });
                 @endphp
+                @push('styles')
+                <style>
+                    .back-to-top {
+                        position: fixed;
+                        bottom: 56px;
+                        right: 56px;
+                        border-radius: 100%;
+                        z-index: 1000;
+                    }
+                </style>
+            @endpush
 
                 @if ($hariIni->isNotEmpty())
                     <div class="col-md-12 mb-3">
@@ -180,6 +191,7 @@
                         </div>
                     </div>
                 @endif
+                
 
 
                 {{-- <div class="col-md-12 mb-3">
@@ -209,4 +221,29 @@
             </div>
         </div>
     </div>
+    <a href="" class="btn btn-primary btn-sm back-to-top" style="display: none;">
+        <i class="ti ti-arrow-up fs-2"></i>
+    </a>
+
+    @push('scripts')
+        <script>
+            // Script untuk menampilkan atau menyembunyikan tombol ketika scroll
+            window.onscroll = function() {
+                const backToTopButton = document.querySelector('.back-to-top');
+                if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                    backToTopButton.style.display = 'block';
+                } else {
+                    backToTopButton.style.display = 'none';
+                }
+            };
+
+            // Scroll ke atas saat tombol diklik
+            document.querySelector('.back-to-top').onclick = function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            };
+        </script>
+    @endpush
 </x-app-layout>

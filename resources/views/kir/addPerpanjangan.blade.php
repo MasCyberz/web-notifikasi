@@ -16,11 +16,14 @@
                         </div>
                     @endif
                     <div class="row row-cards">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-sm-12 col-md-12">
                             <div class="mb-3">
                                 <label class="form-label">KIR Kendaraan</label>
                                 <div>
-                                    <select class="form-select w-100 w-md-50" name="kirs_id">
+                                    <select class="form-select w-100 w-md-50 tomselected" id="select-nomor-polisi"
+                                        name="kirs_id">
+                                        <option value="" disabled selected>Pilih Kendaraan...</option>
+                                        <!-- Placeholder -->
                                         @foreach ($KIRkendaraan as $kir)
                                             <option value="{{ $kir->id }}">
                                                 {{ $kir->kendaraan->nomor_polisi }} | {{ $kir->kendaraan->tipe }} |
@@ -33,9 +36,9 @@
                         </div>
                         <div class="col-12 col-sm-12 col-md-6">
                             <x-Input label="Tanggal Perpanjangan KIR" name="tanggal_expired_kir" type="date"
-                                class="" :value="old('tanggal_expired_kir')" />
+                                class="" :value="old('tanggal_expired_kir')" placeholder="DD-MM-YYYY" />
                         </div>
-                        <div class="col-12 col-md-6 d-sm-none d-md-block"></div>
+                        {{-- <div class="col-12 col-md-6 d-sm-none d-md-block"></div> --}}
                         <div class="col-12 col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Periode</label>
@@ -61,5 +64,28 @@
     </div>
 
     @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                new TomSelect('#select-nomor-polisi', {
+                    searchField: 'text',
+                    create: false,
+                    placeholder: 'Pilih Plat Nomor...',
+                    onItemAdd(value) {
+                        console.log('Item added:', value);
+                    },
+                    onItemRemove(value) {
+                        console.log('Item removed:', value);
+                    }
+                });
+            });
+
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     flatpickr('.flatpickr', {
+            //         dateFormat: "Y-m-d", // Sesuaikan format tanggal
+            //         minDate: "today",
+            //         dateFormat: "d-m-Y",
+            //     });
+            // });
+        </script>
     @endpush
 </x-app-layout>

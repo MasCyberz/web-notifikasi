@@ -105,12 +105,11 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
 
     public function styles(Worksheet $sheet)
     {
-        // Terapkan style untuk heading mulai dari kolom B
         $styleArray = [
             'font' => [
                 'bold' => true,
                 'size' => 12,
-                'name' => 'Times New Roman', // Menambahkan Times New Roman sebagai font
+                'name' => 'Times New Roman',
             ],
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
@@ -126,41 +125,53 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
             ],
         ];
 
-        // Terapkan style untuk heading mulai dari kolom B
         $sheet->getStyle('A1:N1')->applyFromArray($styleArray);
 
-        // Auto-size untuk kolom B sampai N
         foreach (range('B', 'N') as $column) {
             $sheet->getColumnDimension($column)->setAutoSize(true);
         }
 
-        // Gaya untuk setiap judul merk kendaraan tetap di kolom A
+        $rowCount = $sheet->getHighestRow();
+
+        // Pengaturan untuk kolom A (Nomor Urut) dilakukan lebih awal
+        $sheet->getStyle('A2:A' . $rowCount)->applyFromArray([
+            'alignment' => [
+                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                'vertical' => Alignment::VERTICAL_CENTER,
+            ],
+            'font' => [
+                'name' => 'Times New Roman',
+                'size' => 12,
+            ],
+        ]);
+
+        // Menerapkan pengaturan untuk header merk
         foreach ($sheet->getRowIterator() as $row) {
             $cellValue = $sheet->getCell('A' . $row->getRowIndex())->getValue();
 
-            // Jika cell berisi teks "Merk: ", maka terapkan gaya
             if (strpos($cellValue, 'Merk: ') !== false) {
-                $sheet->mergeCells('A' . $row->getRowIndex() . ':N' . $row->getRowIndex()); // Merge row A sampai N
+                // Merge sel untuk header Merk dari A sampai N
+                $sheet->mergeCells('A' . $row->getRowIndex() . ':N' . $row->getRowIndex());
+
+                // Atur alignment dan style untuk header merk setelah merge
                 $sheet->getStyle('A' . $row->getRowIndex())->applyFromArray([
                     'font' => [
                         'bold' => true,
-                        'size' => 14, // Ukuran lebih besar
-                        'name' => 'Times New Roman', // Font untuk judul merk kendaraan
+                        'size' => 14,
+                        'name' => 'Times New Roman',
                     ],
                     'alignment' => [
-                        'horizontal' => Alignment::HORIZONTAL_LEFT,
+                        'horizontal' => Alignment::HORIZONTAL_LEFT, // Rata kiri untuk header merk
                         'vertical' => Alignment::VERTICAL_CENTER,
                     ],
                 ]);
-                // Tambah tinggi baris untuk judul merk
+
                 $sheet->getRowDimension($row->getRowIndex())->setRowHeight(25);
             }
         }
 
-        // Terapkan border all untuk setiap cell yang memiliki nilai
-        $rowCount = $sheet->getHighestRow();
-
-        for ($row = 2; $row <= $rowCount; $row++) { // Mulai dari baris data pertama
+        // Memberikan border tipis untuk data kendaraan
+        for ($row = 2; $row <= $rowCount; $row++) {
             for ($col = 'B'; $col <= 'N'; $col++) {
                 $cellValue = $sheet->getCell($col . $row)->getValue();
                 if ($cellValue !== null && $cellValue !== '') {
@@ -176,16 +187,15 @@ class KendaraanPerJenisExport implements FromCollection, WithHeadings, WithMappi
             }
         }
 
-        // Terapkan font 'Times New Roman' untuk seluruh data di kolom B hingga N
+        // Menerapkan pengaturan font dan alignment untuk data kendaraan selain kolom A
         $sheet->getStyle("B2:N{$rowCount}")->applyFromArray([
             'font' => [
-                'name' => 'Times New Roman', // Font untuk data
+                'name' => 'Times New Roman',
                 'size' => 12,
             ],
         ]);
 
-        // Bekukan heading
-        $sheet->freezePane('B2'); // Bekukan baris 1
+        // Membekukan baris kedua (supaya judul kolom tetap terlihat)
+        $sheet->freezePane('A2');
     }
-
 }

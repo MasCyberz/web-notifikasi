@@ -166,7 +166,7 @@ class KIRController extends Controller
         // Pengecekan manual untuk nomor_uji_kendaraan pada bulan yang sama
         $existingKir = KIR::where('id', $request->kirs_id)
             ->whereHas('kirHistories', function ($query) use ($request) {
-                $query->whereMonth('tanggal_expired_kir', date('m', strtotime($request->tanggal_expired_kir)))
+                $query->whereMonth('tanggal_expired_kir', date('m', timestamp: strtotime($request->tanggal_expired_kir)))
                     ->whereYear('tanggal_expired_kir', date('Y', strtotime($request->tanggal_expired_kir)));
             })->exists();
 
