@@ -14,7 +14,11 @@
                                     <div class="col-12">
                                         <div class="mb-3">
                                             <div
-                                                class="form-control text-center fw-bold text-uppercase fs-2 {{ $KIRHistory->status === 'aktif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                                                class="form-control text-center fw-bold text-uppercase fs-2  {{ $KIRHistory->status === 'aktif'
+                                                    ? 'bg-success text-white'
+                                                    : ($KIRHistory->status === 'pending'
+                                                        ? 'bg-warning text-white'
+                                                        : 'bg-danger text-white') }}">
                                                 {{ $KIRHistory->status }}
                                             </div>
                                         </div>
@@ -25,16 +29,19 @@
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Tanggal Perpanjangan</label>
-                                            <div class="form-control">{{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan)->format('d F Y') }}</div>
+                                            <div class="form-control">
+                                                {{ \Carbon\Carbon::parse($notifikasi->tanggal_perpanjangan)->format('d F Y') }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="mb-3">
                                             <label class="form-label">Biaya</label>
-                                            <div class="form-control">{{ $notifikasi->biaya }}</div>
+                                            <div class="form-control">{{  is_numeric($notifikasi->biaya) ? 'Rp'.number_format($notifikasi->biaya, 0, ',', '.') : '-' }}</div>
                                         </div>
                                         <div class="">
-                                            <a href="https://samsat-pkb2.jakarta.go.id/" target="_blank" class="text-decoration-none">Cek Biaya Perpanjangan</a>
+                                            <a href="https://samsat-pkb2.jakarta.go.id/" target="_blank"
+                                                class="text-decoration-none">Cek Biaya Perpanjangan</a>
                                         </div>
                                     </div>
                                 @elseif ($tipe === 'KIR')
@@ -52,7 +59,8 @@
                                             <div class="form-control">{{ $notifikasi->nomor_uji_kendaraan }}</div>
                                         </div>
                                         <div class="">
-                                            <a href="https://ekir.jakarta.go.id/" target="_blank" class="text-decoration-none">Booking Uji KIR </a>
+                                            <a href="https://ekir.jakarta.go.id/" target="_blank"
+                                                class="text-decoration-none">Booking Uji KIR </a>
                                         </div>
                                     </div>
                                 @endif

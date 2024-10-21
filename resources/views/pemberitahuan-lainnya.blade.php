@@ -32,7 +32,7 @@
                                     <h5 class="card-title">{{ $item->judul }}</h5>
                                     <p class="card-text">
                                         Plat Nomor: <span
-                                            class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span>
+                                            class="fw-bold">{{ $item->ToKendaraan->nomor_polisi ?? 'N/A' }}</span>
                                         <br>
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>
@@ -93,7 +93,7 @@
                                     <h5 class="card-title">{{ $item->judul }}</h5>
                                     <p class="card-text">
                                         Plat Nomor: <span
-                                            class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span><br>
+                                            class="fw-bold">{{ $item->ToKendaraan->nomor_polisi ?? 'N/A' }}</span><br>
                                         Tenggat Waktu: {{ $item->message }}<br>
                                         Tanggal Perpanjangan: {{ $item->tanggal_perpanjangan->format('d M Y') }}<br>
                                         <!-- Tampilkan jenis perpanjangan jika STNK -->
@@ -151,7 +151,7 @@
                                     <h5 class="card-title">{{ $item->judul }}</h5>
                                     <p class="card-text">
                                         Plat Nomor: <span
-                                            class="fw-bold">{{ $item->relasiSTNKtoKendaraan->nomor_polisi ?? 'N/A' }}</span>
+                                            class="fw-bold">{{ $item->ToKendaraan->nomor_polisi ?? 'N/A' }}</span>
                                         <br>
                                         Tenggat Waktu: {{ $item->message }}
                                         <br>

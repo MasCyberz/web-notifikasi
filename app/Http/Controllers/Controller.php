@@ -21,8 +21,8 @@ class Controller extends BaseController
 
         // Total STNK
         $totalStnk = STNK::whereYear('tanggal_perpanjangan', Carbon::now()->year)
-        ->distinct('id_kendaraan') // Menghitung hanya unique id_kendaraan
-        ->count('id_kendaraan');;
+            ->distinct('id_kendaraan') // Menghitung hanya unique id_kendaraan
+            ->count('id_kendaraan');;
 
         $bulanIni = Carbon::now()->format('m');
         $totalStnkBulanIni = Stnk::whereYear('tanggal_perpanjangan', Carbon::now()->year)
@@ -32,8 +32,8 @@ class Controller extends BaseController
 
         // Total KIR berdasarkan tahun
         $totalKIR = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)
-        ->distinct('kirs_id') // Menghitung hanya unique id_kendaraan
-        ->count('kirs_id');
+            ->distinct('kirs_id') // Menghitung hanya unique id_kendaraan
+            ->count('kirs_id');
 
         // Total KIR berdasarkan bulan dan tahun
         $totalKIRBulanIni = KIRHistories::whereYear('tanggal_expired_kir', Carbon::now()->year)
@@ -222,7 +222,7 @@ class Controller extends BaseController
                         'judul' => ($daysToExpire == 0) ? 'Hari ini KIR' : "H$daysToExpire KIR",
                         'message' => $daysToExpire == 0 ? 'Hari ini' : abs($daysToExpire) . ' hari.',
                         'tanggal_perpanjangan' => Carbon::parse($history->tanggal_expired_kir),
-                        'relasiSTNKtoKendaraan' => $kir->kendaraan,
+                        'ToKendaraan' => $kir->kendaraan,
                         'tipe_notifikasi' => 'KIR',
                         'kirHistories' => $kir->kirHistories,
                     ]);
@@ -254,7 +254,7 @@ class Controller extends BaseController
                     'judul' => ($daysToExpire == 0) ? 'Hari ini STNK' : "H$daysToExpire STNK",
                     'message' => $daysToExpire == 0 ? 'Hari ini' : abs($daysToExpire) . ' hari.',
                     'tanggal_perpanjangan' => $stnk->tanggal_perpanjangan,
-                    'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+                    'ToKendaraan' => $stnk->relasiSTNKtoKendaraan,
                     'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
                     'tipe_notifikasi' => 'STNK',
                 ]);
@@ -290,9 +290,9 @@ class Controller extends BaseController
             return $stnk;
         });
 
-        $notifikasi = collect();
+        $notifikasiAktif = collect();
+        $notifikasiLebih365Hari = collect();
 
-        // Gabungkan data KIR
         foreach ($kirData as $kir) {
             foreach ($kir->kirHistories as $history) {
                 // Cek apakah tanggal expired sudah lewat dan belum diperpanjang
@@ -300,17 +300,38 @@ class Controller extends BaseController
                 if ($history->tanggal_expired_kir < $today && $history->tanggal_expired_kir == $latestHistory->tanggal_expired_kir) {
                     // Hitung selisih hari dari tanggal expired KIR ke hari ini
                     $daysOverdue = abs($today->diffInDays(Carbon::parse($history->tanggal_expired_kir), false));
-
-                    // Tampilkan notifikasi jika KIR belum diperpanjang dan sudah melewati tenggat
-                    $notifikasi->push((object) [
-                        'id' => $history->id,
-                        'warna' => 'danger', // Warna merah untuk notifikasi overdue
-                        'judul' => 'KIR Melewati Tenggat',
-                        'message' => "KIR sudah lewat {$daysOverdue} hari.",
-                        'tanggal_expired_kir' => Carbon::parse($history->tanggal_expired_kir),
-                        'relasiSTNKtoKendaraan' => $kir->kendaraan,
-                        'tipe_notifikasi' => 'KIR',
-                    ]);
+        
+                    // Cek status KIR
+                    if ($history->status === 'pending') {
+                        // Tampilkan notifikasi jika KIR dalam status pending
+                        $notifikasi = (object) [
+                            'id' => $history->id,
+                            'warna' => 'warning', // Warna kuning untuk status pending
+                            'judul' => 'KIR Pending',
+                            'message' => "Alasan Pending: {$history->alasan_tidak_lulus}", // Gantilah dengan atribut yang sesuai
+                            'tanggal_expired_kir' => Carbon::parse($history->tanggal_expired_kir),
+                            'toKendaraan' => $kir->kendaraan,
+                            'tipe_notifikasi' => 'KIR',
+                        ];
+                    } else {
+                        // Tampilkan notifikasi jika KIR belum diperpanjang dan sudah melewati tenggat
+                        $notifikasi = (object) [
+                            'id' => $history->id,
+                            'warna' => 'danger', // Warna merah untuk notifikasi overdue
+                            'judul' => 'KIR Melewati Tenggat',
+                            'message' => "KIR sudah lewat {$daysOverdue} hari.",
+                            'tanggal_expired_kir' => Carbon::parse($history->tanggal_expired_kir),
+                            'toKendaraan' => $kir->kendaraan,
+                            'tipe_notifikasi' => 'KIR',
+                        ];
+                    }
+        
+                    // Cek apakah sudah lebih dari 365 hari
+                    if ($daysOverdue > 365) {
+                        $notifikasiLebih365Hari->push($notifikasi);
+                    } else {
+                        $notifikasiAktif->push($notifikasi);
+                    }
                 }
             }
         }
@@ -328,27 +349,38 @@ class Controller extends BaseController
                 $daysOverdue = abs($today->diffInDays(Carbon::parse($stnk->tanggal_perpanjangan), false));
 
                 // Tampilkan notifikasi jika STNK belum diperpanjang dan sudah melewati tenggat
-                $notifikasi->push((object) [
+                $notifikasi = (object) [
                     'id' => $stnk->id,
                     'warna' => 'danger', // Warna merah untuk notifikasi overdue
                     'judul' => 'STNK Melewati Tenggat',
                     'message' => "STNK sudah lewat {$daysOverdue} hari.",
                     'tanggal_perpanjangan' => Carbon::parse($stnk->tanggal_perpanjangan),
-                    'relasiSTNKtoKendaraan' => $stnk->relasiSTNKtoKendaraan,
+                    'toKendaraan' => $stnk->relasiSTNKtoKendaraan,
                     'jenis_perpanjangan' => $stnk->jenis_perpanjangan,
                     'tipe_notifikasi' => 'STNK',
-                ]);
+                ];
+
+                // Cek apakah sudah lebih dari 365 hari
+                if ($daysOverdue > 365) {
+                    $notifikasiLebih365Hari->push($notifikasi);
+                } else {
+                    $notifikasiAktif->push($notifikasi);
+                }
             }
         }
 
-        // Urutkan berdasarkan tanggal expired/perpanjangan yang paling lama
-        $notifikasi = $notifikasi->sortBy(function ($item) {
+        // Gabungkan dan urutkan notifikasi aktif berdasarkan tanggal expired/perpanjangan yang paling lama
+        $notifikasiAktif = $notifikasiAktif->sortBy(function ($item) {
             return $item->tanggal_expired_kir ?? $item->tanggal_perpanjangan;
         });
 
-        // dd($notifikasi);
+        // Urutkan notifikasi lebih dari 365 hari
+        $notifikasiLebih365Hari = $notifikasiLebih365Hari->sortBy(function ($item) {
+            return $item->tanggal_expired_kir ?? $item->tanggal_perpanjangan;
+        });
 
-        return view('belum-perpanjang', compact('notifikasi'));
+        // Menggabungkan hasil akhir untuk dikirim ke view
+        return view('belum-perpanjang', compact('notifikasiAktif', 'notifikasiLebih365Hari'));
     }
 
 
