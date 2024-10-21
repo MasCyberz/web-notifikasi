@@ -1,4 +1,4 @@
-<p align="center"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdpJMs2GnnmZrd9cWwSKfs3sNoyknsrV1iULUl8cgBYEsq0jo7tyCgOJ4L8QLJULJ0AMrg22QQ3SXFRqmFDC1qlhiMIzBsly04IYcfTXa4ocXO2Yl_9qEFouSifk0tBppP1ee19L-4CQw/s1600/Logo+SMKN+12+JAKARTA.png" width="400" alt="Logo Sekolah"></p>
+<p align="center"><a href="https://www.instagram.com/smkn12_jkt/" target="_blank"><img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhdpJMs2GnnmZrd9cWwSKfs3sNoyknsrV1iULUl8cgBYEsq0jo7tyCgOJ4L8QLJULJ0AMrg22QQ3SXFRqmFDC1qlhiMIzBsly04IYcfTXa4ocXO2Yl_9qEFouSifk0tBppP1ee19L-4CQw/s1600/Logo+SMKN+12+JAKARTA.png" width="250" alt="Logo Sekolah"></a></p>
 
 ## Tentang Proyek Ini
 
