@@ -31,6 +31,8 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
     public function collection()
     {
         $exportData = collect(); // Collection to store all data for export
+        $today = Carbon::today(); // Tanggal hari ini
+        $rowNumber = 1; // Inisialisasi nomor urut di sini
 
         KIR::with('kendaraan', 'kirHistories')
             ->when($this->year, function ($query) {
@@ -51,22 +53,33 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                 });
             })
             ->get()
-            ->each(function ($kir) use (&$exportData) {
+            ->each(function ($kir) use (&$exportData, $today, &$rowNumber) {
                 $platNomor = $kir->kendaraan->nomor_polisi ?? ''; // Ambil plat nomor kendaraan
+                $latestHistory = $kir->kirHistories->sortByDesc('tanggal_expired_kir')->first(); // Riwayat KIR terbaru
 
                 foreach ($kir->kirHistories as $history) {
                     $tanggalExpired = Carbon::parse($history->tanggal_expired_kir);
 
-                    // Hanya filter berdasarkan tahun jika $this->year tidak kosong
+                    // Pastikan untuk memeriksa tahun sebelum menerapkan logika status
                     if ($this->year === null || $tanggalExpired->year == $this->year) {
+                        // Logika untuk mengatur status
+                        if ($tanggalExpired < $today && $history->id == $latestHistory->id) {
+                            // Jika belum diperpanjang, status menjadi 'nonaktif'
+                            $status = $history->status === 'pending' ? 'pending' : 'nonaktif';
+                        } else {
+                            // Kosongkan status jika bukan 'pending'
+                            $status = $history->status === 'pending' ? 'pending' : '';
+                        }
+
                         // Buat baris untuk riwayat KIR
                         $exportData->push([
                             'Plat Nomor' => $platNomor,
                             'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
                             'Tanggal Perpanjangan' => $tanggalExpired, // Gunakan instance Carbon untuk pengurutan
-                            'Status' => $history->status,
+                            'Status' => $status,
                             'Keterangan' => $history->alasan_tidak_lulus,
                             'Periode' => $history->periode,
+                            'RowNumber' => $rowNumber++, // Tambahkan nomor urut di sini
                         ]);
                     }
                 }
@@ -79,15 +92,12 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         $previousMonth = null;
         $finalExportData = collect(); // Koleksi akhir dengan spasi
         $firstHeaderAdded = false; // Menandakan apakah header bulan pertama sudah ditambahkan
+        $rowNumberPerMonth = 1; // Inisialisasi nomor urut untuk setiap bulan
 
-        $rowNumber = 1;
-        $sortedExportData->each(function ($data) use (&$previousMonth, &$finalExportData, &$firstHeaderAdded) {
+        $sortedExportData->each(function ($data) use (&$previousMonth, &$finalExportData, &$firstHeaderAdded, &$rowNumberPerMonth) {
             $currentMonth = Carbon::parse($data['Tanggal Perpanjangan']);
             $monthYear = $currentMonth->format('m Y'); // Ambil format bulan dan tahun
             $monthName = $currentMonth->format('F Y'); // Ambil nama bulan
-
-            // Inisialisasi nomor urut di luar callback
-            static $rowNumber = 1;
 
             // Tambahkan header bulan pertama jika belum ditambahkan
             if (!$firstHeaderAdded) {
@@ -113,14 +123,12 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
                     'Keterangan' => '',
                     'Periode' => '',
                 ]);
-
-                // Reset nomor urut untuk grup baru
-                $rowNumber = 1;
+                $rowNumberPerMonth = 1; // Reset nomor urut untuk bulan baru
             }
 
-            // Tambahkan baris saat ini ke koleksi akhir
+            // Tambahkan baris saat ini ke koleksi akhir dengan nomor urut di atas plat nomor
             $finalExportData->push([
-                'Nomor' => $rowNumber++, // Nomor urut
+                'Nomor' => $rowNumberPerMonth++, // Nomor urut per bulan
                 'Plat Nomor' => $data['Plat Nomor'],
                 'Nomor Uji KIR' => $data['Nomor Uji KIR'],
                 'Tanggal Perpanjangan' => Carbon::parse($data['Tanggal Perpanjangan'])->format('d F Y'),
@@ -133,9 +141,11 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
             $previousMonth = $monthYear;
         });
 
-
         return $finalExportData->values(); // Reindex dan kembalikan data export yang terurut dengan spasi
     }
+
+
+
 
     public function headings(): array
     {
