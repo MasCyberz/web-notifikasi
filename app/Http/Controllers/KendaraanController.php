@@ -24,7 +24,7 @@ class KendaraanController extends Controller
                 ->orWhere('tipe', 'like', "%{$search}%")
                 ->orWhere('jenis_kendaraan', 'like', "%{$search}%")
                 ->orWhere('user_kendaraan', 'like', "%{$search}%")
-            //   ->orWhere('modelKendaraan.name', 'like', "%{$search}%")
+                //   ->orWhere('modelKendaraan.name', 'like', "%{$search}%")
             ;
         }
 
@@ -34,8 +34,11 @@ class KendaraanController extends Controller
         $kendaraans = $query->paginate($entries)
             ->appends($request->all());
 
+        // Ambil semua kendaraan untuk filter plat nomor
+        $allKendaraans = Kendaraan::all();
+
         // Melempar data ke view
-        return view('kendaraan.index', compact('kendaraans'));
+        return view('kendaraan.index', compact('kendaraans', 'allKendaraans'));
     }
 
     public function detail($id)

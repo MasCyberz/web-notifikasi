@@ -23,7 +23,7 @@ class ExportController extends Controller
         if ($exportType == 'kir_stnk') {
             $year = $request->input('year');
             $month = $request->input('month');
-            $platNomor = $request->input('platNomor', []);
+            $platNomor = $request->input('plat_nomor', []);
 
             $filename = 'kir_stnk_' . $year . '_' . $month . '_' . $hariIni . '.xlsx';
 

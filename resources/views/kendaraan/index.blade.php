@@ -389,7 +389,7 @@
                                         <!-- Wrapper untuk Daftar Plat Nomor -->
                                         <div id="platNomorWrapper" class="form-control text-start"
                                             style="height: 250px; overflow-y: auto;">
-                                            @foreach ($kendaraans as $kendaraan)
+                                            @foreach ($allKendaraans as $kendaraan)
                                                 <div class="form-check text-start"
                                                     data-plat-nomor="{{ strtolower($kendaraan->nomor_polisi) }}">
                                                     <input type="checkbox" id="kendaraan{{ $kendaraan->id }}"

@@ -37,14 +37,13 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
         KIR::with('kendaraan', 'kirHistories')
             ->when($this->year, function ($query) {
                 return $query->whereHas('kirHistories', function ($subQuery) {
-                    // Memastikan hanya mengambil data dengan tahun yang sesuai
+                    // Pastikan tahun dan bulan difilter
                     $subQuery->whereYear('tanggal_expired_kir', $this->year);
-                });
-            })
-            ->when($this->month, function ($query) {
-                return $query->whereHas('kirHistories', function ($subQuery) {
-                    // Memastikan bulan juga difilter
-                    $subQuery->whereMonth('tanggal_expired_kir', $this->month);
+
+                    // Tambahkan kondisi untuk bulan
+                    if ($this->month !== null) {
+                        $subQuery->whereMonth('tanggal_expired_kir', $this->month);
+                    }
                 });
             })
             ->when($this->platNomor, function ($query) {
@@ -62,25 +61,29 @@ class KIRExport implements FromCollection, WithHeadings, WithStyles, WithTitle
 
                     // Pastikan untuk memeriksa tahun sebelum menerapkan logika status
                     if ($this->year === null || $tanggalExpired->year == $this->year) {
-                        // Logika untuk mengatur status
-                        if ($tanggalExpired < $today && $history->id == $latestHistory->id) {
-                            // Jika belum diperpanjang, status menjadi 'nonaktif'
-                            $status = $history->status === 'pending' ? 'pending' : 'nonaktif';
-                        } else {
-                            // Kosongkan status jika bukan 'pending'
-                            $status = $history->status === 'pending' ? 'pending' : '';
-                        }
+                        if ($this->month === null || $tanggalExpired->month == $this->month) {
 
-                        // Buat baris untuk riwayat KIR
-                        $exportData->push([
-                            'Plat Nomor' => $platNomor,
-                            'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
-                            'Tanggal Perpanjangan' => $tanggalExpired, // Gunakan instance Carbon untuk pengurutan
-                            'Status' => $status,
-                            'Keterangan' => $history->alasan_tidak_lulus,
-                            'Periode' => $history->periode,
-                            'RowNumber' => $rowNumber++, // Tambahkan nomor urut di sini
-                        ]);
+
+                            // Logika untuk mengatur status
+                            if ($tanggalExpired < $today && $history->id == $latestHistory->id) {
+                                // Jika belum diperpanjang, status menjadi 'nonaktif'
+                                $status = $history->status === 'pending' ? 'pending' : 'nonaktif';
+                            } else {
+                                // Kosongkan status jika bukan 'pending'
+                                $status = $history->status === 'pending' ? 'pending' : '';
+                            }
+
+                            // Buat baris untuk riwayat KIR
+                            $exportData->push([
+                                'Plat Nomor' => $platNomor,
+                                'Nomor Uji KIR' => $kir->nomor_uji_kendaraan,
+                                'Tanggal Perpanjangan' => $tanggalExpired, // Gunakan instance Carbon untuk pengurutan
+                                'Status' => $status,
+                                'Keterangan' => $history->alasan_tidak_lulus,
+                                'Periode' => $history->periode,
+                                'RowNumber' => $rowNumber++, // Tambahkan nomor urut di sini
+                            ]);
+                        }
                     }
                 }
             });

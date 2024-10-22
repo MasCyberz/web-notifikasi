@@ -306,7 +306,7 @@ class Controller extends BaseController
                         // Tampilkan notifikasi jika KIR dalam status pending
                         $notifikasi = (object) [
                             'id' => $history->id,
-                            'warna' => 'warning', // Warna kuning untuk status pending
+                            'warna' => 'yellow', // Warna kuning untuk status pending
                             'judul' => 'KIR Pending',
                             'message' => "Alasan Pending: {$history->alasan_tidak_lulus}", // Gantilah dengan atribut yang sesuai
                             'tanggal_expired_kir' => Carbon::parse($history->tanggal_expired_kir),
